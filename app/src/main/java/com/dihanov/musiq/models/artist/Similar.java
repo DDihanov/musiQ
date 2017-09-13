@@ -1,5 +1,5 @@
 
-package com.dihanov.musiq.models;
+package com.dihanov.musiq.models.artist;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
