@@ -1,9 +1,7 @@
-package com.dihanov.musiq.di.components;
+package com.dihanov.musiq.di.app;
 
 import android.app.Application;
 
-import com.dihanov.musiq.di.App;
-import com.dihanov.musiq.di.modules.AppModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
 
 import javax.inject.Singleton;
@@ -11,7 +9,6 @@ import javax.inject.Singleton;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
-import retrofit2.Retrofit;
 
 /**
  * Created by Dimitar Dihanov on 15.9.2017 г..
@@ -25,16 +22,9 @@ import retrofit2.Retrofit;
 interface AppComponent {
     @Component.Builder
     interface Builder{
-        @BindsInstance
-        Builder application(Application application);
-        AppComponent.build();
-    }
-
-    @Component.Builder
-    interface Retrofit{
-        @BindsInstance
-        Retrofit retrofit(String baseUrl);
-        Retrofit.build();
+        AppComponent build();
+        @BindsInstance Builder application(Application application);
+        @BindsInstance Builder networkModule(String baseUrl);
     }
 
     void inject(App app);

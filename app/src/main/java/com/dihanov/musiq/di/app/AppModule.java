@@ -1,9 +1,11 @@
-package com.dihanov.musiq.di.modules;
+package com.dihanov.musiq.di.app;
 
 import android.app.Application;
 import android.content.Context;
 
+import com.dihanov.musiq.di.components.DetailActivityComponent;
 import com.dihanov.musiq.di.components.MainActivityComponent;
+import com.dihanov.musiq.di.modules.NetworkModule;
 
 import javax.inject.Singleton;
 

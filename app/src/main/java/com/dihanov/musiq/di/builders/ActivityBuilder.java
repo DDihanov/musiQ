@@ -1,15 +1,12 @@
-package com.dihanov.musiq.di;
+package com.dihanov.musiq.di.builders;
 
-import android.app.Activity;
+import com.dihanov.musiq.di.modules.DetailActivityModule;
+import com.dihanov.musiq.di.modules.MainActivityModule;
+import com.dihanov.musiq.ui.detail.DetailActivity;
+import com.dihanov.musiq.ui.main.MainActivity;
 
-import com.dihanov.musiq.ui.MainActivity;
-import com.dihanov.musiq.di.components.MainActivityComponent;
-
-import dagger.Binds;
 import dagger.Module;
-import dagger.android.ActivityKey;
-import dagger.android.AndroidInjector;
-import dagger.multibindings.IntoMap;
+import dagger.android.ContributesAndroidInjector;
 
 /**
  * Created by Dimitar Dihanov on 15.9.2017 г..
@@ -17,8 +14,9 @@ import dagger.multibindings.IntoMap;
 
 @Module
 public abstract class ActivityBuilder {
-    @Binds
-    @IntoMap
-    @ActivityKey(MainActivity.class)
-    abstract AndroidInjector.Factory<? extends Activity> bindMainActivity(MainActivityComponent.Builder builder);
+    @ContributesAndroidInjector(modules = MainActivityModule.class)
+    abstract MainActivity bindMainActivity();
+
+    @ContributesAndroidInjector(modules = DetailActivityModule.class)
+    abstract DetailActivity bindDetailActivity();
 }

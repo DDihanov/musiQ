@@ -1,7 +1,10 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.service.LastFmApiService;
-import com.dihanov.musiq.ui.MainActivity;
+import com.dihanov.musiq.ui.detail.DetailActivity;
+import com.dihanov.musiq.ui.detail.DetailPresenter;
+import com.dihanov.musiq.ui.detail.DetailPresenterImpl;
+import com.dihanov.musiq.ui.detail.DetailView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,14 +14,14 @@ import dagger.Provides;
  */
 
 @Module
-public class MainActivityModule {
+public class DetailActivityModule {
     @Provides
-    MainView provideMainView(MainActivity mainActivity){
-        return mainActivity;
+    DetailView provideDetailView(DetailActivity detailActivity){
+        return detailActivity;
     }
 
     @Provides
-    MainPresenter provideMainPresenter(MainView mainView, LastFmApiService apiService){
-        return new MainPresenterImpl(mainView, apiService);
+    DetailPresenter provideMainPresenter(DetailView detailView, LastFmApiService apiService){
+        return new DetailPresenterImpl(detailView, apiService);
     }
 }
