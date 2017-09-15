@@ -1,7 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.RestClient;
 
 import javax.inject.Singleton;
 
@@ -17,7 +16,7 @@ import retrofit2.Retrofit;
 public class LastFmApiServiceModule {
     @Provides
     @Singleton
-    RestClient provideRestClient(Retrofit retrofit){
+    LastFmApiClient provideRestApiClient(Retrofit retrofit){
         return new LastFmApiClient(retrofit);
     }
 }

@@ -13,7 +13,7 @@ import static com.dihanov.musiq.config.Config.LAST_FM_CALL;
  * Created by Dimitar Dihanov on 15.9.2017 г..
  */
 
-public interface LastFmApiService extends RestService{
+public interface LastFmApiService{
     final String METHOD_CALL = LAST_FM_API_URL + "?method=";
 
     @GET(METHOD_CALL+"artist.getinfo&artist={artistName}"+LAST_FM_CALL)

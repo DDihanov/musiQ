@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
-import com.dihanov.musiq.service.RestClient;
+import com.dihanov.musiq.service.LastFmApiClient;
 
 import javax.inject.Inject;
 
@@ -10,12 +10,12 @@ import javax.inject.Inject;
 
 public class MainPresenterImpl implements MainPresenter{
     MainView mainView;
-    RestClient restClient;
+    LastFmApiClient lastFmApiClient;
 
     @Inject
-    public MainPresenterImpl(MainView mainView, RestClient restClient) {
+    public MainPresenterImpl(MainView mainView, LastFmApiClient lastFmApiClient) {
         this.mainView = mainView;
-        this.restClient = restClient;
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     public void loadMain(){

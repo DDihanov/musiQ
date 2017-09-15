@@ -1,4 +1,8 @@
-package com.dihanov.musiq.ui.detail.fragment;
+package com.dihanov.musiq.di.modules;
+
+import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
+import com.dihanov.musiq.ui.detail.fragment.DetailFragmentPresenter;
+import com.dihanov.musiq.ui.detail.fragment.DetailFragmentView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -8,10 +12,13 @@ import dagger.Provides;
  */
 @Module
 public class DetailFragmentModule {
-
     @Provides
-    DetailFragmentView provideDetailFragmentView(DetailFragment detailFragment){
+    DetailFragmentView provideDetailView(DetailFragment detailFragment){
         return detailFragment;
     }
 
+    @Provides
+    DetailFragmentPresenter provideDetailPresenter(DetailFragmentView detailView){
+        return new DetailFragmentPresenter(detailView);
+    }
 }

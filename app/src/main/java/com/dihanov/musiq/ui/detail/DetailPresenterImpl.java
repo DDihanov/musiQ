@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.detail;
 
-import com.dihanov.musiq.service.RestClient;
+import com.dihanov.musiq.service.LastFmApiClient;
 
 import javax.inject.Inject;
 
@@ -11,12 +11,12 @@ import javax.inject.Inject;
 public class DetailPresenterImpl implements DetailPresenter{
 
     DetailView detailView;
-    RestClient restClient;
+    LastFmApiClient lastFmApiClient;
 
     @Inject
-    public DetailPresenterImpl(DetailView detailView, RestClient restClient) {
+    public DetailPresenterImpl(DetailView detailView, LastFmApiClient lastFmApiClient) {
         this.detailView = detailView;
-        this.restClient = restClient;
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     public void loadDetail(){

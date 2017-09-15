@@ -1,8 +1,10 @@
 package com.dihanov.musiq.di.builders;
 
 import com.dihanov.musiq.di.modules.DetailActivityModule;
+import com.dihanov.musiq.di.modules.DetailFragmentModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.ui.detail.DetailActivity;
+import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
 import com.dihanov.musiq.ui.main.MainActivity;
 
 import dagger.Module;
@@ -19,4 +21,7 @@ public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = DetailActivityModule.class)
     abstract DetailActivity bindDetailActivity();
+
+    @ContributesAndroidInjector(modules = DetailFragmentModule.class)
+    abstract DetailFragment bindDetailFragment();
 }

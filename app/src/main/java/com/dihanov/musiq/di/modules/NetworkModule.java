@@ -1,8 +1,5 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.RestClient;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -18,10 +15,12 @@ import rx.schedulers.Schedulers;
  */
 
 @Module
-public abstract class NetworkModule {
-    private String mBaseUrl;
+public class NetworkModule {
+    private String baseUrl;
 
-    abstract void setmBaseUrl(String mBaseUrl);
+    public NetworkModule(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     @Provides
     @Singleton
@@ -40,7 +39,7 @@ public abstract class NetworkModule {
     @Singleton
     Retrofit provideRetrofit(GsonConverterFactory gsonConverterFactory, RxJavaCallAdapterFactory callAdapterFactory) {
         return new Retrofit.Builder()
-                .baseUrl(mBaseUrl)
+                .baseUrl(baseUrl)
                 .addConverterFactory(gsonConverterFactory)
                 .addCallAdapterFactory(callAdapterFactory)
                 .build();

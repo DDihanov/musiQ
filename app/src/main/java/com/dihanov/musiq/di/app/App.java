@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.dihanov.musiq.config.Config;
+import com.dihanov.musiq.di.modules.NetworkModule;
 
 import javax.inject.Inject;
 
@@ -24,7 +25,7 @@ public class App extends Application implements HasActivityInjector{
         DaggerAppComponent
                 .builder()
                 .application(this)
-                .networkModule(Config.LAST_FM_API_URL)
+                .networkModule(new NetworkModule(Config.LAST_FM_API_URL))
                 .build()
                 .inject(this);
     }

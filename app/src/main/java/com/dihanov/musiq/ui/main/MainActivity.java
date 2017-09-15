@@ -1,8 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjection;
 
 
-public class MainActivity extends AppCompatActivity implements MainView{
+public class MainActivity extends Activity implements MainView{
     @Inject
     MainPresenter mainPresenter;
 

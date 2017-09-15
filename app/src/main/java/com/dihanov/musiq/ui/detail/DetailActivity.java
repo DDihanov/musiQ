@@ -1,8 +1,8 @@
 package com.dihanov.musiq.ui.detail;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.dihanov.musiq.R;
@@ -19,7 +19,7 @@ import dagger.android.HasFragmentInjector;
  * Created by mertsimsek on 25/05/2017.
  */
 
-public class DetailActivity extends AppCompatActivity implements HasFragmentInjector, DetailView {
+public class DetailActivity extends Activity implements HasFragmentInjector, DetailView {
 
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentAndroidInjector;

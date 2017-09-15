@@ -3,6 +3,7 @@ package com.dihanov.musiq.di.app;
 import android.app.Application;
 
 import com.dihanov.musiq.di.builders.ActivityBuilder;
+import com.dihanov.musiq.di.modules.NetworkModule;
 
 import javax.inject.Singleton;
 
@@ -22,9 +23,9 @@ import dagger.android.AndroidInjectionModule;
 public interface AppComponent {
     @Component.Builder
     interface Builder{
-        AppComponent build();
         @BindsInstance Builder application(Application application);
-        @BindsInstance Builder networkModule(String baseUrl);
+        Builder networkModule(NetworkModule networkModule);
+        AppComponent build();
     }
 
     void inject(App app);
