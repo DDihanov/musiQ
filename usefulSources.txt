@@ -7,3 +7,21 @@
 4. https://www.youtube.com/watch?v=Zw6jk-UdIW0
 
 https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-and-builders
+
+old injection method:
+We have modules which have a constructor, and @Provides methods that explain how the object is created.
+We have components, which include modules(0 or more), and expose methods and getters.
+If they expose getters(e.g.) Retrofit getRetrofit(), and we have a class which has a field Retrofit:
+we can assign value to that field via retrofit = DaggerAppComponent.builder()
+         .getRetrofit();
+If the field has @Inject, we call injection method in OnCreate to inject the fields. But this way the class that gets injected
+knows the about the injector class. To avoid this:
+
+new injection method:
+we have Components, which can have Subcombonents. This invloves creating a Builder module which provide the 
+activities for us.
+ The subcomponent must extend AndroidInjector<TheActivity>
+ and have an inner abstract builder class that extends AndroidInjector.Builder<TheActivity> this way, when we use
+AndroidInjector.inject(this) in TheActivity --> dagger will know where to look.
+
+https://android.jlelse.eu/android-and-dagger-2-10-androidinjector-5e9c523679a3

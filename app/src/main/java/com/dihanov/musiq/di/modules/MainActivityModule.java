@@ -1,6 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.service.LastFmApiService;
+import com.dihanov.musiq.service.RestClient;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainPresenter;
 import com.dihanov.musiq.ui.main.MainPresenterImpl;
@@ -21,7 +21,7 @@ public class MainActivityModule {
     }
 
     @Provides
-    MainPresenter provideMainPresenter(MainView mainView, LastFmApiService apiService){
-        return new MainPresenterImpl(mainView, apiService);
+    MainPresenter provideMainPresenter(MainView mainView, RestClient restClient){
+        return new MainPresenterImpl(mainView, restClient);
     }
 }

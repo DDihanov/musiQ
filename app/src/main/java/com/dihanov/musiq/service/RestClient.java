@@ -5,4 +5,5 @@ package com.dihanov.musiq.service;
  */
 
 public interface RestClient {
+    RestService getRestService();
 }

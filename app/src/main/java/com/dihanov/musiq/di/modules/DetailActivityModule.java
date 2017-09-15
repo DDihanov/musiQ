@@ -1,6 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.service.LastFmApiService;
+import com.dihanov.musiq.service.RestClient;
 import com.dihanov.musiq.ui.detail.DetailActivity;
 import com.dihanov.musiq.ui.detail.DetailPresenter;
 import com.dihanov.musiq.ui.detail.DetailPresenterImpl;
@@ -21,7 +21,7 @@ public class DetailActivityModule {
     }
 
     @Provides
-    DetailPresenter provideMainPresenter(DetailView detailView, LastFmApiService apiService){
-        return new DetailPresenterImpl(detailView, apiService);
+    DetailPresenter provideMainPresenter(DetailView detailView, RestClient restClient){
+        return new DetailPresenterImpl(detailView, restClient);
     }
 }

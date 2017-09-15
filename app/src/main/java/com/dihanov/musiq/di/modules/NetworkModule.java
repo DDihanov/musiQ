@@ -1,5 +1,8 @@
 package com.dihanov.musiq.di.modules;
 
+import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.service.RestClient;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
