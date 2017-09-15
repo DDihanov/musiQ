@@ -6,6 +6,10 @@
 
 4. https://www.youtube.com/watch?v=Zw6jk-UdIW0
 
+5. google architecture examples - https://github.com/googlesamples/android-architecture
+
+especially this, follow this - https://github.com/googlesamples/android-architecture/tree/todo-mvp-dagger/todoapp/app/src/main/java/com/example/android/architecture/blueprints/todoapp/addedittask
+
 https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-and-builders
 
 old injection method:
@@ -18,8 +22,8 @@ If the field has @Inject, we call injection method in OnCreate to inject the fie
 knows the about the injector class. To avoid this:
 
 new injection method:
-we have Components, which can have Subcombonents. This invloves creating a Builder module which provide the 
-activities for us.
+we have Components, which can have Subcombonents. This invloves creating a Builder module which will provide the 
+activities for us. After this we must link the AppComponent with the Builder module by giving it in the modules = {} of the annotation.
  The subcomponent must extend AndroidInjector<TheActivity>
  and have an inner abstract builder class that extends AndroidInjector.Builder<TheActivity> this way, when we use
 AndroidInjector.inject(this) in TheActivity --> dagger will know where to look.

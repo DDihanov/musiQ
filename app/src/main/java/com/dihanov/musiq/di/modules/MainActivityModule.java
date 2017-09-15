@@ -1,10 +1,10 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainPresenter;
-import com.dihanov.musiq.ui.main.MainPresenterImpl;
-import com.dihanov.musiq.ui.main.MainView;
+import com.dihanov.musiq.ui.main.old.MainActivity;
+import com.dihanov.musiq.ui.main.old.MainPresenter;
+import com.dihanov.musiq.ui.main.old.MainPresenterImpl;
+import com.dihanov.musiq.ui.main.old.MainView;
 
 import dagger.Module;
 import dagger.Provides;

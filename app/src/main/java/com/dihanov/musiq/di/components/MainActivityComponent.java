@@ -1,7 +1,7 @@
 package com.dihanov.musiq.di.components;
 
 import com.dihanov.musiq.di.modules.MainActivityModule;
-import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.old.MainActivity;
 
 import dagger.Subcomponent;
 import dagger.android.AndroidInjector;

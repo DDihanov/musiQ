@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main;
+package com.dihanov.musiq.ui.main.old;
 
 import android.app.Activity;
 import android.content.Intent;

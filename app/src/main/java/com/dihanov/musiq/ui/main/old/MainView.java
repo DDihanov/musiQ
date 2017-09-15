@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main;
+package com.dihanov.musiq.ui.main.old;
 
 /**
  * Created by mertsimsek on 25/05/2017.
