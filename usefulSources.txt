@@ -1,0 +1,9 @@
+1. https://adityaladwa.wordpress.com/2016/05/11/dagger-2-and-mvp-architecture/
+  -repo https://github.com/LadwaAditya/DaggerMVP-Tutorial/tree/master/app/src/main/java/com/example/aditya/daggermvp_tutorial
+2. https://medium.com/@iammert/new-android-injector-with-dagger-2-part-1-8baa60152abe
+
+3. https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2
+
+4. https://www.youtube.com/watch?v=Zw6jk-UdIW0
+
+https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-and-builders

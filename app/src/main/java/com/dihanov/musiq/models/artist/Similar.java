@@ -1,21 +1,22 @@
 
 package com.dihanov.musiq.models.artist;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Similar {
 
     @SerializedName("artist")
     @Expose
-    private List<Artist__> artist = null;
+    private List<Artist> artist = null;
 
-    public List<Artist__> getArtist() {
+    public List<Artist> getArtist() {
         return artist;
     }
 
-    public void setArtist(List<Artist__> artist) {
+    public void setArtist(List<Artist> artist) {
         this.artist = artist;
     }
 
