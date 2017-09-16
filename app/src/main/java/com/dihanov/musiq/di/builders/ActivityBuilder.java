@@ -6,7 +6,7 @@ import com.dihanov.musiq.di.modules.DetailFragmentModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.ui.detail.DetailActivity;
 import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
-import com.dihanov.musiq.ui.main.old.MainActivity;
+import com.dihanov.musiq.ui.main.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

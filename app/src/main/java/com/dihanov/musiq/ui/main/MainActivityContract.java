@@ -10,10 +10,10 @@ import com.dihanov.musiq.ui.BaseView;
 public interface MainActivityContract {
 
     interface View extends BaseView<Presenter>{
-
+        //TODO: ADD METHODS
     }
 
     interface Presenter extends BasePresenter<View>{
-
+        //TODO: ADD METHODS
     }
 }

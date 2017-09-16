@@ -12,6 +12,8 @@ especially this, follow this - https://github.com/googlesamples/android-architec
 
 https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-and-builders
 
+open apis https://github.com/toddmotto/public-apis
+
 old injection method:
 We have modules which have a constructor, and @Provides methods that explain how the object is created.
 We have components, which include modules(0 or more), and expose methods and getters.
