@@ -83,19 +83,6 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     private void addToResult(CharSequence ch, List<String> searchList) {
-//        lastFmApiClient
-//                .getLastFmApiService()
-//                .searchForArtist(ch.toString(), 10)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doOnNext(artistSearchResults -> mainActivityView.showProgressBar())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(artistSearchResults ->
-//                {
-//                    for (Artist artist : artistSearchResults.getResults().getArtistmatches().getArtist()) {
-//                        searchList.add(artist.getName());
-//                    }
-//                }, throwable -> Log.v("BIG ERROR", throwable.getMessage(), throwable))
-//                .dispose();
         lastFmApiClient
                 .getLastFmApiService()
                 .searchForArtist(ch.toString(), 10)
