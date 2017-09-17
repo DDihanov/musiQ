@@ -1,4 +1,4 @@
-package com.dihanov.musiq.models.error;
+package com.dihanov.musiq.models;
 
 /**
  * Created by Dimitar Dihanov on 15.9.2017 г..

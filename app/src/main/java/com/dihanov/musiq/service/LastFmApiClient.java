@@ -1,5 +1,7 @@
 package com.dihanov.musiq.service;
 
+import javax.inject.Inject;
+
 import retrofit2.Retrofit;
 
 /**

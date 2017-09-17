@@ -5,13 +5,11 @@ import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainActivityContract;
 import com.dihanov.musiq.ui.main.MainActivityPresenter;
 
-
-import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import dagger.android.ContributesAndroidInjector;
+
 
 /**
  * Created by Dimitar Dihanov on 15.9.2017 г..
@@ -20,10 +18,8 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class MainActivityModule {
     @Binds
-    abstract MainActivityContract.Presenter taskPresenter(MainActivityPresenter presenter);
+    abstract MainActivityContract.Presenter provideMainActivityPresenter(MainActivityPresenter presenter);
 
-    @Provides
     @Binds
-    @ContributesAndroidInjector
-    abstract MainActivityContract.View provideMainView(MainActivity mainActivity);
+    abstract MainActivityContract.View provideMainActivityView(MainActivity mainActivity);
 }

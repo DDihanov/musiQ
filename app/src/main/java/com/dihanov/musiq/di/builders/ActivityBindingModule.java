@@ -1,6 +1,7 @@
 package com.dihanov.musiq.di.builders;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
+import com.dihanov.musiq.di.annotations.PerFragment;
 import com.dihanov.musiq.di.modules.DetailActivityModule;
 import com.dihanov.musiq.di.modules.DetailFragmentModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
@@ -16,14 +17,16 @@ import dagger.android.ContributesAndroidInjector;
  */
 
 @Module
-public abstract class ActivityBuilder {
+public abstract class ActivityBindingModule {
+    @PerActivity
     @ContributesAndroidInjector(modules = MainActivityModule.class)
     abstract MainActivity bindMainActivity();
 
+    @PerActivity
     @ContributesAndroidInjector(modules = DetailActivityModule.class)
     abstract DetailActivity bindDetailActivity();
 
-    @PerActivity
+    @PerFragment
     @ContributesAndroidInjector(modules = DetailFragmentModule.class)
     abstract DetailFragment bindDetailFragment();
 }

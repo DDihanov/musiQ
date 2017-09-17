@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material"
         android:name=".di.app.App">
-        <activity android:name=".ui.main.old.MainActivity" >
+        <activity android:name=".ui.main.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,5 +19,10 @@
         </activity>
         <activity android:name=".ui.detail.DetailActivity" />
     </application>
+
+    <!--permissions-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--permissions-->
 
 </manifest>

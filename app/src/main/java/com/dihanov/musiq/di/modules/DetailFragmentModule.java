@@ -1,6 +1,7 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
+import com.dihanov.musiq.di.annotations.PerFragment;
 import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
 import com.dihanov.musiq.ui.detail.fragment.DetailFragmentPresenter;
 import com.dihanov.musiq.ui.detail.fragment.DetailFragmentView;
@@ -13,13 +14,13 @@ import dagger.Provides;
  */
 @Module
 public class DetailFragmentModule {
-    @PerActivity
+    @PerFragment
     @Provides
     DetailFragmentView provideDetailView(DetailFragment detailFragment){
         return detailFragment;
     }
 
-    @PerActivity
+    @PerFragment
     @Provides
     DetailFragmentPresenter provideDetailPresenter(DetailFragmentView detailView){
         return new DetailFragmentPresenter(detailView);

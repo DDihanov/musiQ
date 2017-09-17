@@ -1,10 +1,11 @@
 
-package com.dihanov.musiq.models.artist;
+package com.dihanov.musiq.models;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Tag {
+public class Artist_ {
 
     @SerializedName("name")
     @Expose
@@ -12,6 +13,9 @@ public class Tag {
     @SerializedName("url")
     @Expose
     private String url;
+    @SerializedName("image")
+    @Expose
+    private List<Image_> image = null;
 
     public String getName() {
         return name;
@@ -27,6 +31,14 @@ public class Tag {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<Image_> getImage() {
+        return image;
+    }
+
+    public void setImage(List<Image_> image) {
+        this.image = image;
     }
 
 }

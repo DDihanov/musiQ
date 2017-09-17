@@ -1,5 +1,5 @@
 
-package com.dihanov.musiq.models.artist;
+package com.dihanov.musiq.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

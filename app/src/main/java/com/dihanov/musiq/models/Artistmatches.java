@@ -1,12 +1,11 @@
 
-package com.dihanov.musiq.models.artist;
+package com.dihanov.musiq.models;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class Similar {
+public class Artistmatches {
 
     @SerializedName("artist")
     @Expose

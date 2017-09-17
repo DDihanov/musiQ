@@ -2,7 +2,7 @@ package com.dihanov.musiq.di.app;
 
 import android.app.Application;
 
-import com.dihanov.musiq.di.builders.ActivityBuilder;
+import com.dihanov.musiq.di.builders.ActivityBindingModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
 
 import javax.inject.Singleton;
@@ -19,7 +19,7 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AndroidInjectionModule.class,
         AppModule.class,
-        ActivityBuilder.class})
+        ActivityBindingModule.class})
 public interface AppComponent {
     @Component.Builder
     interface Builder{

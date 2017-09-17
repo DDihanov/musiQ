@@ -1,13 +1,21 @@
 package com.dihanov.musiq.di.modules;
 
+import com.dihanov.musiq.config.Config;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.schedulers.Schedulers;
 
 
 /**
@@ -24,8 +32,9 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    RxJavaCallAdapterFactory provideRxJavaCallAdapterFactory() {
-        return RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
+    RxJava2CallAdapterFactory provideRxJavaCallAdapterFactory() {
+        return RxJava2CallAdapterFactory.create();
+//        return RxJavaCallAdapterFactory.create();
     }
 
     @Provides
@@ -34,14 +43,42 @@ public class NetworkModule {
         return GsonConverterFactory.create();
     }
 
+    @Provides
+    @Singleton
+    OkHttpClient provideOkHttpClient() {
+        OkHttpClient.Builder httpClient =
+                new OkHttpClient.Builder();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+            HttpUrl originalHttpUrl = original.url();
+
+            HttpUrl url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("api_key", Config.API_KEY)
+                    .addQueryParameter("format", Config.FORMAT)
+                    .build();
+
+            // Request customization: add request headers
+            Request.Builder requestBuilder = original.newBuilder()
+                    .url(url);
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
+
+        return httpClient
+                //need these otherwise app crashes when using RxJava2
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS).build();
+    }
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(GsonConverterFactory gsonConverterFactory, RxJavaCallAdapterFactory callAdapterFactory) {
+    Retrofit provideRetrofit(GsonConverterFactory gsonConverterFactory, RxJava2CallAdapterFactory callAdapterFactory, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(gsonConverterFactory)
                 .addCallAdapterFactory(callAdapterFactory)
+                .client(okHttpClient)
                 .build();
     }
 }
