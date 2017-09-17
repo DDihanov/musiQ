@@ -56,7 +56,6 @@ public class MainActivity extends DaggerActivity implements MainActivityContract
         ButterKnife.bind(this);
 
         this.setAdapter();
-        this.mainActivityPresenter.setSearchListener(autoCompleteTextView);
     }
 
 

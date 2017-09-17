@@ -71,16 +71,6 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 });
     }
 
-    @Override
-    public void setSearchListener(AutoCompleteTextView v) {
-        RxTextView.textChanges(v)
-                .filter(new Predicate<CharSequence>() {
-                    @Override
-                    public boolean test(CharSequence query) throws Exception {
-                        return query.length() >= 2;
-                    }
-                }).debounce(1000, TimeUnit.MILLISECONDS);
-    }
 
     private void addToResult(CharSequence ch, List<String> searchList) {
         lastFmApiClient

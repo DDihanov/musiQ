@@ -26,6 +26,5 @@ public interface MainActivityContract {
 
     interface Presenter extends BasePresenter<View>{
         void addDataToSearchList(String searchQuery, List<String> searchList);
-        void setSearchListener(AutoCompleteTextView v);
     }
 }
