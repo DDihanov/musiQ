@@ -12,6 +12,12 @@ especially this, follow this - https://github.com/googlesamples/android-architec
 
 https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-and-builders
 
+----
+text listener
+https://github.com/alexander-mironov/AndroidRxJavaAutocomplete/blob/master/app/src/main/java/ru/eightbps/rxjavaautocomplete/MainActivity.java
+gankio : https://github.com/haohaozaici/GankIO/blob/master/app/src/main/java/com/example/hao/gankio/MainAdapter.java
+---
+
 open apis https://github.com/toddmotto/public-apis
 
 old injection method:
