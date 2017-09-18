@@ -1,9 +1,10 @@
 
 package com.dihanov.musiq.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Artist {
 
@@ -74,4 +75,8 @@ public class Artist {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
