@@ -16,6 +16,7 @@ https://stackoverflow.com/questions/43371863/dagger-2-10-android-subcomponents-a
 text listener
 https://github.com/alexander-mironov/AndroidRxJavaAutocomplete/blob/master/app/src/main/java/ru/eightbps/rxjavaautocomplete/MainActivity.java
 gankio : https://github.com/haohaozaici/GankIO/blob/master/app/src/main/java/com/example/hao/gankio/MainAdapter.java
+cardview tut : https://www.androidhive.info/2016/05/android-working-with-card-view-and-recycler-view/
 ---
 
 open apis https://github.com/toddmotto/public-apis
