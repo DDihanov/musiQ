@@ -5,10 +5,12 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.util.Connectivity;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
@@ -62,6 +64,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void addOnAutoCompleteTextViewTextChangedObserver(final AutoCompleteTextView autoCompleteTextView) {
+        mainActivityView.showProgressBar();
         Observable<ArtistSearchResults> autocompleteResponseObservable =
                 RxTextView.textChangeEvents(autoCompleteTextView)
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
@@ -76,6 +79,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                         .flatMap(new Function<String, Observable<ArtistSearchResults>>() {
                             @Override
                             public Observable<ArtistSearchResults> apply(String s) throws Exception {
+                                if(!Connectivity.isConnected(context)){
+                                    makeToastInternetConn();
+                                }
                                 return lastFmApiClient.getLastFmApiService()
                                         .searchForArtist(s, 10);
                             }
@@ -94,7 +100,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
                     @Override
                     public void onNext(ArtistSearchResults artistSearchResults) {
-                        mainActivityView.showProgressBar();
+//                        mainActivityView.showProgressBar();
                         Log.i(TAG, artistSearchResults.toString());
 
                         List<Artist> result = new ArrayList();
@@ -111,6 +117,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                         } else {
                             autoCompleteTextView.showDropDown();
                         }
+                        mainActivityView.hideKeyboard();
                         mainActivityView.hideProgressBar();
                     }
 
@@ -128,6 +135,10 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                         Log.e(TAG, "onError", e);
                     }
                 });
+    }
+
+    private void makeToastInternetConn() {
+        Toast.makeText(context, "No network connection found.", Toast.LENGTH_SHORT).show();
     }
 
     public void addOnAutoCompleteTextViewItemClickedSubscriber(final AutoCompleteTextView autoCompleteTextView) {

@@ -7,6 +7,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.util.KeyboardHelper;
 
 import javax.inject.Inject;
 
@@ -55,6 +56,11 @@ public class MainActivity extends DaggerActivity implements MainActivityContract
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        KeyboardHelper.hideKeyboard(this);
     }
 
     //    public void getArtistExample() {

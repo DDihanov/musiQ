@@ -15,6 +15,8 @@ public interface MainActivityContract {
         void showProgressBar();
 
         void hideProgressBar();
+
+        void hideKeyboard();
     }
 
     interface Presenter extends BasePresenter<View>{
