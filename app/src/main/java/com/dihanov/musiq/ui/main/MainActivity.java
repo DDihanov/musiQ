@@ -74,7 +74,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     private void initRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setAdapter(new ArtistAdapter(this, Collections.emptyList()));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -140,7 +139,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                 collapsingToolbar.setTitle(getString(R.string.app_name));
                 isShow = true;
             } else if (isShow) {
-                collapsingToolbar.setTitle(getString(R.string.app_name));
+                collapsingToolbar.setTitle(" ");
                 isShow = false;
             }
         }

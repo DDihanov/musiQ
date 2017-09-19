@@ -23,7 +23,9 @@
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -59,8 +61,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
+                        android:indeterminateOnly="false"
                         android:layout_centerHorizontal="true"
-                        android:indeterminate="false"
                         android:visibility="gone" />
 
                 </RelativeLayout>

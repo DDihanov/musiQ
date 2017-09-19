@@ -2,6 +2,7 @@ package com.dihanov.musiq.ui.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;

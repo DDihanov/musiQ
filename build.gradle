@@ -26,16 +26,16 @@ ext {
     support_library_version = '26.1.0'
 }
 
-subprojects {
-    project.configurations.all {
-        resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'com.android.support'
-                    && !details.requested.name.contains('multidex') ) {
-                details.useVersion "$support_library_version"
-            }
-        }
-    }
-}
+//subprojects {
+//    project.configurations.all {
+//        resolutionStrategy.eachDependency { details ->
+//            if (details.requested.group == 'com.android.support'
+//                    && !details.requested.name.contains('multidex') ) {
+//                details.useVersion "$support_library_version"
+//            }
+//        }
+//    }
+//}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
