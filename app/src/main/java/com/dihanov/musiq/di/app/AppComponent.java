@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
+import dagger.android.support.AndroidSupportInjectionModule;
 
 /**
  * Created by Dimitar Dihanov on 15.9.2017 г..
@@ -17,7 +17,7 @@ import dagger.android.AndroidInjectionModule;
 
 @Singleton
 @Component(modules = {
-        AndroidInjectionModule.class,
+        AndroidSupportInjectionModule.class,
         AppModule.class,
         ActivityBindingModule.class})
 public interface AppComponent {

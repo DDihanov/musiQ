@@ -2,9 +2,9 @@ package com.dihanov.musiq.ui.main;
 
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dihanov.musiq.models.Artist;
@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
     private static final long DELAY_IN_MILLIS = 500;
+    private final String NO_NETWORK_CONN_FOUND = "No network connection found.";
 
     @Inject
     LastFmApiClient lastFmApiClient;
@@ -63,10 +65,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     @Override
-    public void addOnAutoCompleteTextViewTextChangedObserver(final AutoCompleteTextView autoCompleteTextView) {
-        mainActivityView.showProgressBar();
+    public void addOnAutoCompleteTextViewTextChangedObserver(final RecyclerView recyclerView, EditText searchEditText) {
         Observable<ArtistSearchResults> autocompleteResponseObservable =
-                RxTextView.textChangeEvents(autoCompleteTextView)
+                RxTextView.textChangeEvents(searchEditText)
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                         .map(new Function<TextViewTextChangeEvent, String>() {
                             @Override
@@ -75,13 +76,17 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                             }
                         })
                         .filter(s -> s.length() >= 2)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(s -> {
+                            if(!Connectivity.isConnected(context)){
+                                makeToastInternetConn();
+                            }
+                            mainActivityView.showProgressBar();
+                        })
                         .observeOn(Schedulers.io())
                         .flatMap(new Function<String, Observable<ArtistSearchResults>>() {
                             @Override
                             public Observable<ArtistSearchResults> apply(String s) throws Exception {
-                                if(!Connectivity.isConnected(context)){
-                                    makeToastInternetConn();
-                                }
                                 return lastFmApiClient.getLastFmApiService()
                                         .searchForArtist(s, 10);
                             }
@@ -103,20 +108,15 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 //                        mainActivityView.showProgressBar();
                         Log.i(TAG, artistSearchResults.toString());
 
-                        List<Artist> result = new ArrayList();
-                        for (Artist artist : artistSearchResults.getResults().getArtistmatches().getArtist()) {
-                            result.add(artist);
+                        List<Artist> result = new ArrayList<>();
+                        result.addAll(artistSearchResults.getResults().getArtistmatches().getArtist());
+                        if(result.isEmpty()){
+                            result = Collections.emptyList();
                         }
 
-                        ArrayAdapter<Artist> itemsAdapter = new ArrayAdapter<>
-                                (context, android.R.layout.simple_dropdown_item_1line, result);
-                        autoCompleteTextView.setAdapter(itemsAdapter);
-                        String enteredText = autoCompleteTextView.getText().toString();
-                        if (result.size() >= 1 && enteredText.equals(result.get(0).getName())) {
-                            autoCompleteTextView.dismissDropDown();
-                        } else {
-                            autoCompleteTextView.showDropDown();
-                        }
+                        ArtistAdapter artistAdapter = new ArtistAdapter(context, result);
+
+                        recyclerView.setAdapter(artistAdapter);
                         mainActivityView.hideKeyboard();
                         mainActivityView.hideProgressBar();
                     }
@@ -138,10 +138,10 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     private void makeToastInternetConn() {
-        Toast.makeText(context, "No network connection found.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, NO_NETWORK_CONN_FOUND, Toast.LENGTH_SHORT).show();
     }
 
-    public void addOnAutoCompleteTextViewItemClickedSubscriber(final AutoCompleteTextView autoCompleteTextView) {
+    public void addOnAutoCompleteTextViewItemClickedSubscriber(final RecyclerView recyclerView) {
 //        Observable<PlaceDetailsResult> adapterViewItemClickEventObservable =
 //                RxAutoCompleteTextView.itemClickEvents(autoCompleteTextView)
 //
