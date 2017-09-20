@@ -22,6 +22,7 @@ public class DetailFragment extends Fragment implements DetailFragmentView {
     @Inject
     DetailFragmentPresenter detailFragmentPresenter;
 
+
     public static DetailFragment newInstance() {
         Bundle args = new Bundle();
         DetailFragment fragment = new DetailFragment();

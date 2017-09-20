@@ -1,22 +1,72 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.models.ArtistSearchResults;
+import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.util.Connectivity;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ArtistResultFragmentPresenter implements ArtistResultFragmentContract.Presenter {
-    @Override
-    public void takeView(MainActivityContract.View view) {
+    private static final long DELAY_IN_MILLIS = 500;
+    private final String NO_NETWORK_CONN_FOUND = "No network connection found.";
 
+    @Inject
+    LastFmApiClient lastFmApiClient;
+
+    ArtistResultFragmentContract.View artistResultFragment;
+
+    private Context context;
+
+    private RecyclerView recyclerView;
+
+    private MainActivity mainActivity;
+
+    private Disposable disposable;
+
+    @Inject
+    public ArtistResultFragmentPresenter() {
+    }
+
+    @Override
+    public void takeView(ArtistResultFragmentContract.View view) {
+        this.artistResultFragment = view;
+        mainActivity = (MainActivity)view.getActivity();
+        recyclerView = view.getRecyclerView();
+        context = ((ArtistResultFragment)view).getContext();
     }
 
     @Override
     public void leaveView() {
-
+        if(this.disposable != null){
+            disposable.dispose();
+        }
+        this.artistResultFragment = null;
     }
 
     @Override
@@ -63,5 +113,88 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 //                        updateMap(placeDetailsResponse);
 //                    }
 //                }));
+    }
+
+    @Override
+    public void setRecyclerViewAdapter(ArtistAdapter adapter) {
+        this.recyclerView.setAdapter(adapter);
+        return;
+    }
+
+    @Override
+    public void addOnTextViewTextChangedObserver(EditText searchEditText) {
+        Observable<ArtistSearchResults> autocompleteResponseObservable =
+                RxTextView.textChangeEvents(searchEditText)
+                        .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
+                        .map(new Function<TextViewTextChangeEvent, String>() {
+                            @Override
+                            public String apply(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
+                                return textViewTextChangeEvent.text().toString();
+                            }
+                        })
+                        .filter(s -> s.length() >= 2)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(s -> {
+                            if(!Connectivity.isConnected(artistResultFragment.getActivity())){
+                                makeToastInternetConn();
+                            }
+                            mainActivity.showProgressBar();
+                        })
+                        .observeOn(Schedulers.io())
+                        .flatMap(new Function<String, Observable<ArtistSearchResults>>() {
+                            @Override
+                            public Observable<ArtistSearchResults> apply(String s) throws Exception {
+                                return lastFmApiClient.getLastFmApiService()
+                                        .searchForArtist(s, 10);
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .retry();
+
+        autocompleteResponseObservable
+                .subscribe(new Observer<ArtistSearchResults>() {
+                    private static final String TAG = "ArtistResult";
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(ArtistSearchResults artistSearchResults) {
+//                        mainActivity.showProgressBar();
+                        Log.i(TAG, artistSearchResults.toString());
+
+                        List<Artist> result = new ArrayList<>();
+                        result.addAll(artistSearchResults.getResults().getArtistmatches().getArtist());
+                        if(result.isEmpty()){
+                            result = Collections.emptyList();
+                        }
+
+                        ArtistAdapter artistAdapter = new ArtistAdapter(context, result);
+
+                        artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
+                        mainActivity.hideKeyboard();
+                        mainActivity.hideProgressBar();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mainActivity.hideProgressBar();
+                        disposable.dispose();
+                        Log.i(TAG, "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        disposable.dispose();
+                        mainActivity.hideProgressBar();
+                        Log.e(TAG, "onError", e);
+                    }
+                });
+    }
+
+    private void makeToastInternetConn() {
+        Toast.makeText(context, NO_NETWORK_CONN_FOUND, Toast.LENGTH_SHORT).show();
     }
 }

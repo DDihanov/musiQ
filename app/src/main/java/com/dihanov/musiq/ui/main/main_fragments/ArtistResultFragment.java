@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
-import com.dihanov.musiq.ui.main.MainActivity;
 
 import javax.inject.Inject;
 
@@ -28,33 +26,40 @@ import dagger.android.support.DaggerFragment;
  */
 
 public class ArtistResultFragment extends DaggerFragment implements ArtistResultFragmentContract.View {
-    @Inject
-    ArtistResultFragmentPresenter artistResultFragmentPresenter;
+    public static final String TITLE = "Artists";
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    @Inject
+    ArtistResultFragmentPresenter artistResultFragmentPresenter;
+
     private Context context;
 
-    public static ArtistResultFragment newInstance() {
+    //for dagger
+    @Inject
+    public ArtistResultFragment(){
+    }
+
+    @Inject
+    public ArtistResultFragment newInstance(ArtistResultFragment artistResultFragment) {
         Bundle args = new Bundle();
-        ArtistResultFragment fragment = new ArtistResultFragment();
-        fragment.setArguments(args);
-        return fragment;
+        artistResultFragment.setArguments(args);
+        return artistResultFragment;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-
+        this.artistResultFragmentPresenter.takeView(this);
         initRecyclerView();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragments.artist_search_fragment, container, false);
+        View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -67,12 +72,28 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         recyclerView.setLayoutManager(mLayoutManager);
     }
 
+    @Override
+    public Context getContext() {
+        return this.context;
+    }
+
     /**
      * Converting dp to pixel
      */
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.artistResultFragmentPresenter.leaveView();
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return this.recyclerView;
     }
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

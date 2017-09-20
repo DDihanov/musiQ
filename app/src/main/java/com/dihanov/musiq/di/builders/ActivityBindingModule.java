@@ -7,6 +7,7 @@ import com.dihanov.musiq.di.modules.DetailActivityModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.ui.detail.DetailActivity;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -27,5 +28,5 @@ public abstract class ActivityBindingModule {
 
     @PerFragment
     @ContributesAndroidInjector(modules = ArtistResultFragmentModule.class)
-    abstract ArtistResultFragmentModule bindArtistResultFragment();
+    abstract ArtistResultFragment bindArtistResultFragment();
 }

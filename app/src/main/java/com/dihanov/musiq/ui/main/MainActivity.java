@@ -1,24 +1,18 @@
 package com.dihanov.musiq.ui.main;
 
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
-import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
+import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentPresenter;
 import com.dihanov.musiq.util.KeyboardHelper;
 
 import javax.inject.Inject;
@@ -33,26 +27,23 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
-    @Inject
-    MainActivityPresenter mainActivityPresenter;
+    @Inject MainActivityPresenter mainActivityPresenter;
 
-    @BindView(R.id.search)
-    EditText searchEditText;
+    @Inject ArtistResultFragmentPresenter artistResultFragmentPresenter;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.search) EditText searchEditText;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
-    @BindView(R.id.appbar)
-    AppBarLayout appBarLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    @BindView(R.id.appbar) AppBarLayout appBarLayout;
 
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+
+    @BindView(R.id.tabs) TabLayout tabLayout;
+
+    @BindView(R.id.viewpager) ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,42 +52,29 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (savedInstanceState == null)
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
-                    .commitAllowingStateLoss();
+//        if (savedInstanceState == null)
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
+//                    .commitAllowingStateLoss();
 
         initCollapsingToolbar();
+        initViewPager();
         setSupportActionBar(toolbar);
 
         //TODO: FIX THIS
-        mainActivityPresenter.addOnTextViewTextChangedObserver(recyclerView, searchEditText);
+        artistResultFragmentPresenter.addOnTextViewTextChangedObserver(searchEditText);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
-
+        mainActivityPresenter.takeView(this);
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mainActivityPresenter.leaveView();
-    }
 
-    @Override
-    public void showProgressBar() {
-        this.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgressBar() {
-        this.progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideKeyboard() {
-        KeyboardHelper.hideKeyboard(this);
+    private void initViewPager() {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void initCollapsingToolbar() {
@@ -125,6 +103,27 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainActivityPresenter.leaveView();
+    }
+
+    @Override
+    public void showProgressBar() {
+        this.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        KeyboardHelper.hideKeyboard(this);
+    }
+
     private class OnOffsetChangedListener implements AppBarLayout.OnOffsetChangedListener {
         boolean isShow = false;
         int scrollRange = -1;
@@ -143,7 +142,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
             }
         }
     }
-
     //    public void getArtistExample() {
 //        Single<Artist> artistInfo = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfo("Cher");
 ////        Call<Artist> call = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfoCall("Cher");
