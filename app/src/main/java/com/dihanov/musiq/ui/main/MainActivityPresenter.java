@@ -65,7 +65,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     @Override
-    public void addOnAutoCompleteTextViewTextChangedObserver(final RecyclerView recyclerView, EditText searchEditText) {
+    public void addOnTextViewTextChangedObserver(final RecyclerView recyclerView, EditText searchEditText) {
         Observable<ArtistSearchResults> autocompleteResponseObservable =
                 RxTextView.textChangeEvents(searchEditText)
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
@@ -139,50 +139,5 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private void makeToastInternetConn() {
         Toast.makeText(context, NO_NETWORK_CONN_FOUND, Toast.LENGTH_SHORT).show();
-    }
-
-    public void addOnAutoCompleteTextViewItemClickedSubscriber(final RecyclerView recyclerView) {
-//        Observable<PlaceDetailsResult> adapterViewItemClickEventObservable =
-//                RxAutoCompleteTextView.itemClickEvents(autoCompleteTextView)
-//
-//                        .map(new Func1<AdapterViewItemClickEvent, String>() {
-//                            @Override
-//                            public String call(AdapterViewItemClickEvent adapterViewItemClickEvent) {
-//                                NameAndPlaceId item = (NameAndPlaceId) autoCompleteTextView.getAdapter()
-//                                        .getItem(adapterViewItemClickEvent.position());
-//                                return item.placeId;
-//                            }
-//                        })
-//                        .observeOn(Schedulers.io())
-//                        .flatMap(new Func1<String, Observable<PlaceDetailsResult>>() {
-//                            @Override
-//                            public Observable<PlaceDetailsResult> call(String placeId) {
-//                                return RestClient.INSTANCE.getGooglePlacesClient().details(placeId);
-//                            }
-//                        })
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .retry();
-//
-//        compositeSubscription.add(adapterViewItemClickEventObservable
-//                .subscribe(new Observer<PlaceDetailsResult>() {
-//
-//                    private static final String TAG = "PlaceDetailsResult";
-//
-//                    @Override
-//                    public void onCompleted() {
-//                        Log.i(TAG, "onCompleted");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e(TAG, "onError", e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(PlaceDetailsResult placeDetailsResponse) {
-//                        Log.i(TAG, placeDetailsResponse.toString());
-//                        updateMap(placeDetailsResponse);
-//                    }
-//                }));
     }
 }

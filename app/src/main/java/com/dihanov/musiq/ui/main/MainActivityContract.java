@@ -2,7 +2,6 @@ package com.dihanov.musiq.ui.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -22,8 +21,6 @@ public interface MainActivityContract {
     }
 
     interface Presenter extends BasePresenter<View>{
-        void addOnAutoCompleteTextViewTextChangedObserver(RecyclerView recyclerView, EditText searchEditText);
-
-        void addOnAutoCompleteTextViewItemClickedSubscriber(RecyclerView recyclerView);
+        void addOnTextViewTextChangedObserver(RecyclerView recyclerView, EditText searchEditText);
     }
 }

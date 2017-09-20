@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
 
 import javax.inject.Inject;
 
@@ -33,12 +32,12 @@ public class DetailActivity extends Activity implements HasFragmentInjector, Det
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         detailPresenter.loadDetail();
-
-        if (savedInstanceState == null)
-            getFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.container, DetailFragment.newInstance())
-                    .commitAllowingStateLoss();
+//
+//        if (savedInstanceState == null)
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
+//                    .commitAllowingStateLoss();
     }
 
     @Override

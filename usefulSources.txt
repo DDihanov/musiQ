@@ -17,6 +17,10 @@ text listener
 https://github.com/alexander-mironov/AndroidRxJavaAutocomplete/blob/master/app/src/main/java/ru/eightbps/rxjavaautocomplete/MainActivity.java
 gankio : https://github.com/haohaozaici/GankIO/blob/master/app/src/main/java/com/example/hao/gankio/MainAdapter.java
 cardview tut : https://www.androidhive.info/2016/05/android-working-with-card-view-and-recycler-view/
+
+material design tab layout - https://www.learn2crack.com/2017/07/android-material-design-tabs.html
+
+https://github.com/codepath/android_guides/wiki/ViewPager-with-FragmentPagerAdapter
 ---
 
 open apis https://github.com/toddmotto/public-apis

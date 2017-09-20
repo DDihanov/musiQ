@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,23 +17,22 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.ui.detail.fragment.DetailFragment;
+import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 import com.dihanov.musiq.util.KeyboardHelper;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
-import dagger.android.HasFragmentInjector;
 import dagger.android.support.DaggerAppCompatActivity;
 
 /**
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View, HasFragmentInjector {
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     @Inject
     MainActivityPresenter mainActivityPresenter;
 
@@ -45,11 +45,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-
     @BindView(R.id.appbar)
     AppBarLayout appBarLayout;
+
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -61,23 +61,22 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        if (savedInstanceState == null)
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
+                    .commitAllowingStateLoss();
+
         initCollapsingToolbar();
-        initRecyclerView();
         setSupportActionBar(toolbar);
 
-        mainActivityPresenter.addOnAutoCompleteTextViewTextChangedObserver(recyclerView, searchEditText);
-        mainActivityPresenter.addOnAutoCompleteTextViewItemClickedSubscriber(recyclerView);
+        //TODO: FIX THIS
+        mainActivityPresenter.addOnTextViewTextChangedObserver(recyclerView, searchEditText);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
 
     }
 
-    private void initRecyclerView() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(mLayoutManager);
-    }
 
     @Override
     protected void onDestroy() {
@@ -145,48 +144,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
     }
 
-    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
     //    public void getArtistExample() {
 //        Single<Artist> artistInfo = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfo("Cher");
 ////        Call<Artist> call = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfoCall("Cher");
