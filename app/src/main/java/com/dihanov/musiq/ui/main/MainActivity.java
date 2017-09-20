@@ -51,6 +51,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mainActivityPresenter.takeView(this);
 
 //        if (savedInstanceState == null)
 //            getSupportFragmentManager()
@@ -66,7 +67,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         artistResultFragmentPresenter.addOnTextViewTextChangedObserver(searchEditText);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
-        mainActivityPresenter.takeView(this);
     }
 
 

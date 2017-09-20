@@ -1,5 +1,7 @@
 package com.dihanov.musiq.di.modules;
 
+import android.os.Bundle;
+
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;

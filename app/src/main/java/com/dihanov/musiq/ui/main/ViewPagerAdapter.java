@@ -6,17 +6,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 
-import javax.inject.Inject;
-
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 3;
-
-    @Inject
-    ArtistResultFragment artistResultFragment;
+    private static int TAB_COUNT = 1;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -27,11 +22,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return artistResultFragment;
+                return ArtistResultFragment.newInstance();
             case 1:
-                break;
-            case 2:
-               break;
+                return ArtistResultFragment.newInstance();
+//            case 2:
+//               break;
         }
         return null;
     }
@@ -45,10 +40,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return artistResultFragment.TITLE;
+                return ArtistResultFragment.TITLE;
             case 1:
-
-            case 2:
+                return ArtistResultFragment.TITLE;
+//            case 2:
         }
         return super.getPageTitle(position);
     }

@@ -36,14 +36,9 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
 
     private Context context;
 
-    //for dagger
-    @Inject
-    public ArtistResultFragment(){
-    }
-
-    @Inject
-    public ArtistResultFragment newInstance(ArtistResultFragment artistResultFragment) {
+    public static ArtistResultFragment newInstance() {
         Bundle args = new Bundle();
+        ArtistResultFragment artistResultFragment = new ArtistResultFragment();
         artistResultFragment.setArguments(args);
         return artistResultFragment;
     }
@@ -53,7 +48,6 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         super.onAttach(context);
         this.context = context;
         this.artistResultFragmentPresenter.takeView(this);
-        initRecyclerView();
     }
 
     @Nullable
@@ -61,6 +55,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
+        initRecyclerView();
         return view;
     }
 

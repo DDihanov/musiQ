@@ -55,10 +55,11 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
     @Override
     public void takeView(ArtistResultFragmentContract.View view) {
+        ArtistResultFragment artistResultFragment = (ArtistResultFragment) view;
         this.artistResultFragment = view;
-        mainActivity = (MainActivity)view.getActivity();
-        recyclerView = view.getRecyclerView();
-        context = ((ArtistResultFragment)view).getContext();
+        mainActivity = (MainActivity)artistResultFragment.getActivity();
+        recyclerView = artistResultFragment.getRecyclerView();
+        context = artistResultFragment.getContext();
     }
 
     @Override
@@ -132,6 +133,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                                 return textViewTextChangeEvent.text().toString();
                             }
                         })
+                        //TODO: FIX THIS ITS NOT WORKING
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
@@ -150,6 +152,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                         })
                         .observeOn(AndroidSchedulers.mainThread())
                         .retry();
+
 
         autocompleteResponseObservable
                 .subscribe(new Observer<ArtistSearchResults>() {
