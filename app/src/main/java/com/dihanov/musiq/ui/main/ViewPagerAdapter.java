@@ -23,8 +23,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return ArtistResultFragment.newInstance();
-            case 1:
-                return ArtistResultFragment.newInstance();
+//            case 1:
+//                return ArtistResultFragment.newInstance();
 //            case 2:
 //               break;
         }
@@ -41,8 +41,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return ArtistResultFragment.TITLE;
-            case 1:
-                return ArtistResultFragment.TITLE;
+//            case 1:
+//                return ArtistResultFragment.TITLE;
 //            case 2:
         }
         return super.getPageTitle(position);

@@ -8,6 +8,7 @@ import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentContract;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentPresenter;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -15,16 +16,12 @@ import dagger.Provides;
  * Created by Dimitar Dihanov on 02/06/2017.
  */
 @Module
-public class ArtistResultFragmentModule {
-    @Provides
+public abstract class ArtistResultFragmentModule {
+    @Binds
     @PerFragment
-    ArtistResultFragmentContract.View provideArtistResultFragmentView(ArtistResultFragment artistResultFragment){
-        return artistResultFragment;
-    }
+    abstract ArtistResultFragmentContract.View provideArtistResultFragmentView(ArtistResultFragment artistResultFragment);
 
-    @Provides
+    @Binds
     @PerActivity
-    ArtistResultFragmentContract.Presenter provideArtistResultFragmentPresenter(ArtistResultFragmentPresenter presenter){
-        return presenter;
-    }
+    abstract ArtistResultFragmentContract.Presenter provideArtistResultFragmentPresenter(ArtistResultFragmentPresenter presenter);
 }

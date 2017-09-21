@@ -1,8 +1,11 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -10,7 +13,9 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.MainActivityContract;
 import com.dihanov.musiq.util.Connectivity;
+import com.dihanov.musiq.util.KeyboardHelper;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
@@ -23,6 +28,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -41,13 +47,10 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
     ArtistResultFragmentContract.View artistResultFragment;
 
-    private Context context;
+    private Disposable disposable;
 
     private RecyclerView recyclerView;
 
-    private MainActivity mainActivity;
-
-    private Disposable disposable;
 
     @Inject
     public ArtistResultFragmentPresenter() {
@@ -55,11 +58,8 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
     @Override
     public void takeView(ArtistResultFragmentContract.View view) {
-        ArtistResultFragment artistResultFragment = (ArtistResultFragment) view;
         this.artistResultFragment = view;
-        mainActivity = (MainActivity)artistResultFragment.getActivity();
-        recyclerView = artistResultFragment.getRecyclerView();
-        context = artistResultFragment.getContext();
+        this.recyclerView = view.getRecyclerView();
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
     }
 
     @Override
-    public void addOnTextViewTextChangedObserver(EditText searchEditText) {
+    public void addOnTextViewTextChangedObserver(MainActivity mainActivity, EditText searchEditText) {
         Observable<ArtistSearchResults> autocompleteResponseObservable =
                 RxTextView.textChangeEvents(searchEditText)
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
@@ -137,8 +137,8 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            if(!Connectivity.isConnected(artistResultFragment.getActivity())){
-                                makeToastInternetConn();
+                            if(!Connectivity.isConnected(mainActivity)){
+                                makeToastInternetConn(mainActivity);
                             }
                             mainActivity.showProgressBar();
                         })
@@ -155,6 +155,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
 
         autocompleteResponseObservable
+//                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ArtistSearchResults>() {
                     private static final String TAG = "ArtistResult";
 
@@ -174,9 +175,9 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                             result = Collections.emptyList();
                         }
 
-                        ArtistAdapter artistAdapter = new ArtistAdapter(context, result);
+                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result);
 
-                        artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
+                        recyclerView.setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();
                         mainActivity.hideProgressBar();
                     }
@@ -197,7 +198,8 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                 });
     }
 
-    private void makeToastInternetConn() {
+
+    private void makeToastInternetConn(Context context) {
         Toast.makeText(context, NO_NETWORK_CONN_FOUND, Toast.LENGTH_SHORT).show();
     }
 }

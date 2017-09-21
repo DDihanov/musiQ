@@ -5,8 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -29,11 +31,11 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     @Inject MainActivityPresenter mainActivityPresenter;
 
-    @Inject ArtistResultFragmentPresenter artistResultFragmentPresenter;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
-    @BindView(R.id.search) EditText searchEditText;
-
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.search)
+    EditText searchEditText;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -64,7 +66,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setSupportActionBar(toolbar);
 
         //TODO: FIX THIS
-        artistResultFragmentPresenter.addOnTextViewTextChangedObserver(searchEditText);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
     }
@@ -78,7 +79,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     private void initCollapsingToolbar() {
-        collapsingToolbar.setTitle(" ");
+//        collapsingToolbar.setTitle(" ");
+        collapsingToolbar.setTitle(getString(R.string.app_name));
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -96,7 +98,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                     collapsingToolbar.setTitle(getString(R.string.app_name));
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setTitle(getString(R.string.app_name));
+//                    collapsingToolbar.setTitle(getString(" ");
                     isShow = false;
                 }
             }
@@ -107,6 +110,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     protected void onDestroy() {
         super.onDestroy();
         mainActivityPresenter.leaveView();
+    }
+
+    @Override
+    public EditText getSearchBar() {
+        return this.searchEditText;
     }
 
     @Override
@@ -123,6 +131,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     public void hideKeyboard() {
         KeyboardHelper.hideKeyboard(this);
     }
+
 
     private class OnOffsetChangedListener implements AppBarLayout.OnOffsetChangedListener {
         boolean isShow = false;

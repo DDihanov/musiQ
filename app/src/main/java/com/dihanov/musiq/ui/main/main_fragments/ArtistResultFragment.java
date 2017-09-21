@@ -12,8 +12,14 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.util.KeyboardHelper;
+
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -34,7 +40,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     @Inject
     ArtistResultFragmentPresenter artistResultFragmentPresenter;
 
-    private Context context;
+    private MainActivity mainActivity;
 
     public static ArtistResultFragment newInstance() {
         Bundle args = new Bundle();
@@ -46,8 +52,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
-        this.artistResultFragmentPresenter.takeView(this);
+        this.mainActivity = (MainActivity)getActivity();
     }
 
     @Nullable
@@ -56,20 +61,28 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
         initRecyclerView();
+
+        this.artistResultFragmentPresenter.takeView(this);
+        this.artistResultFragmentPresenter.addOnTextViewTextChangedObserver(mainActivity, mainActivity.getSearchBar());
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     private void initRecyclerView() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mainActivity, 2);
         recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(new ArtistAdapter(mainActivity, Collections.emptyList()));
     }
 
     @Override
     public Context getContext() {
-        return this.context;
+        return this.mainActivity;
     }
 
     /**
@@ -90,6 +103,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     public RecyclerView getRecyclerView() {
         return this.recyclerView;
     }
+
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 

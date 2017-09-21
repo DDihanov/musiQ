@@ -1,5 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
+import android.support.v4.app.FragmentActivity;
+import android.widget.EditText;
+
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -10,6 +13,8 @@ import com.dihanov.musiq.ui.BaseView;
 public interface MainActivityContract {
 
     interface View extends BaseView<Presenter>{
+        EditText getSearchBar();
+
         void showProgressBar();
 
         void hideProgressBar();
