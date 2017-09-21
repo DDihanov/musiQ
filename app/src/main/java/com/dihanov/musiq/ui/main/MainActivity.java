@@ -79,8 +79,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     private void initCollapsingToolbar() {
-//        collapsingToolbar.setTitle(" ");
-        collapsingToolbar.setTitle(getString(R.string.app_name));
+        collapsingToolbar.setTitle(" ");
+//        collapsingToolbar.setTitle(getString(R.string.app_name));
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -98,7 +98,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                     collapsingToolbar.setTitle(getString(R.string.app_name));
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle(" ");
 //                    collapsingToolbar.setTitle(getString(" ");
                     isShow = false;
                 }
