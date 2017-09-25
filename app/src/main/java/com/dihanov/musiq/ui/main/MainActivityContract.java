@@ -1,7 +1,7 @@
 package com.dihanov.musiq.ui.main;
 
-import android.support.v4.app.FragmentActivity;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -23,6 +23,6 @@ public interface MainActivityContract {
     }
 
     interface Presenter extends BasePresenter<View>{
-
+        void setBackdropImageChangeListener(MainActivity mainActivity, ImageView backdrop);
     }
 }

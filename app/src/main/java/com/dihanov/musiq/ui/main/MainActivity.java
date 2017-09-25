@@ -5,16 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentPresenter;
 import com.dihanov.musiq.util.KeyboardHelper;
 
 import javax.inject.Inject;
@@ -29,7 +27,11 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
+    private static final String search = "Search";
     @Inject MainActivityPresenter mainActivityPresenter;
+
+    @BindView(R.id.backdrop)
+    ImageView backDrop;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -66,8 +68,15 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setSupportActionBar(toolbar);
 
         //TODO: FIX THIS
+        searchEditText.setHint(search);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
+        mainActivityPresenter.setBackdropImageChangeListener(this, backDrop);
+//        try {
+//            Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 

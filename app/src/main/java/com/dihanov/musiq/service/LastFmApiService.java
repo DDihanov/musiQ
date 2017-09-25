@@ -3,6 +3,7 @@ package com.dihanov.musiq.service;
 
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.models.SpecificArtist;
+import com.dihanov.musiq.models.TopArtistsResult;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -21,6 +22,9 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"artist.search")
     Observable<ArtistSearchResults> searchForArtist(@Query("artist") String artistName, @Query("limit") Integer limit);
+
+    @GET(METHOD_CALL+"chart.getTopArtists")
+    Observable<TopArtistsResult> chartTopArtists(@Query("limit") Integer limit);
 
 
 //    @GET(METHOD_CALL+"artist.getinfo")

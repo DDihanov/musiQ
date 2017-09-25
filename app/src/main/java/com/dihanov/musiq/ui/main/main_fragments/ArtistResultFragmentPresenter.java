@@ -1,11 +1,8 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,9 +10,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
 import com.dihanov.musiq.util.Connectivity;
-import com.dihanov.musiq.util.KeyboardHelper;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
@@ -28,7 +23,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -41,6 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ArtistResultFragmentPresenter implements ArtistResultFragmentContract.Presenter {
     private static final long DELAY_IN_MILLIS = 500;
     private final String NO_NETWORK_CONN_FOUND = "No network connection found.";
+    private static final int limit = 20;
 
     @Inject
     LastFmApiClient lastFmApiClient;
@@ -50,6 +45,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
     private Disposable disposable;
 
     private RecyclerView recyclerView;
+
 
 
     @Inject
@@ -133,7 +129,6 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                                 return textViewTextChangeEvent.text().toString();
                             }
                         })
-                        //TODO: FIX THIS ITS NOT WORKING
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
@@ -147,7 +142,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                             @Override
                             public Observable<ArtistSearchResults> apply(String s) throws Exception {
                                 return lastFmApiClient.getLastFmApiService()
-                                        .searchForArtist(s, 10);
+                                        .searchForArtist(s, limit);
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
