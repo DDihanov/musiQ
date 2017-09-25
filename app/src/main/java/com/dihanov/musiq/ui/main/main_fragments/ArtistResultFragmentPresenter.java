@@ -165,7 +165,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                         Log.i(TAG, artistSearchResults.toString());
 
                         List<Artist> result = new ArrayList<>();
-                        result.addAll(artistSearchResults.getResults().getArtistmatches().getArtist());
+                        result.addAll(artistSearchResults.getResults().getArtistmatches().getArtistMatches());
                         if(result.isEmpty()){
                             result = Collections.emptyList();
                         }

@@ -7,13 +7,14 @@ import com.bumptech.glide.Glide;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -45,45 +46,36 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     @Override
     public void setBackdropImageChangeListener(MainActivity mainActivity, ImageView backdrop) {
         int counter = 0;
-        Observable<List<Artist>> topArtists = lastFmApiClient.getLastFmApiService().chartTopArtists(5)
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        lastFmApiClient.getLastFmApiService().chartTopArtists(5)
+                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
+                .doOnNext(artist -> Observable.timer(3000L, TimeUnit.MILLISECONDS))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches());
+                .subscribe(new Observer<Artist>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        topArtists.subscribe(new Observer<List<Artist>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Artist> artists) {
-                int counter = 0;
-                while(true){
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
-                    if(counter == 5){
-                        counter = 0;
+
+                    @Override
+                    public void onNext(Artist artist) {
+                        String url = artist.getImage().get(3).getText();
+                        Glide.with(mainActivity).load(url).crossFade().into(backdrop);
                     }
-                    String linkUrl = artists.get(counter).getImage().get(2).getText();
-                    Glide.with(mainActivity).load(linkUrl).crossFade(1000).into(backdrop);
-                    counter++;
-                }
-            }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-            }
-        });
+                    }
+                });
+
+
 
     }
 }
