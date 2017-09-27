@@ -111,9 +111,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                     collapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER);
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
+//                    collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setTitle(getString(R.string.app_name));
                     collapsingToolbar.setExpandedTitleGravity(Gravity.CENTER);
-                    collapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER);
 //                    collapsingToolbar.setTitle(getString(" ");
                     isShow = false;
                 }
