@@ -1,20 +1,21 @@
 package com.dihanov.musiq.ui.main;
 
 
+import android.os.Handler;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -24,6 +25,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
     MainActivityContract.View mainActivityView;
+
+    private Disposable disposable;
 
     @Inject
     LastFmApiClient lastFmApiClient;
@@ -39,6 +42,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void leaveView() {
+        disposable.dispose();
         this.mainActivityView = null;
     }
 
@@ -46,22 +50,22 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     @Override
     public void setBackdropImageChangeListener(MainActivity mainActivity, ImageView backdrop) {
         int counter = 0;
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        List<Artist> artists = new ArrayList<>();
         lastFmApiClient.getLastFmApiService().chartTopArtists(5)
-                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
-                .doOnNext(artist -> Observable.timer(3000L, TimeUnit.MILLISECONDS))
+//                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
+                .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
+                .delay(3000L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Artist>() {
+                .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
-                    public void onNext(Artist artist) {
-                        String url = artist.getImage().get(3).getText();
-                        Glide.with(mainActivity).load(url).crossFade().into(backdrop);
+                    public void onNext(List<Artist> artist) {
+                        artists.addAll(artist);
                     }
 
                     @Override
@@ -76,6 +80,35 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 });
 
 
+        initBackdropImageChanger(mainActivity, backdrop, artists);
+    }
 
+    private void initBackdropImageChanger(MainActivity mainActivity, ImageView backdrop, List<Artist> artists) {
+        Handler handler = new Handler();
+        //this method checks the artist list, and if it's not empty, it loads the images onto the backdrop
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    if(!artists.isEmpty()){
+                        for (Artist artist : artists) {
+                            try {
+                                Thread.sleep(5000);
+                                String url = artist.getImage().get(2).getText();
+
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Glide.with(mainActivity).load(url).crossFade(1000).into(backdrop);
+                                    }
+                                });
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }).start();
     }
 }

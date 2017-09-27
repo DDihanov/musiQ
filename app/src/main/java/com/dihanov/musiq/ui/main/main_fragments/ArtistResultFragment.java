@@ -70,8 +70,8 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     }
 
     private void initRecyclerView() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mainActivity, 2);
-        recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(3, dpToPx(10), true));
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mainActivity, 3);
+        recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(new ArtistAdapter(mainActivity, Collections.emptyList()));

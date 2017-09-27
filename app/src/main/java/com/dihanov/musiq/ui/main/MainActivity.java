@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -88,7 +89,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     private void initCollapsingToolbar() {
+        //TODO: CLEAN THIS METHOD UP
         collapsingToolbar.setTitle(" ");
+        collapsingToolbar.setExpandedTitleGravity(Gravity.CENTER);
 //        collapsingToolbar.setTitle(getString(R.string.app_name));
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
@@ -105,9 +108,12 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER);
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setExpandedTitleGravity(Gravity.CENTER);
+                    collapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER);
 //                    collapsingToolbar.setTitle(getString(" ");
                     isShow = false;
                 }
