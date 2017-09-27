@@ -1,7 +1,7 @@
 package com.dihanov.musiq.ui.main;
 
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.GridView;
 
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -15,6 +15,8 @@ public interface MainActivityContract {
     interface View extends BaseView<Presenter>{
         EditText getSearchBar();
 
+        GridView getGridView();
+
         void showProgressBar();
 
         void hideProgressBar();
@@ -23,6 +25,6 @@ public interface MainActivityContract {
     }
 
     interface Presenter extends BasePresenter<View>{
-        void setBackdropImageChangeListener(MainActivity mainActivity, ImageView backdrop);
+        void setBackdropImageChangeListener(MainActivity mainActivity);
     }
 }

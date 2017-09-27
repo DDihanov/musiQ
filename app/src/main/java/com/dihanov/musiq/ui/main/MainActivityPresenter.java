@@ -1,10 +1,10 @@
 package com.dihanov.musiq.ui.main;
 
 
-import android.os.Handler;
+import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
 
@@ -28,6 +28,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private Disposable disposable;
 
+    private GridView gridView;
+
     @Inject
     LastFmApiClient lastFmApiClient;
 
@@ -37,6 +39,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void takeView(MainActivityContract.View view) {
+        this.gridView = view.getGridView();
         this.mainActivityView = view;
     }
 
@@ -48,10 +51,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
 
     @Override
-    public void setBackdropImageChangeListener(MainActivity mainActivity, ImageView backdrop) {
-        int counter = 0;
-        List<Artist> artists = new ArrayList<>();
-        lastFmApiClient.getLastFmApiService().chartTopArtists(5)
+    public void setBackdropImageChangeListener(MainActivity mainActivity) {
+        lastFmApiClient.getLastFmApiService().chartTopArtists(6)
 //                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .delay(3000L, TimeUnit.MILLISECONDS)
@@ -64,8 +65,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(List<Artist> artist) {
-                        artists.addAll(artist);
+                    public void onNext(List<Artist> artists) {
+                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, R.layout.top_artist_viewholder, (ArrayList<Artist>) artists);
+                        gridView.setAdapter(topArtistAdapter);
                     }
 
                     @Override
@@ -79,36 +81,38 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     }
                 });
 
-
-        initBackdropImageChanger(mainActivity, backdrop, artists);
+//
+//        initBackdropImageChanger(mainActivity, backdrop, artists);
     }
 
     private void initBackdropImageChanger(MainActivity mainActivity, ImageView backdrop, List<Artist> artists) {
-        Handler handler = new Handler();
-        //this method checks the artist list, and if it's not empty, it loads the images onto the backdrop
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    if(!artists.isEmpty()){
-                        for (Artist artist : artists) {
-                            try {
-                                Thread.sleep(5000);
-                                String url = artist.getImage().get(2).getText();
-
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Glide.with(mainActivity).load(url).crossFade(1000).into(backdrop);
-                                    }
-                                });
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        }).start();
+//        Handler handler = new Handler();
+//        //this method checks the artist list, and if it's not empty, it loads the images onto the backdrop
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while(true){
+//                    if(!artists.isEmpty()){
+//                        for (Artist artist : artists) {
+//                            try {
+//                                Thread.sleep(5000);
+//                                String url = artist.getImage().get(4).getText();
+//
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        Glide.with(mainActivity).load(url).asBitmap()
+//                                                .format(DecodeFormat.PREFER_ARGB_8888)
+//                                                .crossFade(1000).into(backdrop);
+//                                    }
+//                                });
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }).start();
     }
 }

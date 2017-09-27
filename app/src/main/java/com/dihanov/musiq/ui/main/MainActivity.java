@@ -10,11 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.util.KeyboardHelper;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -31,8 +34,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private static final String search = "Search";
     @Inject MainActivityPresenter mainActivityPresenter;
 
-    @BindView(R.id.backdrop)
-    ImageView backDrop;
+    @BindView(R.id.main_gridview)
+    GridView gridView;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -56,23 +59,22 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mainActivityPresenter.takeView(this);
 
 //        if (savedInstanceState == null)
 //            getSupportFragmentManager()
 //                    .beginTransaction()
 //                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
 //                    .commitAllowingStateLoss();
-
         initCollapsingToolbar();
+        initGridView();
         initViewPager();
         setSupportActionBar(toolbar);
 
-        //TODO: FIX THIS
         searchEditText.setHint(search);
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
-        mainActivityPresenter.setBackdropImageChangeListener(this, backDrop);
+        mainActivityPresenter.takeView(this);
+        mainActivityPresenter.setBackdropImageChangeListener(this);
 //        try {
 //            Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
 //        } catch (Exception e) {
@@ -133,6 +135,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
+    public GridView getGridView() {
+        return this.gridView;
+    }
+
+    @Override
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
     }
@@ -165,6 +172,12 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                 isShow = false;
             }
         }
+    }
+
+    private void initGridView() {
+//        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+        gridView.setAdapter(new TopArtistAdapter(this, R.layout.top_artist_viewholder, new ArrayList<Artist>()));
+//        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
     //    public void getArtistExample() {
 //        Single<Artist> artistInfo = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfo("Cher");
