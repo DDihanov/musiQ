@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
@@ -34,8 +35,9 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
     }
 
 
-    public class MyViewHolder{
-        public ImageView artist;
+    private class MyViewHolder{
+        TextView name;
+        ImageView artist;
     }
 
     @NonNull
@@ -49,6 +51,7 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
                     .inflate(resourceId, parent, false);
             holder = new MyViewHolder();
             holder.artist = (ImageView) row.findViewById(R.id.top_artist_image);
+            holder.name = (TextView) row.findViewById(R.id.top_artist_name);
             row.setTag(holder);
         } else {
             holder = (MyViewHolder) row.getTag();
@@ -60,7 +63,7 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
                 .load(artist.getImage().get(ARTIST_IMAGE_LARGE).getText())
                 .crossFade(2000)
                 .into(holder.artist);
-
+        holder.name.setText(artist.getName());
         return row;
     }
 }

@@ -31,7 +31,7 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
-    private static final String search = "Search";
+    private static final String search = "search for artists";
     @Inject MainActivityPresenter mainActivityPresenter;
 
     @BindView(R.id.main_gridview)
@@ -177,6 +177,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private void initGridView() {
 //        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
         gridView.setAdapter(new TopArtistAdapter(this, R.layout.top_artist_viewholder, new ArrayList<Artist>()));
+        gridView.setSelector(android.R.color.transparent);
 //        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
     //    public void getArtistExample() {

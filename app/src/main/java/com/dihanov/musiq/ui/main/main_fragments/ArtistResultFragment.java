@@ -70,10 +70,22 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     }
 
     private void initRecyclerView() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mainActivity, 3);
-        recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
+        RecyclerView.LayoutManager layoutManager = null;
+        //check if tablet --> 3 columns instead of 2;
+        if (getResources().getBoolean(R.bool.isTablet)){
+            layoutManager = new GridLayoutManager(mainActivity, 3);
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(3, dpToPx(10), true));
+        } else {
+            layoutManager = new GridLayoutManager(mainActivity, 2);
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
+        }
+
+        if(layoutManager == null){
+            return;
+        }
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new ArtistAdapter(mainActivity, Collections.emptyList()));
     }
 

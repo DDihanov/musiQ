@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
  */
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> {
-    private final int ARTIST_IMAGE_LARGE = 2;
+    private final int ARTIST_IMAGE_LARGE = 3;
     private Context mContext;
     private List<Artist> artistList;
 
