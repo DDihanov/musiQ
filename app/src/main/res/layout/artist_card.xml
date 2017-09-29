@@ -45,14 +45,14 @@
                 <!--android:textSize="@dimen/songs_count" />-->
             <!--android:paddingBottom="@dimen/songs_count_padding_bottom"-->
 
-            <ImageView
-                android:id="@+id/overflow"
-                android:layout_width="@dimen/ic_artist_overflow_width"
-                android:layout_height="@dimen/ic_artist_overflow_height"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/thumbnail"
-                android:layout_marginTop="@dimen/ic_artist_overflow_margin_top"
-                android:scaleType="centerCrop" />
+            <!--<ImageView-->
+                <!--android:id="@+id/overflow"-->
+                <!--android:layout_width="@dimen/ic_artist_overflow_width"-->
+                <!--android:layout_height="@dimen/ic_artist_overflow_height"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_below="@id/thumbnail"-->
+                <!--android:layout_marginTop="@dimen/ic_artist_overflow_margin_top"-->
+                <!--android:scaleType="centerCrop" />-->
                 <!--android:src="@drawable/ic_dots" />-->
 
         </RelativeLayout>

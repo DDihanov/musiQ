@@ -2,10 +2,10 @@ package com.dihanov.musiq.di.builders;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
+import com.dihanov.musiq.di.modules.ArtistDetailsActivityModule;
 import com.dihanov.musiq.di.modules.ArtistResultFragmentModule;
-import com.dihanov.musiq.di.modules.DetailActivityModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
-import com.dihanov.musiq.ui.detail.DetailActivity;
+import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 
@@ -23,8 +23,8 @@ public abstract class ActivityBindingModule {
     abstract MainActivity bindMainActivity();
 
     @PerActivity
-    @ContributesAndroidInjector(modules = DetailActivityModule.class)
-    abstract DetailActivity bindDetailActivity();
+    @ContributesAndroidInjector(modules = ArtistDetailsActivityModule.class)
+    abstract ArtistDetailsActivity bindArtistDetailActivity();
 
     @PerFragment
     @ContributesAndroidInjector(modules = ArtistResultFragmentModule.class)

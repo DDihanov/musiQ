@@ -1,11 +1,9 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
+import com.dihanov.musiq.util.Constants;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -26,11 +27,11 @@ import butterknife.ButterKnife;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> {
     private final int ARTIST_IMAGE_LARGE = 3;
-    private Context mContext;
+    private Context context;
     private List<Artist> artistList;
 
     public ArtistAdapter(Context context, List<Artist> albumList) {
-        this.mContext = context;
+        this.context = context;
         this.artistList = albumList;
     }
 
@@ -43,9 +44,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
 
         @BindView(R.id.thumbnail)
         public ImageView thumbnail;
-
-        @BindView(R.id.overflow)
-        public ImageView overflow;
 
         public MyViewHolder(View view) {
             super(view);
@@ -71,14 +69,14 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
         holder.count.setText(artist.getListeners() + " listeners");
 
         // loading album cover using Glide library
-        Glide.with(mContext)
+        Glide.with(context)
                 .load(artist.getImage().get(ARTIST_IMAGE_LARGE).getText())
                 .into(holder.thumbnail);
 
-        holder.overflow.setOnClickListener(new View.OnClickListener() {
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+                showArtistDetails(artistList.get(view.getId()));
             }
         });
     }
@@ -88,21 +86,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
         return this.artistList.size();
     }
 
-    private void showPopupMenu(View view) {
-        // inflate menu
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_artist, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
-        popup.show();
-    }
-
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            //TODO: IMPLEMENT THIS
-            return true;
-        }
+    private void showArtistDetails(Artist artist) {
+        Intent showArtistDetailsIntent = new Intent(context, ArtistDetailsActivity.class);
+        showArtistDetailsIntent.putExtra(Constants.ARTIST, new Gson().toJson(artist));
     }
 }
