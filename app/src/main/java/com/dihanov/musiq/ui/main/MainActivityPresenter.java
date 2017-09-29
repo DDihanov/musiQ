@@ -30,8 +30,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private GridView gridView;
 
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    @Inject LastFmApiClient lastFmApiClient;
 
     @Inject
     public MainActivityPresenter() {

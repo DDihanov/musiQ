@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
 
-import java.util.Collections;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -31,13 +29,11 @@ import dagger.android.support.DaggerFragment;
  */
 
 public class ArtistResultFragment extends DaggerFragment implements ArtistResultFragmentContract.View {
-    public static final String TITLE = "Artists";
+    public static final String TITLE = "artists";
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    @Inject
-    ArtistResultFragmentPresenter artistResultFragmentPresenter;
+    @Inject ArtistResultFragmentPresenter artistResultFragmentPresenter;
 
     private MainActivity mainActivity;
 
@@ -69,7 +65,6 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         this.artistResultFragmentPresenter.takeView(this);
         return view;
     }
-
 
     //Since the menu gets created in the onCreateOptionMenu method from MainActivity, we need to override this method, so we can set the listener,
     //in the exact moment the menu gets created. If we set the listener directly in MainActivity, the RecyclerView that we use in the listener method
@@ -104,7 +99,6 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new ArtistAdapter(mainActivity, Collections.emptyList()));
     }
 
     @Override
@@ -112,9 +106,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         return this.mainActivity;
     }
 
-    /**
-     * Converting dp to pixel
-     */
+    //dp to pixel
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));

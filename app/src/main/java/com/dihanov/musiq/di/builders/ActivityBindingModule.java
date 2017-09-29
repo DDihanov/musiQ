@@ -6,6 +6,7 @@ import com.dihanov.musiq.di.modules.ArtistDetailsActivityModule;
 import com.dihanov.musiq.di.modules.ArtistResultFragmentModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
+import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsBiographyFragment;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
 
@@ -29,4 +30,8 @@ public abstract class ActivityBindingModule {
     @PerFragment
     @ContributesAndroidInjector(modules = ArtistResultFragmentModule.class)
     abstract ArtistResultFragment bindArtistResultFragment();
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract ArtistDetailsBiographyFragment bindArtistBiographyFragment();
 }

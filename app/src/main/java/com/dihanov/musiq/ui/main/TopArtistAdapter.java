@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.List;
  */
 
 public class TopArtistAdapter extends ArrayAdapter<Artist> {
-    private static final int ARTIST_IMAGE_LARGE = 4;
     private Context context;
     private List<Artist> topArtist;
     private int resourceId;
@@ -60,10 +60,10 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
 
         Artist artist = topArtist.get(position);
         Glide.with(context)
-                .load(artist.getImage().get(ARTIST_IMAGE_LARGE).getText())
+                .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
                 .crossFade(2000)
                 .into(holder.artist);
-        holder.name.setText(artist.getName());
+        holder.name.setText(artist.getName().toLowerCase());
         return row;
     }
 }

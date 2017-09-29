@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.KeyboardHelper;
 
 import java.util.ArrayList;
@@ -81,10 +82,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        Constants.changeTabsFont(this, tabLayout);
     }
 
     private void initCollapsingToolbar() {
-        collapsingToolbar.setTitle(getString(R.string.app_name));
+        Constants.setToolbarFont(collapsingToolbar, this);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 

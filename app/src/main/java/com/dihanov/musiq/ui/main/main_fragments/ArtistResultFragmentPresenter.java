@@ -36,8 +36,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
     private final String NO_NETWORK_CONN_FOUND = "No network connection found.";
     private static final int limit = 20;
 
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    @Inject LastFmApiClient lastFmApiClient;
 
     ArtistResultFragmentContract.View artistResultFragment;
 
@@ -159,7 +158,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                             result = Collections.emptyList();
                         }
 
-                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result);
+                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, lastFmApiClient);
 
                         recyclerView.setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();
