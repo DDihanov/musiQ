@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
-import android.widget.EditText;
+import android.support.v7.widget.SearchView;
 import android.widget.GridView;
 
 import com.dihanov.musiq.ui.BasePresenter;
@@ -13,7 +13,7 @@ import com.dihanov.musiq.ui.BaseView;
 public interface MainActivityContract {
 
     interface View extends BaseView<Presenter>{
-        EditText getSearchBar();
+        SearchView getSearchBar();
 
         GridView getGridView();
 

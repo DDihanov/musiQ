@@ -1,10 +1,8 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.widget.EditText;
+import android.support.v7.widget.SearchView;
 
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -24,8 +22,6 @@ public interface ArtistResultFragmentContract {
     interface Presenter extends BasePresenter<View> {
         void addOnArtistResultClickedListener(RecyclerView recyclerView);
 
-        void addOnTextViewTextChangedObserver(MainActivity fragmentActivity, EditText searchEditText);
-
-        void setRecyclerViewAdapter(ArtistAdapter adapter);
+        void addOnSearchBarTextChangedListener(MainActivity fragmentActivity, SearchView searchEditText);
     }
 }

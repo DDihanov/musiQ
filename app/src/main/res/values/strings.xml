@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">musiQ🐦</string>
     <string name="top_artists_text">loading this week\'s top artists...</string>
+    <string name="searchTitle">Search for artists</string>
 </resources>

@@ -6,10 +6,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
@@ -40,9 +41,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.search)
-    EditText searchEditText;
-
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
@@ -52,6 +50,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.tabs) TabLayout tabLayout;
 
     @BindView(R.id.viewpager) ViewPager viewPager;
+
+    private SearchView searchBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,21 +65,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 //                    .beginTransaction()
 //                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
 //                    .commitAllowingStateLoss();
-        initCollapsingToolbar();
         initGridView();
         initViewPager();
+        initCollapsingToolbar();
         setSupportActionBar(toolbar);
 
-        searchEditText.setHint(search);
-        appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener());
         appBarLayout.setExpanded(true);
         mainActivityPresenter.takeView(this);
         mainActivityPresenter.setBackdropImageChangeListener(this);
-//        try {
-//            Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
 
@@ -91,10 +84,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     private void initCollapsingToolbar() {
-        //TODO: CLEAN THIS METHOD UP
-        collapsingToolbar.setTitle(" ");
-        collapsingToolbar.setExpandedTitleGravity(Gravity.CENTER);
-//        collapsingToolbar.setTitle(getString(R.string.app_name));
+        collapsingToolbar.setTitle(getString(R.string.app_name));
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -109,14 +99,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
-                    collapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER);
+                    collapsingToolbar.setTitle(" ");
+
                     isShow = true;
                 } else if (isShow) {
-//                    collapsingToolbar.setTitle(" ");
                     collapsingToolbar.setTitle(getString(R.string.app_name));
-                    collapsingToolbar.setExpandedTitleGravity(Gravity.CENTER);
-//                    collapsingToolbar.setTitle(getString(" ");
                     isShow = false;
                 }
             }
@@ -130,9 +117,19 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public EditText getSearchBar() {
-        return this.searchEditText;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
+        this.searchBar = (SearchView) myActionMenuItem.getActionView();
+        return true;
     }
+
+    @Override
+    public SearchView getSearchBar() {
+        return this.searchBar;
+    }
+
 
     @Override
     public GridView getGridView() {
@@ -152,26 +149,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     public void hideKeyboard() {
         KeyboardHelper.hideKeyboard(this);
-    }
-
-
-    private class OnOffsetChangedListener implements AppBarLayout.OnOffsetChangedListener {
-        boolean isShow = false;
-        int scrollRange = -1;
-
-        @Override
-        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-            if (scrollRange == -1) {
-                scrollRange = appBarLayout.getTotalScrollRange();
-            }
-            if (scrollRange + verticalOffset == 0) {
-                collapsingToolbar.setTitle(getString(R.string.app_name));
-                isShow = true;
-            } else if (isShow) {
-                collapsingToolbar.setTitle(" ");
-                isShow = false;
-            }
-        }
     }
 
     private void initGridView() {

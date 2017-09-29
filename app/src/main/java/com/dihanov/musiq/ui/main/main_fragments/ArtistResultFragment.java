@@ -10,6 +10,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,11 +59,27 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
+
+        //very important to call this - this enables us to use the below method(onCreateOptionsMenu), and allows us
+        //to receive calls from MainActivity's onCreateOptionsMenu
+        setHasOptionsMenu(true);
+
         initRecyclerView();
 
         this.artistResultFragmentPresenter.takeView(this);
-        this.artistResultFragmentPresenter.addOnTextViewTextChangedObserver(mainActivity, mainActivity.getSearchBar());
         return view;
+    }
+
+
+    //Since the menu gets created in the onCreateOptionMenu method from MainActivity, we need to override this method, so we can set the listener,
+    //in the exact moment the menu gets created. If we set the listener directly in MainActivity, the RecyclerView that we use in the listener method
+    //will not have been initialized yet, and we will get a NullPointerException. However if we set the listener here, the recycler view will
+    //already be initialized and in the same thread as the listener. It is important to set the listener in the same class(thread) where the recycler view
+    //gets initialized.
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity, mainActivity.getSearchBar());
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.dihanov.musiq.ui.main.main_fragments;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dihanov.musiq.models.Artist;
@@ -11,8 +11,7 @@ import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +45,6 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
     private RecyclerView recyclerView;
 
-
-
     @Inject
     public ArtistResultFragmentPresenter() {
     }
@@ -65,6 +62,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
         }
         this.artistResultFragment = null;
     }
+
 
     @Override
     public void addOnArtistResultClickedListener(final RecyclerView recyclerView) {
@@ -113,22 +111,13 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
     }
 
     @Override
-    public void setRecyclerViewAdapter(ArtistAdapter adapter) {
-        this.recyclerView.setAdapter(adapter);
-        return;
-    }
-
-    @Override
-    public void addOnTextViewTextChangedObserver(MainActivity mainActivity, EditText searchEditText) {
+    public void addOnSearchBarTextChangedListener(MainActivity mainActivity, SearchView searchEditText) {
+        if(searchEditText == null){
+            return;
+        }
         Observable<ArtistSearchResults> autocompleteResponseObservable =
-                RxTextView.textChangeEvents(searchEditText)
+                RxSearchView.queryTextChanges(searchEditText)
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
-                        .map(new Function<TextViewTextChangeEvent, String>() {
-                            @Override
-                            public String apply(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
-                                return textViewTextChangeEvent.text().toString();
-                            }
-                        })
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
@@ -138,11 +127,11 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())
-                        .flatMap(new Function<String, Observable<ArtistSearchResults>>() {
+                        .flatMap(new Function<CharSequence, Observable<ArtistSearchResults>>() {
                             @Override
-                            public Observable<ArtistSearchResults> apply(String s) throws Exception {
+                            public Observable<ArtistSearchResults> apply(CharSequence s) throws Exception {
                                 return lastFmApiClient.getLastFmApiService()
-                                        .searchForArtist(s, limit);
+                                        .searchForArtist(s.toString(), limit);
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
