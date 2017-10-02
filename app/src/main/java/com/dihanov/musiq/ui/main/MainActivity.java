@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
@@ -35,6 +36,9 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     private static final String search = "search for artists";
     @Inject MainActivityPresenter mainActivityPresenter;
+
+    @BindView(R.id.tooltip_dummy)
+    TextView tooltipDummy;
 
     @BindView(R.id.main_gridview)
     GridView gridView;

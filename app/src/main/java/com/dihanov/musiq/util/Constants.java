@@ -1,14 +1,18 @@
 package com.dihanov.musiq.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.res.ResourcesCompat;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.github.florent37.viewtooltip.ViewTooltip;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
@@ -19,11 +23,27 @@ public class Constants {
     public static final int ARTIST_LIMIT = 6;
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
+    public static final int BIRD_COLOR = Color.parseColor("#37B4E2");
 
     public static void setToolbarFont(CollapsingToolbarLayout toolbarLayout, Context context){
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/cabin_regular.ttf");
         toolbarLayout.setTitle(context.getString(R.string.app_name));
-        toolbarLayout.setExpandedTitleTypeface(ResourcesCompat.getFont(context, R.font.cabin));
-        toolbarLayout.setCollapsedTitleTypeface(ResourcesCompat.getFont(context, R.font.cabin));
+        toolbarLayout.setExpandedTitleTypeface(typeface);
+        toolbarLayout.setCollapsedTitleTypeface(typeface);
+    }
+
+    public static void showTooltip(Activity activity, View view, String text){
+        ViewTooltip.on(view)
+                .corner(60)
+                .textSize(TypedValue.COMPLEX_UNIT_DIP, 20)
+                .align(ViewTooltip.ALIGN.CENTER)
+                .textTypeFace(Typeface.createFromAsset(activity.getAssets(), "fonts/cabin_regular.ttf"))
+                .position(ViewTooltip.Position.BOTTOM)
+                .text(text)
+                .color(Constants.BIRD_COLOR)
+                .textColor(Color.WHITE)
+                .animation(new ViewTooltip.FadeTooltipAnimation())
+                .show();
     }
 
     public static void changeTabsFont(Context context, TabLayout tabLayout) {

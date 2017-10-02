@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,13 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
+    private static final String LOADING_ARTISTS = "loading this week's top artists...";
+
     MainActivityContract.View mainActivityView;
 
     private Disposable disposable;
 
     private GridView gridView;
-
     @Inject LastFmApiClient lastFmApiClient;
 
     @Inject
@@ -42,6 +44,10 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         this.mainActivityView = view;
     }
 
+    private void initTooltips(MainActivity mainActivity) {
+
+    }
+
     @Override
     public void leaveView() {
         disposable.dispose();
@@ -51,6 +57,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void setBackdropImageChangeListener(MainActivity mainActivity) {
+        initTooltips(mainActivity);
+
         lastFmApiClient.getLastFmApiService().chartTopArtists(6)
 //                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
@@ -60,6 +68,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        Constants.showTooltip(mainActivity, mainActivity.tooltipDummy, LOADING_ARTISTS);
+                        mainActivity.showProgressBar();
                         disposable = d;
                     }
 
@@ -76,7 +86,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
                     @Override
                     public void onComplete() {
-
+                        mainActivity.hideProgressBar();
                     }
                 });
 
