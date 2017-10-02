@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
@@ -41,10 +43,14 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
     @BindView(R.id.artist_details_viewpager) ViewPager viewPager;
 
-    @BindView(R.id.artist_details_name)
-    TextView artistName;
+    @BindView(R.id.artist_details_name) TextView artistName;
 
     private Artist artist;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

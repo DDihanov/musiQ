@@ -42,7 +42,7 @@
                 android:columnWidth="204dp"
                 android:listSelector="@null"
                 android:numColumns="3"
-
+                android:scrollbars="horizontal"
                 android:scaleType="center"
                 android:stretchMode="none" />
 
@@ -93,7 +93,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_gravity="bottom"
                 android:textAllCaps="false"
-                android:fontFamily="@font/cabin"
                 app:tabContentStart="40dp"
                 app:tabMode="scrollable" />
 
@@ -127,12 +126,12 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tooltip_dummy"
+            android:id="@+id/bird"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="93dp"
+            android:layout_marginEnd="41dp"
             android:layout_marginTop="9dp"
             android:text="@string/app_bird"
             android:textAlignment="center"

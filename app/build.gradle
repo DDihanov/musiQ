@@ -47,6 +47,8 @@ dependencies {
     //custom tooltip library
     compile 'com.github.florent37:viewtooltip:1.0.8'
 
+    //calligraphy, for default font in app
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
     //Gson JSON parser
     compile 'com.google.code.gson:gson:2.8.1'

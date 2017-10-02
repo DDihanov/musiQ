@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
 
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     private Disposable disposable;
 
     private GridView gridView;
-    @Inject LastFmApiClient lastFmApiClient;
+    @Inject
+    LastFmApiClient lastFmApiClient;
 
     @Inject
     public MainActivityPresenter() {
@@ -59,6 +61,13 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     public void setBackdropImageChangeListener(MainActivity mainActivity) {
         initTooltips(mainActivity);
 
+        setListenerOnFoundConnection(mainActivity);
+
+//
+//        initBackdropImageChanger(mainActivity, backdrop, artists);
+    }
+
+    private void loadBackdrop(MainActivity mainActivity) {
         lastFmApiClient.getLastFmApiService().chartTopArtists(6)
 //                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
@@ -68,7 +77,6 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Constants.showTooltip(mainActivity, mainActivity.tooltipDummy, LOADING_ARTISTS);
                         mainActivity.showProgressBar();
                         disposable = d;
                     }
@@ -89,9 +97,33 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                         mainActivity.hideProgressBar();
                     }
                 });
+    }
 
-//
-//        initBackdropImageChanger(mainActivity, backdrop, artists);
+    private void setListenerOnFoundConnection(MainActivity mainActivity) {
+        Thread newConnThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Connectivity.isConnected(mainActivity)) {
+                    try {
+                        Constants.showNetworkErrorTooltip(mainActivity);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadBackdrop(mainActivity);
+                    }
+                });
+            }
+        });
+
+        if (!newConnThread.isAlive()) {
+            newConnThread.start();
+        }
     }
 
     private void initBackdropImageChanger(MainActivity mainActivity, ImageView backdrop, List<Artist> artists) {

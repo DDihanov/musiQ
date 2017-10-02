@@ -1,16 +1,14 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.util.Connectivity;
+import com.dihanov.musiq.util.Constants;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ArtistResultFragmentPresenter implements ArtistResultFragmentContract.Presenter {
     private static final long DELAY_IN_MILLIS = 500;
-    private final String NO_NETWORK_CONN_FOUND = "No network connection found.";
     private static final int limit = 20;
 
     @Inject LastFmApiClient lastFmApiClient;
@@ -120,9 +117,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            if(!Connectivity.isConnected(mainActivity)){
-                                makeToastInternetConn(mainActivity);
-                            }
+                            Constants.checkConnection(mainActivity);
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())
@@ -179,10 +174,5 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                         Log.e(TAG, "onError", e);
                     }
                 });
-    }
-
-
-    private void makeToastInternetConn(Context context) {
-        Toast.makeText(context, NO_NETWORK_CONN_FOUND, Toast.LENGTH_SHORT).show();
     }
 }

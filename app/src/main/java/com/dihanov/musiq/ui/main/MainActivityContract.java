@@ -22,6 +22,8 @@ public interface MainActivityContract {
         void hideProgressBar();
 
         void hideKeyboard();
+
+        android.view.View getBirdIcon();
     }
 
     interface Presenter extends BasePresenter<View>{

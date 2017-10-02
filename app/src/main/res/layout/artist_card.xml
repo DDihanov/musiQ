@@ -33,7 +33,6 @@
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
                 android:textColor="@color/artist_title"
-                android:fontFamily="@font/cabin"
                 android:textSize="@dimen/artist_title" />
 
             <TextView
@@ -41,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:fontFamily="@font/cabin"
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding" />
                 <!--android:textSize="@dimen/songs_count" />-->

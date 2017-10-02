@@ -107,7 +107,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
                 android:elegantTextHeight="false"
-                android:fontFamily="@font/cabin"
                 android:gravity="center"
                 android:text="Red Hot Chili Peppers"
                 android:textColor="@android:color/white"

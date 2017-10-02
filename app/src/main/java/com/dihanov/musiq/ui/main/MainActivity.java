@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -28,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by Dihanov on 9/16/2017.
@@ -37,8 +39,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private static final String search = "search for artists";
     @Inject MainActivityPresenter mainActivityPresenter;
 
-    @BindView(R.id.tooltip_dummy)
-    TextView tooltipDummy;
+    @BindView(R.id.bird)
+    TextView bird;
 
     @BindView(R.id.main_gridview)
     GridView gridView;
@@ -57,6 +59,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.viewpager) ViewPager viewPager;
 
     private SearchView searchBar;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +162,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     public void hideKeyboard() {
         KeyboardHelper.hideKeyboard(this);
+    }
+
+    @Override
+    public View getBirdIcon() {
+        return this.bird;
     }
 
     private void initGridView() {
