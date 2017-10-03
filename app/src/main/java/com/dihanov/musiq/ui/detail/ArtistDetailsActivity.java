@@ -30,20 +30,27 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
-public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View{
-    @Inject ArtistDetailsActivityPresenter presenter;
+public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View {
+    @Inject
+    ArtistDetailsActivityPresenter presenter;
 
-    @BindView(R.id.artist_details_collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.artist_details_collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
 
-    @BindView(R.id.artist_details_toolbar) Toolbar toolbar;
+    @BindView(R.id.artist_details_toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.artist_details_image) ImageView artistImage;
+    @BindView(R.id.artist_details_image)
+    ImageView artistImage;
 
-    @BindView(R.id.artist_details_tabs) TabLayout tabLayout;
+    @BindView(R.id.artist_details_tabs)
+    TabLayout tabLayout;
 
-    @BindView(R.id.artist_details_viewpager) ViewPager viewPager;
+    @BindView(R.id.artist_details_viewpager)
+    ViewPager viewPager;
 
-    @BindView(R.id.artist_details_name) TextView artistName;
+    @BindView(R.id.artist_details_name)
+    TextView artistTitle;
 
     private Artist artist;
 
@@ -59,6 +66,12 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+//        if (savedInstanceState == null)
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.artist_details_collapsing_toolbar, ArtistResultFragment.newInstance())
+//                    .commitAllowingStateLoss();
+
         Intent receiveIntent = getIntent();
         String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
         this.artist = new Gson().fromJson(artistSerialized, Artist.class);
@@ -69,6 +82,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
         initViewPager();
         initArtistImage();
+        setArtistTitle(artist.getName());
     }
 
     private void initArtistImage() {
@@ -85,32 +99,37 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         ArtistDetailsViewPagerAdapter viewPagerAdapter = new ArtistDetailsViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposes property,
+        //in the xml, and the fonts are set programatically
+        Constants.changeTabsFont(this, tabLayout);
     }
 
     private void initCollapsingToolbar() {
         Constants.setToolbarFont(collapsingToolbar, this);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.artist_details_appbar);
         appBarLayout.setExpanded(true);
-//        // hiding & showing the title when toolbar expanded & collapsed
-//        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            boolean isShow = false;
-//            int scrollRange = -1;
-//
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (scrollRange == -1) {
-//                    scrollRange = appBarLayout.getTotalScrollRange();
-//                }
-//                if (scrollRange + verticalOffset == 0) {
-//                    collapsingToolbar.setTitle(" ");
-//
-//                    isShow = true;
-//                } else if (isShow) {
-//                    collapsingToolbar.setTitle(getString(R.string.app_name));
-//                    isShow = false;
-//                }
-//            }
-//        });
+
+
+        // hiding & showing the title when toolbar expanded & collapsed
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(" ");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    isShow = false;
+                }
+            }
+        });
     }
 
     @Override
@@ -121,5 +140,9 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @Override
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public void setArtistTitle(String artistTitle) {
+        this.artistTitle.setText(artistTitle);
     }
 }

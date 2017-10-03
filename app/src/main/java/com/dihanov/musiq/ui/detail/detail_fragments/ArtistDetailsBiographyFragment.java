@@ -3,6 +3,8 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +25,10 @@ import dagger.android.support.DaggerFragment;
 
 //this needs no presenter, because it is a simple fragment that only displays text
 public class ArtistDetailsBiographyFragment extends DaggerFragment{
-    public static final String TITLE = "Biography";
+    public static final String TITLE = "biography";
 
     @BindView(R.id.artist_details_biography)
-    TextView biographyText;
+    TextView biographyTextView;
 
     private String biography;
 
@@ -53,7 +55,16 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
         View view = inflater.inflate(R.layout.artist_details_biography_fragment, container, false);
         ButterKnife.bind(this, view);
 
-        this.biographyText.setText(this.biography);
+        String modifiedBio = formatText(this.biography);
+        this.biographyTextView.setText(Html.fromHtml(modifiedBio));
+        this.biographyTextView.setMovementMethod(LinkMovementMethod.getInstance());
         return view;
+    }
+
+    private String formatText(String biography) {
+        String result = biography;
+        result = result.replaceAll("<a href=\"https://www.last.fm/music/Red\">Read more on Last.fm</a>. User-contributed text is available under the Creative Commons By-SA License; additional terms may apply.", "\n<a href=\"https://www.last.fm/music/Red\">Read more on Last.fm</a>. User-contributed text is available under the Creative Commons By-SA License; additional terms may apply.");
+        result = result.replaceAll("\\n", "<br>");
+        return result;
     }
 }

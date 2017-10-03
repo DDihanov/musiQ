@@ -27,6 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
     private static final String LOADING_ARTISTS = "loading this week's top artists...";
+    private static final long NETWORK_CHECK_THREAD_TIMEOUT = 5000;
 
     MainActivityContract.View mainActivityView;
 
@@ -46,10 +47,6 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         this.mainActivityView = view;
     }
 
-    private void initTooltips(MainActivity mainActivity) {
-
-    }
-
     @Override
     public void leaveView() {
         disposable.dispose();
@@ -59,12 +56,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void setBackdropImageChangeListener(MainActivity mainActivity) {
-        initTooltips(mainActivity);
-
         setListenerOnFoundConnection(mainActivity);
-
-//
-//        initBackdropImageChanger(mainActivity, backdrop, artists);
     }
 
     private void loadBackdrop(MainActivity mainActivity) {
@@ -77,6 +69,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
                         mainActivity.showProgressBar();
                         disposable = d;
                     }
@@ -106,7 +99,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 while (!Connectivity.isConnected(mainActivity)) {
                     try {
                         Constants.showNetworkErrorTooltip(mainActivity);
-                        Thread.sleep(1000);
+                        Thread.sleep(NETWORK_CHECK_THREAD_TIMEOUT);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -126,6 +119,8 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         }
     }
 
+
+    //unused method to cycle through images
     private void initBackdropImageChanger(MainActivity mainActivity, ImageView backdrop, List<Artist> artists) {
 //        Handler handler = new Handler();
 //        //this method checks the artist list, and if it's not empty, it loads the images onto the backdrop

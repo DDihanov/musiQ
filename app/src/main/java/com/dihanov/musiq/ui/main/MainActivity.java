@@ -93,6 +93,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposes property,
+        //in the xml, and the fonts are set programatically
         Constants.changeTabsFont(this, tabLayout);
     }
 
@@ -112,10 +115,12 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
+                    searchBar.setVisibility(View.INVISIBLE);
                     collapsingToolbar.setTitle(" ");
 
                     isShow = true;
                 } else if (isShow) {
+                    searchBar.setVisibility(View.VISIBLE);
                     collapsingToolbar.setTitle(getString(R.string.app_name));
                     isShow = false;
                 }
