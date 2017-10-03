@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -37,6 +38,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     private static final String search = "search for artists";
+    private static final int NUM_COLUMNS_HORIZONTAL_TABLET = 10;
+
     @Inject MainActivityPresenter mainActivityPresenter;
 
     @BindView(R.id.bird)
@@ -178,6 +181,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 //        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
         gridView.setAdapter(new TopArtistAdapter(this, R.layout.top_artist_viewholder, new ArrayList<Artist>()));
         gridView.setSelector(android.R.color.transparent);
+        if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
+            gridView.setNumColumns(NUM_COLUMNS_HORIZONTAL_TABLET);
+        }
 //        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
     //    public void getArtistExample() {

@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.main;
 
 
+import android.content.res.Configuration;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -28,6 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivityPresenter implements MainActivityContract.Presenter {
     private static final String LOADING_ARTISTS = "loading this week's top artists...";
     private static final long NETWORK_CHECK_THREAD_TIMEOUT = 5000;
+    private static int TOP_ARTIST_LIMIT = 6;
 
     MainActivityContract.View mainActivityView;
 
@@ -60,7 +62,11 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     private void loadBackdrop(MainActivity mainActivity) {
-        lastFmApiClient.getLastFmApiService().chartTopArtists(6)
+        if(Constants.isTablet(mainActivity) && Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE){
+            TOP_ARTIST_LIMIT = 10;
+        }
+
+        lastFmApiClient.getLastFmApiService().chartTopArtists(TOP_ARTIST_LIMIT)
 //                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .delay(3000L, TimeUnit.MILLISECONDS)

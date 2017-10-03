@@ -31,6 +31,14 @@ public class Constants {
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
 
+    public static boolean isTablet(Context context){
+        return context.getResources().getBoolean(R.bool.isTablet);
+    }
+
+    public static int getOrientation(Context context){
+        return context.getResources().getConfiguration().orientation;
+    }
+
     public static void setToolbarFont(CollapsingToolbarLayout toolbarLayout, Context context){
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/cabin_regular.ttf");
         toolbarLayout.setTitle(context.getString(R.string.app_name));

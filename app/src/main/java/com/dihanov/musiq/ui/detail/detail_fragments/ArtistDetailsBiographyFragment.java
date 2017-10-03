@@ -34,6 +34,23 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
 
     private ArtistDetailsActivityContract.View artistDetailsActivity;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        if(savedInstanceState != null){
+            this.biography = savedInstanceState.getString(TITLE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(TITLE, this.biography);
+    }
+
     public static ArtistDetailsBiographyFragment newInstance(){
         Bundle args = new Bundle();
         ArtistDetailsBiographyFragment artistDetailsBiographyFragment = new ArtistDetailsBiographyFragment();
@@ -46,7 +63,9 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
     public void onAttach(Context context) {
         super.onAttach(context);
         this.artistDetailsActivity = (ArtistDetailsActivity) context;
-        this.biography = this.artistDetailsActivity.getArtistBiography();
+        if(this.biography == null){
+            this.biography = this.artistDetailsActivity.getArtistBiography();
+        }
     }
 
     @Nullable
@@ -67,4 +86,14 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
         result = result.replaceAll("\\n", "<br>");
         return result;
     }
+
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
 }

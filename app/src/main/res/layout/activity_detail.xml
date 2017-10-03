@@ -31,10 +31,6 @@
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
-                android:id="@+id/artist_details_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/artist_details_toolbar"
@@ -47,6 +43,16 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                 app:layout_scrollFlags="enterAlwaysCollapsed">
             </android.support.v7.widget.Toolbar>
+
+
+
+                <ImageView
+                    android:id="@+id/artist_details_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop" />
+
 
 
             <android.support.constraint.ConstraintLayout
@@ -131,6 +137,7 @@
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textSize="24sp"
+                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.47"

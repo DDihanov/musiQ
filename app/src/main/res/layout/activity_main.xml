@@ -54,8 +54,7 @@
                 android:layout_alignParentTop="true"
                 android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-                app:layout_scrollFlags="enterAlwaysCollapsed"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
 
             <android.support.constraint.ConstraintLayout

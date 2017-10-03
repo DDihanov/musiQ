@@ -31,6 +31,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 
 public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View {
+    private static final String TAG_RETAINED_ARTIST = "artist";
+
+    private String serializedArtist;
+
     @Inject
     ArtistDetailsActivityPresenter presenter;
 
@@ -66,15 +70,15 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-//        if (savedInstanceState == null)
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.artist_details_collapsing_toolbar, ArtistResultFragment.newInstance())
-//                    .commitAllowingStateLoss();
-
-        Intent receiveIntent = getIntent();
-        String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
-        this.artist = new Gson().fromJson(artistSerialized, Artist.class);
+        if(savedInstanceState != null){
+            this.serializedArtist = savedInstanceState.getString(TAG_RETAINED_ARTIST);
+            this.artist = new Gson().fromJson(serializedArtist, Artist.class);
+        } else {
+            Intent receiveIntent = getIntent();
+            String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
+            this.serializedArtist = artistSerialized;
+            this.artist = new Gson().fromJson(artistSerialized, Artist.class);
+        }
 
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
@@ -87,6 +91,13 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
     private void initArtistImage() {
         Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText()).crossFade(2000).into(this.artistImage);
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(TAG_RETAINED_ARTIST, serializedArtist);
     }
 
     @Override

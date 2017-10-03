@@ -36,6 +36,7 @@ dependencies {
     compile "com.android.support:design:${support_library_version}"
     compile "com.android.support:animated-vector-drawable:${support_library_version}"
     compile "com.android.support:leanback-v17:${support_library_version}"
+    compile "com.android.support:support-core-utils:${support_library_version}"
 
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
