@@ -23,7 +23,9 @@ import com.github.florent37.viewtooltip.ViewTooltip;
 
 public class Constants {
     public static final String ARTIST = "artist";
+    public static final String ALBUM = "album";
     public static final int ARTIST_LIMIT = 6;
+    public static final int ALBUM_LIMIT = 20;
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
     public static final int BIRD_COLOR = Color.parseColor("#37B4E2");

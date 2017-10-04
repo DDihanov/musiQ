@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
+import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -23,15 +24,20 @@ import com.jakewharton.rxbinding2.view.RxView;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -39,10 +45,13 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> {
-    private LastFmApiClient lastFmApiClient;
-    private Disposable disposable;
+    private static final String LOADING_ARTIST = "hold on... i'm fetching this artist for you";
+    private static final long ARTIST_LOADED_THREAD_TIMEOUT = 2000L;
+    private static final CompositeDisposable disposable = new CompositeDisposable();
+
     private MainActivity mainActivity;
     private List<Artist> artistList;
+    private LastFmApiClient lastFmApiClient;
 
     public ArtistAdapter(MainActivity context, List<Artist> albumList, LastFmApiClient lastFmApiClient) {
         this.mainActivity = context;
@@ -120,30 +129,132 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
 
     private void showArtistDetails(String nameToFetch) {
         Intent showArtistDetailsIntent = new Intent(mainActivity, ArtistDetailsActivity.class);
+        Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
 
-        lastFmApiClient.getLastFmApiService().getSpecificArtistInfo(nameToFetch)
+        //TODO: FIX THIS, TOPALBUMS NOT WORKING, GSON PARSE ERROR
+        Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
+                .getSpecificArtistInfo(nameToFetch)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+        Observable<TopArtistAlbums> topAlbumRequest = lastFmApiClient.getLastFmApiService()
+                .searchForArtistTopAlbums(nameToFetch, Constants.ALBUM_LIMIT)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable.zip(specificArtistRequest,
+                topAlbumRequest,
+                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
+                    @Override
+                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
+                        HashMap<String, String> result = new HashMap<>();
+
+                        result.put(Constants.ARTIST, new Gson().toJson(specificArtist.getArtist()));
+                        result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums.getTopalbums().getAlbum()));
+
+                        return result;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<SpecificArtist>() {
+                .subscribe(new Observer<HashMap<String, String>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        mainActivity.showProgressBar();
-                        disposable = d;
+                        disposable.add(d);
                     }
 
                     @Override
-                    public void onSuccess(SpecificArtist specificArtist) {
-                        mainActivity.hideProgressBar();
-                        disposable.dispose();
-                        showArtistDetailsIntent.putExtra(Constants.ARTIST, new Gson().toJson(specificArtist.getArtist()));
-                        mainActivity.startActivity(showArtistDetailsIntent);
+                    public void onNext(HashMap<String, String> stringStringHashMap) {
+                        for (Map.Entry<String, String> kvp : stringStringHashMap.entrySet()) {
+                            showArtistDetailsIntent.putExtra(kvp.getKey(), kvp.getValue());
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(ArtistAdapter.class.toString(), e.getMessage());
                     }
+
+                    @Override
+                    public void onComplete() {
+                        disposable.dispose();
+                    }
                 });
+
+//        lastFmApiClient.getLastFmApiService().getSpecificArtistInfo(nameToFetch)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new SingleObserver<SpecificArtist>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                        disposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(SpecificArtist specificArtist) {
+//                        showArtistDetailsIntent.putExtra(Constants.ARTIST, new Gson().toJson(specificArtist.getArtist()));
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(ArtistAdapter.class.toString(), e.getMessage());
+//                    }
+//                });
+//
+//        lastFmApiClient.getLastFmApiService().searchForArtistTopAlbums(nameToFetch, Constants.ALBUM_LIMIT)
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(topArtistAlbums -> topArtistAlbums.getTopalbums().getAlbum())
+//                .subscribe(new Observer<List<Album>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        disposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<Album> albums) {
+//                        showArtistDetailsIntent.putExtra(Constants.ALBUM, new Gson().toJson(albums));
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(ArtistAdapter.class.toString(), e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+//
+//        listenIfArtistIsLoaded(showArtistDetailsIntent);
     }
 
+    //this method checks if the intent has been filled with all data, before starting the activity
+    private void listenIfArtistIsLoaded(Intent showArtistDetailsIntent) {
+        Thread listenerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!showArtistDetailsIntent.hasExtra(Constants.ALBUM) || !showArtistDetailsIntent.hasExtra(Constants.ARTIST)) {
+                    try {
+                        Thread.sleep(ARTIST_LOADED_THREAD_TIMEOUT);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                disposable.dispose();
+                mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.hideProgressBar();
+                        mainActivity.startActivity(showArtistDetailsIntent);
+                    }
+                });
+            }
+        });
+
+        if (!listenerThread.isAlive()) {
+            listenerThread.start();
+        }
+    }
 }

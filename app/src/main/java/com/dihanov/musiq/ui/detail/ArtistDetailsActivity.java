@@ -14,9 +14,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,8 +38,15 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View {
     private static final String TAG_RETAINED_ARTIST = "artist";
+    private static final String TAG_RETAINED_ALBUMS = "albums";
+    private static final Type LIST_TYPE_ALBUM = new TypeToken<ArrayList<Album>>(){}.getType();
 
     private String serializedArtist;
+    private String serializedAlbumList;
+
+    private Artist artist;
+
+    private List<Album> albums;
 
     @Inject
     ArtistDetailsActivityPresenter presenter;
@@ -56,8 +69,6 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @BindView(R.id.artist_details_name)
     TextView artistTitle;
 
-    private Artist artist;
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -70,15 +81,19 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             this.serializedArtist = savedInstanceState.getString(TAG_RETAINED_ARTIST);
-            this.artist = new Gson().fromJson(serializedArtist, Artist.class);
+            this.serializedAlbumList = savedInstanceState.getString(TAG_RETAINED_ALBUMS);
+
         } else {
             Intent receiveIntent = getIntent();
             String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
+            String albumSerialized = receiveIntent.getStringExtra(Constants.ALBUM);
             this.serializedArtist = artistSerialized;
-            this.artist = new Gson().fromJson(artistSerialized, Artist.class);
+            this.serializedAlbumList = albumSerialized;
         }
+
+        deserializeArtistInfo();
 
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
@@ -87,6 +102,11 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         initViewPager();
         initArtistImage();
         setArtistTitle(artist.getName());
+    }
+
+    private void deserializeArtistInfo() {
+        this.albums = new Gson().fromJson(serializedAlbumList, LIST_TYPE_ALBUM);
+        this.artist = new Gson().fromJson(serializedArtist, Artist.class);
     }
 
     private void initArtistImage() {
@@ -151,6 +171,16 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @Override
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    @Override
+    public Artist getArtist() {
+        return this.artist;
+    }
+
+    @Override
+    public List<Album> getAlbums(){
+        return this.albums;
     }
 
     public void setArtistTitle(String artistTitle) {

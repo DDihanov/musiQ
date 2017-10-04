@@ -182,7 +182,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         gridView.setAdapter(new TopArtistAdapter(this, R.layout.top_artist_viewholder, new ArrayList<Artist>()));
         gridView.setSelector(android.R.color.transparent);
         if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
-            gridView.setNumColumns(NUM_COLUMNS_HORIZONTAL_TABLET);
+            gridView.setNumColumns(GridView.AUTO_FIT);
         }
 //        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }

@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Attr {
 
+    @SerializedName("artist")
+    @Expose
+    private String artist;
     @SerializedName("for")
     @Expose
     private String _for;
@@ -21,6 +24,25 @@ public class Attr {
     @SerializedName("total")
     @Expose
     private String total;
+    @SerializedName("rank")
+    @Expose
+    private String rank;
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
 
     public String getFor() {
         return _for;

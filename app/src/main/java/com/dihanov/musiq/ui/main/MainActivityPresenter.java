@@ -31,13 +31,11 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     private static final long NETWORK_CHECK_THREAD_TIMEOUT = 5000;
     private static int TOP_ARTIST_LIMIT = 6;
 
-    MainActivityContract.View mainActivityView;
-
+    private MainActivityContract.View mainActivityView;
     private Disposable disposable;
-
     private GridView gridView;
-    @Inject
-    LastFmApiClient lastFmApiClient;
+
+    @Inject LastFmApiClient lastFmApiClient;
 
     @Inject
     public MainActivityPresenter() {

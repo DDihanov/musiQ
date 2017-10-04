@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -13,9 +14,11 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="15dp"
-            android:textAlignment="center"
             android:autoLink="web"
             android:linksClickable="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+            android:textAlignment="center"
+            tools:ignore="MissingPrefix"
+            fontPath="fonts/cabin_regular.ttf"
+            android:textColor="@android:color/black" />
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

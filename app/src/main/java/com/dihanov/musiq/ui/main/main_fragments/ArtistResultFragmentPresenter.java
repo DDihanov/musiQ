@@ -35,10 +35,8 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
 
     @Inject LastFmApiClient lastFmApiClient;
 
-    ArtistResultFragmentContract.View artistResultFragment;
-
+    private ArtistResultFragmentContract.View artistResultFragment;
     private Disposable disposable;
-
     private RecyclerView recyclerView;
 
     @Inject
