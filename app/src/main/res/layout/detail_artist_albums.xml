@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
         android:id="@+id/album_card_view"
@@ -28,7 +29,7 @@
                 android:id="@+id/album_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/thumbnail"
+                android:layout_below="@id/album_thumbnail"
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
@@ -39,7 +40,9 @@
                 android:id="@+id/album_song_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title"
+                android:layout_below="@id/album_title"
+                tools:ignore="MissingPrefix"
+                fontPath="fonts/cabin_regular.tff"
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding" />
                 <!--android:textSize="@dimen/songs_count" />-->

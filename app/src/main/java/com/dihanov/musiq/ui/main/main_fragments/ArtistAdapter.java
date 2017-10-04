@@ -130,8 +130,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
     private void showArtistDetails(String nameToFetch) {
         Intent showArtistDetailsIntent = new Intent(mainActivity, ArtistDetailsActivity.class);
         Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
+        mainActivity.showProgressBar();
 
-        //TODO: FIX THIS, TOPALBUMS NOT WORKING, GSON PARSE ERROR
         Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
                 .getSpecificArtistInfo(nameToFetch)
                 .subscribeOn(Schedulers.newThread())
@@ -177,6 +177,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHold
                     @Override
                     public void onComplete() {
                         disposable.dispose();
+                        mainActivity.hideProgressBar();
+                        mainActivity.startActivity(showArtistDetailsIntent);
                     }
                 });
 

@@ -1,18 +1,27 @@
 
 package com.dihanov.musiq.models;
 
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class Album {
 
     @SerializedName("name")
     @Expose
     private String name;
+    //this is neccecary as artist returns both string and artist object
     @SerializedName("artist")
     @Expose
-    private String artist;
+    private Object artist;
     @SerializedName("mbid")
     @Expose
     private String mbid;
@@ -25,9 +34,10 @@ public class Album {
     @SerializedName("listeners")
     @Expose
     private String listeners;
+    //TODO: possible problem, as one API call for specific album returns a String playcount, the artists top album call returns a String
     @SerializedName("playcount")
     @Expose
-    private String playcount;
+    private Object playcount;
     @SerializedName("tracks")
     @Expose
     private Tracks tracks;
@@ -38,20 +48,20 @@ public class Album {
     @Expose
     private Wiki wiki;
 
+    public void setArtist(Object artist) {
+        this.artist = artist;
+    }
+
+    public Object getArtist() {
+        return artist;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
     }
 
     public String getMbid() {
@@ -86,11 +96,11 @@ public class Album {
         this.listeners = listeners;
     }
 
-    public String getPlaycount() {
+    public Object getPlaycount() {
         return playcount;
     }
 
-    public void setPlaycount(String playcount) {
+    public void setPlaycount(Object playcount) {
         this.playcount = playcount;
     }
 
@@ -118,4 +128,36 @@ public class Album {
         this.wiki = wiki;
     }
 
+    //this is necessary as API returns different types
+    public static class DataStateDeserializer implements JsonDeserializer<Album> {
+        @Override
+        public Album deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Album album = new Gson().fromJson(json, Album.class);
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            if (jsonObject.has("artist")) {
+                JsonElement elem = jsonObject.get("artist");
+                if (elem != null && !elem.isJsonNull()) {
+                    if(elem.isJsonPrimitive()){
+                        album.setArtist(elem.getAsString());
+                    }else{
+                        album.setArtist(new Gson().fromJson(elem, Artist.class));
+                    }
+                }
+            }
+
+            if(jsonObject.has("playcount")){
+                JsonElement elem = jsonObject.get("playcount");
+                if (elem != null && !elem.isJsonNull()){
+                    if(elem.isJsonPrimitive()){
+                        album.setPlaycount(elem.getAsInt());
+                    } else {
+                        album.setPlaycount(elem.getAsString());
+                    }
+                }
+            }
+
+            return album;
+        }
+    }
 }

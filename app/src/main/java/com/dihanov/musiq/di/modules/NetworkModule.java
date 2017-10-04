@@ -1,15 +1,16 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.config.Config;
+import com.dihanov.musiq.models.Album;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -40,7 +41,9 @@ public class NetworkModule {
     @Provides
     @Singleton
     GsonConverterFactory provideGsonConverterFactory() {
-        return GsonConverterFactory.create();
+        //need to pass the custom deserializer here
+        Gson gson = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer()).create();
+        return GsonConverterFactory.create(gson);
     }
 
     @Provides
