@@ -2,10 +2,9 @@ package com.dihanov.musiq.ui.main;
 
 
 import android.content.res.Configuration;
-import android.widget.GridView;
+import android.support.v17.leanback.widget.HorizontalGridView;
 import android.widget.ImageView;
 
-import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.Connectivity;
@@ -33,7 +32,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private MainActivityContract.View mainActivityView;
     private Disposable disposable;
-    private GridView gridView;
+    private HorizontalGridView gridView;
 
     @Inject LastFmApiClient lastFmApiClient;
 
@@ -80,7 +79,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
                     @Override
                     public void onNext(List<Artist> artists) {
-                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, R.layout.top_artist_viewholder, (ArrayList<Artist>) artists);
+                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists);
                         gridView.setAdapter(topArtistAdapter);
                     }
 

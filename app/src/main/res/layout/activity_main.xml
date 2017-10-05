@@ -33,18 +33,10 @@
 
 
             <!--a lot of small tweaks to get this perfect, and a normal solution wouldn't do-->
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            <android.support.v17.leanback.widget.HorizontalGridView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/main_gridview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipChildren="false"
-                android:layout_marginTop="75dp"
-                android:columnWidth="204dp"
-                android:listSelector="@null"
-                android:numColumns="3"
-                android:scrollbars="horizontal"
-                android:scaleType="center"
-                android:stretchMode="none"/>
+                android:layout_height="match_parent"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

@@ -1,19 +1,18 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -47,7 +46,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     TextView bird;
 
     @BindView(R.id.main_gridview)
-    GridView gridView;
+    HorizontalGridView gridView;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -170,7 +169,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
 
     @Override
-    public GridView getGridView() {
+    public HorizontalGridView getGridView() {
         return this.gridView;
     }
 
@@ -196,11 +195,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     private void initGridView() {
 //        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
-        gridView.setAdapter(new TopArtistAdapter(this, R.layout.top_artist_viewholder, new ArrayList<Artist>()));
-        gridView.setSelector(android.R.color.transparent);
-        if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
-            gridView.setNumColumns(GridView.AUTO_FIT);
-        }
+        gridView.setAdapter(new TopArtistAdapter(this, new ArrayList<Artist>()));
+        gridView.setNumRows(2);
+        gridView.setVerticalSpacing(0);
+        gridView.setHorizontalSpacing(0);
+        gridView.setNestedScrollingEnabled(false);
+//        if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
+//            gridView.setNumColumns(GridView.AUTO_FIT);
+//        }
 //        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
     //    public void getArtistExample() {
