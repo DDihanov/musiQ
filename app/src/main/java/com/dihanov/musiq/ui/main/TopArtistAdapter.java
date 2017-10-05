@@ -1,6 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.util.Constants;
+import com.veinhorn.tagview.TagView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +38,11 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
 
 
     private class MyViewHolder{
-        TextView name;
+        TagView name;
         ImageView artist;
     }
 
+    @SuppressLint("ResourceType")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -51,7 +54,7 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
                     .inflate(resourceId, parent, false);
             holder = new MyViewHolder();
             holder.artist = (ImageView) row.findViewById(R.id.top_artist_image);
-            holder.name = (TextView) row.findViewById(R.id.top_artist_name);
+            holder.name = (TagView) row.findViewById(R.id.top_artist_name);
             row.setTag(holder);
         } else {
             holder = (MyViewHolder) row.getTag();
@@ -64,6 +67,8 @@ public class TopArtistAdapter extends ArrayAdapter<Artist> {
                 .crossFade(2000)
                 .into(holder.artist);
         holder.name.setText(artist.getName().toLowerCase());
+        holder.name.setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));
+        holder.name.setTagCircleRadius(10f);
         return row;
     }
 }

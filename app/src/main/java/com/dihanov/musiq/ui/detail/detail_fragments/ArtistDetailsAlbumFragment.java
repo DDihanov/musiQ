@@ -19,7 +19,10 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentContract;
 import com.dihanov.musiq.util.Constants;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +38,10 @@ import dagger.android.support.DaggerFragment;
 
 public class ArtistDetailsAlbumFragment extends DaggerFragment implements ArtistResultFragmentContract.View {
     public static final String TITLE = "albums";
+    private static final Type LIST_TYPE_ALBUM = new TypeToken<ArrayList<Album>>(){}.getType();
 
     private List<Album> artistAlbums;
+    private String serializedAlbums;
     private ArtistDetailsActivity artistDetailsActivity;
 
     @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
@@ -57,7 +62,23 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
     public void onAttach(Context context) {
         super.onAttach(context);
         this.artistDetailsActivity = (ArtistDetailsActivity)getActivity();
-        this.artistAlbums = artistDetailsActivity.getAlbums();
+        if(this.artistAlbums.size() == 0){
+            this.serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
+            this.artistAlbums = new Gson().fromJson(serializedAlbums, LIST_TYPE_ALBUM);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(TITLE, this.serializedAlbums);
     }
 
     @Nullable

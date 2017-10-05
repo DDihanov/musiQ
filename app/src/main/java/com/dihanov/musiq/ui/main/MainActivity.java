@@ -38,6 +38,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     private static final String search = "search for artists";
+    private static final String TAG_LAST_SEARCH = "lastSearch";
     private static final int NUM_COLUMNS_HORIZONTAL_TABLET = 10;
 
     @Inject MainActivityPresenter mainActivityPresenter;
@@ -62,6 +63,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.viewpager) ViewPager viewPager;
 
     private SearchView searchBar;
+    private String lastSearch;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -75,11 +77,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-//        if (savedInstanceState == null)
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.viewpager, ArtistResultFragment.newInstance())
-//                    .commitAllowingStateLoss();
+        if(savedInstanceState != null){
+            this.lastSearch = savedInstanceState.getString(TAG_LAST_SEARCH);
+        }
+
         initGridView();
         initViewPager();
         initCollapsingToolbar();
@@ -90,7 +91,12 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         mainActivityPresenter.setBackdropImageChangeListener(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        outState.putString(Constants.LAST_SEARCH, searchBar.getQuery().toString());
+    }
 
     private void initViewPager() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -138,11 +144,22 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        this.invalidateOptionsMenu();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
         this.searchBar = (SearchView) myActionMenuItem.getActionView();
+
+        if(this.lastSearch != null){
+            this.searchBar.setQuery(lastSearch, true);
+        }
+
         return true;
     }
 

@@ -17,6 +17,11 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by dimitar.dihanov on 9/29/2017.
  */
@@ -24,6 +29,8 @@ import com.github.florent37.viewtooltip.ViewTooltip;
 public class Constants {
     public static final String ARTIST = "artist";
     public static final String ALBUM = "album";
+    public static final String TAGS = "tags";
+    public static final String LAST_SEARCH = "lastSearch";
     public static final int ARTIST_LIMIT = 6;
     public static final int ALBUM_LIMIT = 20;
     public static final int IMAGE_XLARGE = 4;
@@ -32,6 +39,37 @@ public class Constants {
 
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
+
+    public static final String formatNumberWithSeperator(int number){
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+
+        symbols.setGroupingSeparator(' ');
+        formatter.setDecimalFormatSymbols(symbols);
+
+        return formatter.format(number);
+    }
+    public static final String formatNumberWithSeperator(double number){
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+
+        symbols.setGroupingSeparator(' ');
+        formatter.setDecimalFormatSymbols(symbols);
+
+        return formatter.format(number);
+    }
+    public static final String formatNumberWithSeperator(long number){
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+
+        symbols.setGroupingSeparator(' ');
+        formatter.setDecimalFormatSymbols(symbols);
+
+        return formatter.format(number);
+    }
+    public static final String formatNumberWithSeperator(String number){
+        return formatNumberWithSeperator(Long.parseLong(number));
+    }
 
     public static boolean isTablet(Context context){
         return context.getResources().getBoolean(R.bool.isTablet);

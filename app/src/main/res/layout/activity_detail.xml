@@ -40,9 +40,8 @@
                 android:layout_alignParentTop="true"
                 android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-                app:layout_scrollFlags="enterAlwaysCollapsed">
-            </android.support.v7.widget.Toolbar>
+                app:layout_scrollFlags="enterAlwaysCollapsed"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"></android.support.v7.widget.Toolbar>
 
 
             <android.support.constraint.ConstraintLayout
@@ -66,8 +65,101 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.35" />
-            </android.support.constraint.ConstraintLayout>
 
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/first_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/bird"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.006"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.016"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/second_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5px"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/first_tag"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/third_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5px"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/second_tag"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/fourth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5px"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/third_tag"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/fifth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5px"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fourth_tag"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+            </android.support.constraint.ConstraintLayout>
 
 
             <android.support.constraint.ConstraintLayout
@@ -112,6 +204,33 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
+    <!--seperator line-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:id="@+id/artist_details_name"
+            fontPath="fonts/cabin_bold.ttf"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:background="@color/transparent"
+            android:elegantTextHeight="false"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            tools:ignore="MissingPrefix" />
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -122,45 +241,16 @@
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="45dp"
-            android:layout_marginTop="9dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginTop="16dp"
             android:text="@string/app_bird"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="24sp"
+            tools:layout_editor_absoluteX="298dp"
+            tools:layout_editor_absoluteY="7dp"
             tools:text="@string/app_bird" />
     </RelativeLayout>
-
-    <!--seperator line-->
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
-
-            <TextView
-                android:id="@+id/artist_details_name"
-                fontPath="fonts/cabin_bold.ttf"
-                android:layout_width="187dp"
-                android:layout_height="54dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/transparent"
-                android:elegantTextHeight="false"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.47"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="MissingPrefix" />
-        </android.support.constraint.ConstraintLayout>
 
     <include
         android:id="@+id/artist_details_include"

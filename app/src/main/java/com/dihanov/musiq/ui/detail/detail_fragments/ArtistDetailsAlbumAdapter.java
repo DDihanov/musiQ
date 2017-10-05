@@ -69,7 +69,7 @@ public class ArtistDetailsAlbumAdapter extends RecyclerView.Adapter<ArtistDetail
         double playcount = (double)album.getPlaycount();
 
         holder.title.setText(album.getName().toLowerCase());
-        holder.count.setText(String.valueOf((int)playcount) + "plays");
+        holder.count.setText(Constants.formatNumberWithSeperator((int)playcount) + " plays");
 
         // loading album cover using Glide library
         Glide.with(mainActivity)

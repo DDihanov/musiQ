@@ -2,6 +2,7 @@ package com.dihanov.musiq.service;
 
 
 import com.dihanov.musiq.models.ArtistSearchResults;
+import com.dihanov.musiq.models.ArtistTopTags;
 import com.dihanov.musiq.models.SpecificAlbum;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.TopArtistAlbums;
@@ -29,6 +30,9 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"album.getinfo")
     Observable<SpecificAlbum> searchForSpecificAlbum(@Query("artist") String artistName, @Query("album") String albumName);
+
+    @GET(METHOD_CALL+"artist.gettoptags")
+    Observable<ArtistTopTags> getArtistTopTags(@Query("artist") String artistName);
 
     @GET(METHOD_CALL+"chart.gettopartists")
     Observable<TopArtistsResult> chartTopArtists(@Query("limit") Integer limit);

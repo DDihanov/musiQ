@@ -38,10 +38,6 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-        if(savedInstanceState != null){
-            this.biography = savedInstanceState.getString(TITLE);
-        }
     }
 
     @Override

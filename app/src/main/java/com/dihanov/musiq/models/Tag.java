@@ -6,12 +6,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class Tag {
 
+    @SerializedName("count")
+    @Expose
+    private Integer count;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("url")
     @Expose
     private String url;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public String getName() {
         return name;

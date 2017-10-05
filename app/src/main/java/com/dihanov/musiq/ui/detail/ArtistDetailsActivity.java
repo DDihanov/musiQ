@@ -1,7 +1,9 @@
 package com.dihanov.musiq.ui.detail;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -14,14 +16,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.veinhorn.tagview.TagView;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,14 +44,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View {
     private static final String TAG_RETAINED_ARTIST = "artist";
     private static final String TAG_RETAINED_ALBUMS = "albums";
-    private static final Type LIST_TYPE_ALBUM = new TypeToken<ArrayList<Album>>(){}.getType();
+    private static final String TAG_RETAINED_TAGS = "tags";
+    private static final Type LIST_TYPE_TAGS = new TypeToken<List<Tag>>(){}.getType();
 
     private String serializedArtist;
     private String serializedAlbumList;
-
+    private String serializedTags;
     private Artist artist;
-
-    private List<Album> albums;
 
     @Inject
     ArtistDetailsActivityPresenter presenter;
@@ -69,6 +73,8 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @BindView(R.id.artist_details_name)
     TextView artistTitle;
 
+    TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -84,17 +90,19 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         if (savedInstanceState != null) {
             this.serializedArtist = savedInstanceState.getString(TAG_RETAINED_ARTIST);
             this.serializedAlbumList = savedInstanceState.getString(TAG_RETAINED_ALBUMS);
-
+            this.serializedTags = savedInstanceState.getString(TAG_RETAINED_TAGS);
         } else {
             Intent receiveIntent = getIntent();
             String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
             String albumSerialized = receiveIntent.getStringExtra(Constants.ALBUM);
+            String tagsSerialized = receiveIntent.getStringExtra(Constants.TAGS);
             this.serializedArtist = artistSerialized;
             this.serializedAlbumList = albumSerialized;
+            this.serializedTags = tagsSerialized;
         }
 
+        initTags();
         deserializeArtistInfo();
-
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
         this.presenter.takeView(this);
@@ -104,8 +112,46 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         setArtistTitle(artist.getName());
     }
 
+    @SuppressLint("ResourceType")
+    private void initTags() {
+        firstTag = (TagView) findViewById(R.id.first_tag);
+        secondTag = (TagView) findViewById(R.id.second_tag);
+        thirdTag = (TagView) findViewById(R.id.third_tag);
+        fourthTag = (TagView) findViewById(R.id.fourth_tag);
+        fifthTag = (TagView) findViewById(R.id.fifth_tag);
+
+        TagView[] tags = new TagView[]{
+                firstTag, secondTag, thirdTag, fourthTag, fifthTag
+        };
+
+        List<Tag> tagText = new Gson().fromJson(this.serializedTags, LIST_TYPE_TAGS);
+
+        //this is very ugly, however since there is no lambda what can you do
+        List<String> firstFive = new ArrayList<String>(){
+            {
+                for (int i = 0; i < 5; i++) {
+                    this.add(tagText.get(i).getName());
+                }
+            }
+        };
+
+        //sorted by tag name length
+        Collections.sort(firstFive, new Comparator<String>() {
+
+            @Override
+            public int compare(String s, String t1) {
+                return Integer.compare(t1.length(), s.length());
+            }
+        });
+
+        for (int i = 0; i < tags.length; i++) {
+            TagView currTag = tags[i];
+            currTag.setText(firstFive.get(i));
+            currTag.setTagColor(Color.parseColor(getString(R.color.colorAccent)));
+        }
+    }
+
     private void deserializeArtistInfo() {
-        this.albums = new Gson().fromJson(serializedAlbumList, LIST_TYPE_ALBUM);
         this.artist = new Gson().fromJson(serializedArtist, Artist.class);
     }
 
@@ -118,6 +164,8 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         super.onSaveInstanceState(outState);
 
         outState.putString(TAG_RETAINED_ARTIST, serializedArtist);
+        outState.putString(TAG_RETAINED_ALBUMS, serializedAlbumList);
+        outState.putString(TAG_RETAINED_TAGS, serializedTags);
     }
 
     @Override
@@ -169,6 +217,11 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     }
 
     @Override
+    public String getSerialiedAlbums() {
+        return this.serializedAlbumList;
+    }
+
+    @Override
     public void setArtist(Artist artist) {
         this.artist = artist;
     }
@@ -176,11 +229,6 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @Override
     public Artist getArtist() {
         return this.artist;
-    }
-
-    @Override
-    public List<Album> getAlbums(){
-        return this.albums;
     }
 
     public void setArtistTitle(String artistTitle) {

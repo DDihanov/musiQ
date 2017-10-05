@@ -33,6 +33,8 @@
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
+                tools:ignore="MissingPrefix"
+                fontPath="fonts/cabin_regular.tff"
                 android:textColor="@color/artist_title"
                 android:textSize="@dimen/artist_title" />
 
