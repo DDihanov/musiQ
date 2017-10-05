@@ -66,98 +66,61 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.35" />
 
-                <com.veinhorn.tagview.TagView
-                    android:id="@+id/first_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/bird"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.006"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.016"
-                    app:tagType="trapezium"
-                    app:tagUpperCase="true" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <com.veinhorn.tagview.TagView
-                    android:id="@+id/second_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/first_tag"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:tagType="trapezium"
-                    app:tagUpperCase="true" />
+                    <com.veinhorn.tagview.TagView
+                        android:id="@+id/first_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="9dp"
+                        android:textSize="10sp"
+                        app:tagType="trapezium"
+                        app:tagUpperCase="true" />
 
-                <com.veinhorn.tagview.TagView
-                    android:id="@+id/third_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/second_tag"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:tagType="trapezium"
-                    app:tagUpperCase="true" />
+                    <com.veinhorn.tagview.TagView
+                        android:id="@+id/second_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/first_tag"
+                        android:layout_below="@+id/first_tag"
+                        android:textSize="10sp"
+                        app:tagType="trapezium"
+                        app:tagUpperCase="true" />
 
-                <com.veinhorn.tagview.TagView
-                    android:id="@+id/fourth_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/third_tag"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:tagType="trapezium"
-                    app:tagUpperCase="true" />
+                    <com.veinhorn.tagview.TagView
+                        android:id="@+id/third_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/second_tag"
+                        android:layout_below="@+id/second_tag"
+                        android:textSize="10sp"
+                        app:tagType="trapezium"
+                        app:tagUpperCase="true" />
 
+                    <com.veinhorn.tagview.TagView
+                        android:id="@+id/fourth_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/third_tag"
+                        android:layout_below="@+id/third_tag"
+                        android:textSize="10sp"
+                        app:tagType="trapezium"
+                        app:tagUpperCase="true" />
 
-                <com.veinhorn.tagview.TagView
-                    android:id="@+id/fifth_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fourth_tag"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:tagType="trapezium"
-                    app:tagUpperCase="true" />
+                    <com.veinhorn.tagview.TagView
+                        android:id="@+id/fifth_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/fourth_tag"
+                        android:layout_below="@+id/fourth_tag"
+                        android:textSize="10sp"
+                        app:tagType="trapezium"
+                        app:tagUpperCase="true" />
+                </RelativeLayout>
 
             </android.support.constraint.ConstraintLayout>
 
