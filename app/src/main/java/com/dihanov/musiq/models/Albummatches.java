@@ -6,14 +6,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Topalbums {
+public class Albummatches {
 
     @SerializedName("album")
     @Expose
     private List<Album> album = null;
-    @SerializedName("@attr")
-    @Expose
-    private Attr attr;
 
     public List<Album> getAlbum() {
         return album;
@@ -22,13 +19,4 @@ public class Topalbums {
     public void setAlbum(List<Album> album) {
         this.album = album;
     }
-
-    public Attr getAttr() {
-        return attr;
-    }
-
-    public void setAttr(Attr attr) {
-        this.attr = attr;
-    }
-
 }

@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class SpecificAlbum {
-
     @SerializedName("album")
     @Expose
     private Album album;

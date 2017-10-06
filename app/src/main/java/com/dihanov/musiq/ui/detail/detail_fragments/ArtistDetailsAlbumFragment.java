@@ -1,28 +1,22 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
-import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragmentContract;
+import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.util.Constants;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,22 +24,20 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerFragment;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistDetailsAlbumFragment extends DaggerFragment implements ArtistResultFragmentContract.View {
+public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     public static final String TITLE = "albums";
-    private static final Type LIST_TYPE_ALBUM = new TypeToken<ArrayList<Album>>(){}.getType();
 
     private List<Album> artistAlbums;
     private String serializedAlbums;
-    private ArtistDetailsActivity artistDetailsActivity;
 
+
+    @Inject ArtistDetailsFragmentPresenter artistDetailsFragmentPresenter;
     @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
-    @Inject LastFmApiClient lastFmApiClient;
 
     public ArtistDetailsAlbumFragment() {
         this.artistAlbums = new ArrayList<>();
@@ -61,10 +53,12 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.artistDetailsActivity = (ArtistDetailsActivity)getActivity();
         if(this.artistAlbums.size() == 0){
             this.serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
-            this.artistAlbums = new Gson().fromJson(serializedAlbums, LIST_TYPE_ALBUM);
+            //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
+            //because this wont deserialize correctly, we need to use the model we created for this cause
+            GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
+            this.artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
         }
     }
 
@@ -88,6 +82,7 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
         ButterKnife.bind(this, view);
 
         initRecyclerView();
+        this.artistDetailsFragmentPresenter.takeView(this);
         return view;
     }
 
@@ -101,10 +96,10 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
         //check if tablet --> 3 columns instead of 2;
         if (Constants.isTablet(artistDetailsActivity)){
             layoutManager = new GridLayoutManager(artistDetailsActivity, 3);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, dpToPx(10), true));
+            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, artistDetailsActivity), true));
         } else {
             layoutManager = new GridLayoutManager(artistDetailsActivity, 2);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
+            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, artistDetailsActivity), true));
         }
 
         if(layoutManager == null){
@@ -113,23 +108,12 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new ArtistDetailsAlbumAdapter(this.artistDetailsActivity, this.artistAlbums, lastFmApiClient));
+        recyclerView.setAdapter(new ArtistDetailsAlbumAdapter(this.artistDetailsActivity, this.artistAlbums, artistDetailsFragmentPresenter));
     }
 
     @Override
     public Context getContext() {
         return this.artistDetailsActivity;
-    }
-
-    //dp to pixel
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    @Override
-    public RecyclerView getRecyclerView() {
-        return this.recyclerView;
     }
 
 
@@ -167,4 +151,5 @@ public class ArtistDetailsAlbumFragment extends DaggerFragment implements Artist
             }
         }
     }
+
 }

@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
-import android.support.v17.leanback.widget.HorizontalGridView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 
 import com.dihanov.musiq.ui.BasePresenter;
@@ -15,13 +15,13 @@ public interface MainActivityContract {
     interface View extends BaseView<Presenter>{
         SearchView getSearchBar();
 
-        HorizontalGridView getGridView();
-
-        void showProgressBar();
+        RecyclerView getRecyclerView();
 
         void hideProgressBar();
 
         void hideKeyboard();
+
+        void showProgressBar();
 
         android.view.View getBirdIcon();
     }

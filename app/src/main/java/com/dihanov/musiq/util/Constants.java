@@ -2,6 +2,7 @@ package com.dihanov.musiq.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -69,6 +70,12 @@ public class Constants {
     }
     public static final String formatNumberWithSeperator(String number){
         return formatNumberWithSeperator(Long.parseLong(number));
+    }
+
+    //dp to pixel
+    public static int dpToPx(int dp, Context context) {
+        Resources r = context.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
     public static boolean isTablet(Context context){

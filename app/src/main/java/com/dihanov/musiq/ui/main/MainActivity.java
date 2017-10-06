@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -46,7 +48,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     TextView bird;
 
     @BindView(R.id.main_gridview)
-    HorizontalGridView gridView;
+    RecyclerView recyclerView;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -169,8 +171,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
 
     @Override
-    public HorizontalGridView getGridView() {
-        return this.gridView;
+    public RecyclerView getRecyclerView() {
+        return this.recyclerView;
     }
 
     @Override
@@ -184,22 +186,23 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     @Override
-    public void hideKeyboard() {
-        KeyboardHelper.hideKeyboard(this);
-    }
-
-    @Override
     public View getBirdIcon() {
         return this.bird;
     }
 
+    @Override
+    public void hideKeyboard() {
+        KeyboardHelper.hideKeyboard(this);
+    }
+
     private void initGridView() {
+        RecyclerView.LayoutManager layoutManager = new CustomGridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
 //        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
-        gridView.setAdapter(new TopArtistAdapter(this, new ArrayList<Artist>()));
-        gridView.setNumRows(2);
-        gridView.setVerticalSpacing(0);
-        gridView.setHorizontalSpacing(0);
-        gridView.setNestedScrollingEnabled(false);
+        recyclerView.setAdapter(new TopArtistAdapter(this, new ArrayList<Artist>()));
+
 //        if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
 //            gridView.setNumColumns(GridView.AUTO_FIT);
 //        }

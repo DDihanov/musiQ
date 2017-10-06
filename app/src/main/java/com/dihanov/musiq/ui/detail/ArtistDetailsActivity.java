@@ -11,19 +11,21 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.models.ArtistTopTags;
+import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.veinhorn.tagview.TagView;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,7 +47,6 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     private static final String TAG_RETAINED_ARTIST = "artist";
     private static final String TAG_RETAINED_ALBUMS = "albums";
     private static final String TAG_RETAINED_TAGS = "tags";
-    private static final Type LIST_TYPE_TAGS = new TypeToken<List<Tag>>(){}.getType();
 
     private String serializedArtist;
     private String serializedAlbumList;
@@ -72,6 +73,12 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
     @BindView(R.id.artist_details_name)
     TextView artistTitle;
+
+    @BindView(R.id.artist_details_progress_bar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.artist_details_bird)
+    TextView bird;
 
     TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 
@@ -124,7 +131,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
                 firstTag, secondTag, thirdTag, fourthTag, fifthTag
         };
 
-        List<Tag> tagText = new Gson().fromJson(this.serializedTags, LIST_TYPE_TAGS);
+        List<Tag> tagText = new Gson().fromJson(this.serializedTags, ArtistTopTags.class).getToptags().getTag();
 
         //this is very ugly, however since there is no lambda what can you do
         List<String> firstFive = new ArrayList<String>(){
@@ -152,7 +159,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     }
 
     private void deserializeArtistInfo() {
-        this.artist = new Gson().fromJson(serializedArtist, Artist.class);
+        this.artist = new Gson().fromJson(serializedArtist, SpecificArtist.class).getArtist();
     }
 
     private void initArtistImage() {
@@ -230,6 +237,22 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     public Artist getArtist() {
         return this.artist;
     }
+
+    @Override
+    public void showProgressBar() {
+        this.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressbar() {
+        this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public View getBirdIcon() {
+        return this.bird;
+    }
+
 
     public void setArtistTitle(String artistTitle) {
         this.artistTitle.setText(artistTitle);

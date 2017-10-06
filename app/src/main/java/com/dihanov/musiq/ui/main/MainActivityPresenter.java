@@ -2,7 +2,7 @@ package com.dihanov.musiq.ui.main;
 
 
 import android.content.res.Configuration;
-import android.support.v17.leanback.widget.HorizontalGridView;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
 import com.dihanov.musiq.models.Artist;
@@ -12,7 +12,6 @@ import com.dihanov.musiq.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -32,9 +31,10 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private MainActivityContract.View mainActivityView;
     private Disposable disposable;
-    private HorizontalGridView gridView;
+    private RecyclerView recyclerView;
 
-    @Inject LastFmApiClient lastFmApiClient;
+    @Inject
+    LastFmApiClient lastFmApiClient;
 
     @Inject
     public MainActivityPresenter() {
@@ -42,7 +42,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void takeView(MainActivityContract.View view) {
-        this.gridView = view.getGridView();
+        this.recyclerView = view.getRecyclerView();
         this.mainActivityView = view;
     }
 
@@ -59,14 +59,14 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     private void loadBackdrop(MainActivity mainActivity) {
-        if(Constants.isTablet(mainActivity) && Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE){
+        if (Constants.isTablet(mainActivity) && Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
             TOP_ARTIST_LIMIT = 10;
         }
 
         lastFmApiClient.getLastFmApiService().chartTopArtists(TOP_ARTIST_LIMIT)
 //                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
-                .delay(3000L, TimeUnit.MILLISECONDS)
+//                .delay(3000L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Artist>>() {
@@ -80,7 +80,13 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     @Override
                     public void onNext(List<Artist> artists) {
                         TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists);
-                        gridView.setAdapter(topArtistAdapter);
+                        recyclerView.setAdapter(topArtistAdapter);
+                        recyclerView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.smoothScrollToPosition(artists.size() - 1);
+                            }
+                        }, 1000);
                     }
 
                     @Override

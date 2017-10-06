@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivityContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerFragment;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
@@ -24,15 +21,13 @@ import dagger.android.support.DaggerFragment;
 
 
 //this needs no presenter, because it is a simple fragment that only displays text
-public class ArtistDetailsBiographyFragment extends DaggerFragment{
+public class ArtistDetailsBiographyFragment extends ArtistDetailsFragment{
     public static final String TITLE = "biography";
 
     @BindView(R.id.artist_details_biography)
     TextView biographyTextView;
 
     private String biography;
-
-    private ArtistDetailsActivityContract.View artistDetailsActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +53,6 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.artistDetailsActivity = (ArtistDetailsActivity) context;
         if(this.biography == null){
             this.biography = this.artistDetailsActivity.getArtistBiography();
         }
@@ -73,6 +67,7 @@ public class ArtistDetailsBiographyFragment extends DaggerFragment{
         String modifiedBio = formatText(this.biography);
         this.biographyTextView.setText(Html.fromHtml(modifiedBio));
         this.biographyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        this.artistDetailsFragmentPresenter.takeView(this);
         return view;
     }
 

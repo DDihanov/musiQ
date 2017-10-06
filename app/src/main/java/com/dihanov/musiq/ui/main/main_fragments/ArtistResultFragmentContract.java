@@ -20,7 +20,7 @@ public interface ArtistResultFragmentContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-        void addOnArtistResultClickedListener(RecyclerView recyclerView);
+        void addOnArtistResultClickedListener(ArtistAdapter.MyViewHolder viewHolder, String artistName);
 
         void addOnSearchBarTextChangedListener(MainActivity fragmentActivity, SearchView searchEditText);
     }

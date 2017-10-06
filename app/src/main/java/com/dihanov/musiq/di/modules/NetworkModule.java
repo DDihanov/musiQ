@@ -42,7 +42,9 @@ public class NetworkModule {
     @Singleton
     GsonConverterFactory provideGsonConverterFactory() {
         //need to pass the custom deserializer here
-        Gson gson = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer()).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Album.class, new Album.DataStateDeserializer())
+                .create();
         return GsonConverterFactory.create(gson);
     }
 

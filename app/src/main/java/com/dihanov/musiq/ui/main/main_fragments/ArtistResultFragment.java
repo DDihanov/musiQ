@@ -1,14 +1,12 @@
 package com.dihanov.musiq.ui.main.main_fragments;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +41,10 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         ArtistResultFragment artistResultFragment = new ArtistResultFragment();
         artistResultFragment.setArguments(args);
         return artistResultFragment;
+    }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
     }
 
     @Override
@@ -88,10 +90,10 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         //check if tablet --> 3 columns instead of 2;
         if (Constants.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(3, dpToPx(10), true));
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, dpToPx(10), true));
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){
@@ -107,11 +109,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
         return this.mainActivity;
     }
 
-    //dp to pixel
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
+
 
     @Override
     public void onDestroy() {
