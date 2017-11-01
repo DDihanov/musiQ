@@ -64,10 +64,10 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.35" />
 
+                <!--TODO:FIX LABEL POSITIONS-->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="80dp">
+                    android:layout_height="match_parent">
 
                     <com.veinhorn.tagview.TagView
                         android:id="@+id/first_tag"
