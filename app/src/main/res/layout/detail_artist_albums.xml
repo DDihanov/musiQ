@@ -34,7 +34,7 @@
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
                 tools:ignore="MissingPrefix"
-                fontPath="fonts/cabin_regular.tff"
+                fontPath="fonts/cabin_regular.ttf"
                 android:textColor="@color/artist_title"
                 android:textSize="@dimen/artist_title" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/album_title"
                 tools:ignore="MissingPrefix"
-                fontPath="fonts/cabin_regular.tff"
+                fontPath="fonts/cabin_regular.ttf"
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding" />
                 <!--android:textSize="@dimen/songs_count" />-->

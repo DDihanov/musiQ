@@ -70,7 +70,7 @@ public class ArtistDetailsFragmentPresenter implements ArtistDetailsFragmentCont
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(click -> {
                     lastFmApiClient.getLastFmApiService()
-                            .searchForSpecificAlbum(album.getName(), ((Artist)album.getArtist()).getName())
+                            .searchForSpecificAlbum(((Artist)album.getArtist()).getName(), album.getName())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .map(specificAlbum -> specificAlbum)
@@ -112,7 +112,12 @@ public class ArtistDetailsFragmentPresenter implements ArtistDetailsFragmentCont
         ImageView cover = albumDetails.findViewById(R.id.album_popup_thumbnail);
         StringBuilder sb = new StringBuilder();
         for (Track track : album.getTracks().getTrack()) {
-            sb.append(String.format("%s %s\n", track.getName(), track.getDuration()));
+            long millis = Long.parseLong(track.getDuration());
+            String duration = String.format("%d:%d",
+                    TimeUnit.SECONDS.toMinutes(millis),
+                    TimeUnit.SECONDS.toSeconds(millis) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(millis)));
+            sb.append(String.format("%s - %s\n", track.getName(), duration));
         }
 
         tracks.setText(sb.toString());

@@ -32,7 +32,7 @@ public class App extends Application implements HasActivityInjector{
                 .inject(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/cabin_regulat.ttf")
+                .setDefaultFontPath("assets/fonts/cabin_regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
     }
