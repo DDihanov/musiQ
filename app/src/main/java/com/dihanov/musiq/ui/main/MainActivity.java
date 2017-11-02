@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.KeyboardHelper;
 
@@ -37,10 +38,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View, MainViewFunctionable {
     private static final String search = "search for artists";
     private static final String TAG_LAST_SEARCH = "lastSearch";
-    private static final int NUM_COLUMNS_HORIZONTAL_TABLET = 10;
 
     @Inject MainActivityPresenter mainActivityPresenter;
 
@@ -200,39 +200,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-//        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
         recyclerView.setAdapter(new TopArtistAdapter(this, new ArrayList<Artist>()));
-
-//        if(Constants.isTablet(this) && Constants.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE){
-//            gridView.setNumColumns(GridView.AUTO_FIT);
-//        }
-//        mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
-    //    public void getArtistExample() {
-//        Single<Artist> artistInfo = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfo("Cher");
-////        Call<Artist> call = mainActivityPresenter.lastFmApiClient.getLastFmApiService().getArtistInfoCall("Cher");
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-////        call.enqueue(new Callback<Artist>() {
-////            @Override
-////            public void onResponse(Call<Artist> call, Response<Artist> response) {
-////                Artist artist = response.body();
-////                builder.setTitle(artist.getArtist().getName());
-////                builder.setMessage(artist.getArtist().getBio().getContent());
-////                builder.show();
-////                System.out.println();
-////            }
-////
-////            @Override
-////            public void onFailure(Call<Artist> call, Throwable t) {
-////            }
-////        });
-//
-////        artistInfo
-////                .subscribeOn(Schedulers.io())
-////                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe(artist -> {
-////                            builder.setTitle(artist.getArtist().getName());
-////                            builder.setMessage(artist.getArtist().getBio().getSummary());
-////                            builder.show();});
-////    }
 }

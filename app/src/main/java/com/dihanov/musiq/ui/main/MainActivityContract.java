@@ -17,13 +17,7 @@ public interface MainActivityContract {
 
         RecyclerView getRecyclerView();
 
-        void hideProgressBar();
-
         void hideKeyboard();
-
-        void showProgressBar();
-
-        android.view.View getBirdIcon();
     }
 
     interface Presenter extends BasePresenter<View>{

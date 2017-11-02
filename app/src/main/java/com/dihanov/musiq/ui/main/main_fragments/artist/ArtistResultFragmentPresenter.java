@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main.main_fragments;
+package com.dihanov.musiq.ui.main.main_fragments.artist;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +32,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -154,7 +154,7 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                 });
     }
 
-     private void showArtistDetailsIntent(String artistName) {
+    private void showArtistDetailsIntent(String artistName) {
         Intent showArtistDetailsIntent = new Intent(mainActivity, ArtistDetailsActivity.class);
         showArtistDetailsIntent.putExtra(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
         Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
@@ -169,17 +169,16 @@ public class ArtistResultFragmentPresenter implements ArtistResultFragmentContra
                 .searchForArtistTopAlbums(artistName, Constants.ALBUM_LIMIT)
                 .subscribeOn(Schedulers.newThread());
 
-        Observable.zip(specificArtistRequest,
+        Observable.zip(
+                specificArtistRequest,
                 topAlbumRequest,
-                topArtistTags,
-                new Function3<SpecificArtist, TopArtistAlbums, ArtistTopTags, HashMap<String, String>>() {
+                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
                     @Override
-                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums, ArtistTopTags artistTopTags) throws Exception {
+                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
                         HashMap<String, String> result = new HashMap<>();
 
                         result.put(Constants.ARTIST, new Gson().toJson(specificArtist, SpecificArtist.class));
                         result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums, TopArtistAlbums.class));
-                        result.put(Constants.TAGS, new Gson().toJson(artistTopTags, ArtistTopTags.class));
 
                         return result;
                     }

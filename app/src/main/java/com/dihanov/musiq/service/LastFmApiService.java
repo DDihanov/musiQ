@@ -33,7 +33,7 @@ public interface LastFmApiService{
     Observable<SpecificAlbum> searchForSpecificAlbum(@Query("artist") String artistName, @Query("album") String albumName);
 
     @GET(METHOD_CALL+"album.search")
-    Observable<GeneralAlbumSearch> searchForAlbum(@Query("album") String albumName);
+    Observable<GeneralAlbumSearch> searchForAlbum(@Query("album") String albumName, @Query("limit") Integer limit);
 
     @GET(METHOD_CALL+"artist.gettoptags")
     Observable<ArtistTopTags> getArtistTopTags(@Query("artist") String artistName);

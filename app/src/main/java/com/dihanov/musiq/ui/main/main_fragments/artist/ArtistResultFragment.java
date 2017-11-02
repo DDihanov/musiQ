@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.detail.detail_fragments;
+package com.dihanov.musiq.ui.main.main_fragments.artist;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -8,83 +8,76 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.models.Album;
-import com.dihanov.musiq.models.TopArtistAlbums;
-import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
+import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
-import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerFragment;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
-    public static final String TITLE = "albums";
+public class ArtistResultFragment extends DaggerFragment implements ArtistResultFragmentContract.View {
+    public static final String TITLE = "artists";
 
-    private List<Album> artistAlbums;
-    private String serializedAlbums;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
+    @Inject ArtistResultFragmentPresenter artistResultFragmentPresenter;
 
-    @Inject ArtistDetailsFragmentPresenter artistDetailsFragmentPresenter;
-    @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
+    private MainActivity mainActivity;
 
-    public ArtistDetailsAlbumFragment() {
-        this.artistAlbums = new ArrayList<>();
+    public static ArtistResultFragment newInstance() {
+        Bundle args = new Bundle();
+        ArtistResultFragment artistResultFragment = new ArtistResultFragment();
+        artistResultFragment.setArguments(args);
+        return artistResultFragment;
     }
 
-    public static ArtistDetailsAlbumFragment newInstance() {
-        Bundle args = new Bundle();
-        ArtistDetailsAlbumFragment artistDetailsAlbumFragment = new ArtistDetailsAlbumFragment();
-        artistDetailsAlbumFragment.setArguments(args);
-        return artistDetailsAlbumFragment;
+    public MainActivity getMainActivity() {
+        return mainActivity;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(this.artistAlbums.size() == 0){
-            this.serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
-            //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
-            //because this wont deserialize correctly, we need to use the model we created for this cause
-            GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
-            this.artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
-        }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString(TITLE, this.serializedAlbums);
+        this.mainActivity = (MainActivity)getActivity();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.detail_artist_albums_recycler_view, container, false);
+        View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
 
+        //very important to call this - this enables us to use the below method(onCreateOptionsMenu), and allows us
+        //to receive calls from MainActivity's onCreateOptionsMenu
+        setHasOptionsMenu(true);
+
         initRecyclerView();
-        this.artistDetailsFragmentPresenter.takeView(this);
+
+        this.artistResultFragmentPresenter.takeView(this);
         return view;
+    }
+
+    //Since the menu gets created in the onCreateOptionMenu method from MainActivity, we need to override this method, so we can set the listener,
+    //in the exact moment the menu gets created. If we set the listener directly in MainActivity, the RecyclerView that we use in the listener method
+    //will not have been initialized yet, and we will get a NullPointerException. However if we set the listener here, the recycler view will
+    //already be initialized and in the same thread as the listener. It is important to set the listener in the same class(thread) where the recycler view
+    //gets initialized.
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity, mainActivity.getSearchBar());
     }
 
     @Override
@@ -95,12 +88,12 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     private void initRecyclerView() {
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (Constants.isTablet(artistDetailsActivity)){
-            layoutManager = new GridLayoutManager(artistDetailsActivity, 3);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, artistDetailsActivity), true));
+        if (Constants.isTablet(mainActivity)){
+            layoutManager = new GridLayoutManager(mainActivity, 3);
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, mainActivity), true));
         } else {
-            layoutManager = new GridLayoutManager(artistDetailsActivity, 2);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, artistDetailsActivity), true));
+            layoutManager = new GridLayoutManager(mainActivity, 2);
+            recyclerView.addItemDecoration(new ArtistResultFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){
@@ -109,12 +102,22 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AlbumDetailsAdapter(this.artistDetailsActivity, this.artistAlbums, artistDetailsFragmentPresenter));
     }
 
     @Override
     public Context getContext() {
-        return this.artistDetailsActivity;
+        return this.mainActivity;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.artistResultFragmentPresenter.leaveView();
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return this.recyclerView;
     }
 
 
@@ -152,5 +155,4 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
             }
         }
     }
-
 }

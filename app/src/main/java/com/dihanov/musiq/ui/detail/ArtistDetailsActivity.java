@@ -18,8 +18,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.models.ArtistTopTags;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
@@ -43,10 +43,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
-public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View {
+public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View, MainViewFunctionable {
     private static final String TAG_RETAINED_ARTIST = "artist";
     private static final String TAG_RETAINED_ALBUMS = "albums";
-    private static final String TAG_RETAINED_TAGS = "tags";
 
     private String serializedArtist;
     private String serializedAlbumList;
@@ -97,19 +96,16 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         if (savedInstanceState != null) {
             this.serializedArtist = savedInstanceState.getString(TAG_RETAINED_ARTIST);
             this.serializedAlbumList = savedInstanceState.getString(TAG_RETAINED_ALBUMS);
-            this.serializedTags = savedInstanceState.getString(TAG_RETAINED_TAGS);
         } else {
             Intent receiveIntent = getIntent();
             String artistSerialized = receiveIntent.getStringExtra(Constants.ARTIST);
             String albumSerialized = receiveIntent.getStringExtra(Constants.ALBUM);
-            String tagsSerialized = receiveIntent.getStringExtra(Constants.TAGS);
             this.serializedArtist = artistSerialized;
             this.serializedAlbumList = albumSerialized;
-            this.serializedTags = tagsSerialized;
         }
 
-        initTags();
         deserializeArtistInfo();
+        initTags();
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
         this.presenter.takeView(this);
@@ -131,12 +127,16 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
                 firstTag, secondTag, thirdTag, fourthTag, fifthTag
         };
 
-        List<Tag> tagText = new Gson().fromJson(this.serializedTags, ArtistTopTags.class).getToptags().getTag();
+        List<Tag> tagText = this.artist.getTags().getTag();
+
+        if(tagText.isEmpty()){
+            return;
+        }
 
         //this is very ugly, however since there is no lambda what can you do
         List<String> firstFive = new ArrayList<String>(){
             {
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < tagText.size(); i++) {
                     this.add(tagText.get(i).getName());
                 }
             }
@@ -151,7 +151,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
             }
         });
 
-        for (int i = 0; i < tags.length; i++) {
+        for (int i = 0; i < tagText.size(); i++) {
             TagView currTag = tags[i];
             currTag.setText(firstFive.get(i));
             currTag.setTagColor(Color.parseColor(getString(R.color.colorAccent)));
@@ -172,7 +172,6 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
         outState.putString(TAG_RETAINED_ARTIST, serializedArtist);
         outState.putString(TAG_RETAINED_ALBUMS, serializedAlbumList);
-        outState.putString(TAG_RETAINED_TAGS, serializedTags);
     }
 
     @Override
@@ -186,7 +185,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposes property,
+        //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposed property,
         //in the xml, and the fonts are set programatically
         Constants.changeTabsFont(this, tabLayout);
     }
@@ -246,7 +245,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     }
 
     @Override
-    public void hideProgressbar() {
+    public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
     }
 

@@ -4,15 +4,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsAlbumFragment;
-import com.dihanov.musiq.ui.main.main_fragments.ArtistResultFragment;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 1;
+    private static int TAB_COUNT = 2;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,7 +25,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return ArtistResultFragment.newInstance();
             case 1:
-                return ArtistDetailsAlbumFragment.newInstance();
+                return AlbumResultFragment.newInstance();
 //            case 2:
 //               break;
         }
@@ -43,7 +43,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return ArtistResultFragment.TITLE;
             case 1:
-                return ArtistDetailsAlbumFragment.TITLE;
+                return AlbumResultFragment.TITLE;
 //            case 2:
         }
         return super.getPageTitle(position);

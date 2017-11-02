@@ -11,7 +11,7 @@
     <dimen name="backdrop_title">30dp</dimen>
     <dimen name="backdrop_subtitle">18dp</dimen>
     <dimen name="card_margin">5dp</dimen>
-    <dimen name="card_artist_radius">0dp</dimen>
+    <dimen name="card_artist_radius">15dp</dimen>
     <dimen name="toolbar_height">50dp</dimen>
     <dimen name="artist_height">180dp</dimen>
     <dimen name="artist_width">180dp</dimen>

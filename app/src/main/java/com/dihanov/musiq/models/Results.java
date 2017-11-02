@@ -21,6 +21,9 @@ public class Results {
     @SerializedName("artistmatches")
     @Expose
     private Artistmatches artistmatches;
+    @SerializedName("albummatches")
+    @Expose
+    private Albummatches albummatches;
     @SerializedName("@attr")
     @Expose
     private Attr attr;
@@ -63,6 +66,14 @@ public class Results {
 
     public void setArtistmatches(Artistmatches artistmatches) {
         this.artistmatches = artistmatches;
+    }
+
+    public Albummatches getAlbummatches() {
+        return albummatches;
+    }
+
+    public void setAlbummatches(Albummatches albummatches) {
+        this.albummatches = albummatches;
     }
 
     public Attr getAttr() {

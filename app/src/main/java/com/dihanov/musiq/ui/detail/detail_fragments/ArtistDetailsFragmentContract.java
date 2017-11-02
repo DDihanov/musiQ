@@ -1,6 +1,5 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
-import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -13,6 +12,6 @@ public interface ArtistDetailsFragmentContract {
     }
 
     interface Presenter extends BasePresenter<ArtistDetailsFragmentContract.View> {
-        void setClickListenerFetchEntireAlbumInfo(Album album, ArtistDetailsAlbumAdapter.MyViewHolder myViewHolder);
+
     }
 }

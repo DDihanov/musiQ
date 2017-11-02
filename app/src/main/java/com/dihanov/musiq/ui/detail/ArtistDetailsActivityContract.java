@@ -17,12 +17,6 @@ public interface ArtistDetailsActivityContract {
         void setArtist(Artist artist);
 
         Artist getArtist();
-
-        void showProgressBar();
-
-        void hideProgressbar();
-
-        android.view.View getBirdIcon();
     }
 
     interface Presenter extends BasePresenter<View> {

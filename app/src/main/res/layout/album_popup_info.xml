@@ -1,21 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/album_details_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
         android:elevation="3dp"
         card_view:cardCornerRadius="@dimen/popup_card_radius">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/album_popup_thumbnail"
@@ -27,17 +28,18 @@
                 android:clickable="true"
                 android:scaleType="centerCrop" />
 
+
             <TextView
                 android:id="@+id/album_popup_title"
                 fontPath="fonts/cabin_regular.ttf"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:paddingBottom="@dimen/artist_title_padding"
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
-                android:paddingBottom="@dimen/artist_title_padding"
                 android:textAlignment="center"
                 android:textColor="@color/artist_title"
                 android:textSize="@dimen/artist_title"
@@ -45,22 +47,103 @@
                 tools:ignore="MissingPrefix" />
 
             <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/album_popup_thumbnail"
+                android:layout_alignParentEnd="true"
                 android:layout_below="@+id/album_popup_thumbnail"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="13dp">
 
-                <TextView
-                    android:id="@+id/album_popup_tracks"
-                    fontPath="fonts/cabin_regular.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/album_title"
-                    android:paddingLeft="@dimen/artist_title_padding"
-                    android:paddingRight="@dimen/artist_title_padding"
-                    tools:ignore="MissingPrefix" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/album_popup_tracks"
+                        fontPath="fonts/cabin_regular.ttf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/album_title"
+                        android:paddingLeft="@dimen/artist_title_padding"
+                        android:paddingRight="@dimen/artist_title_padding"
+                        tools:ignore="MissingPrefix" />
+
+
+                    <TextView
+                        android:id="@+id/album_popup_wiki"
+                        fontPath="fonts/cabin_regular.ttf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/album_popup_tracks"
+                        android:paddingLeft="@dimen/artist_title_padding"
+                        android:paddingRight="@dimen/artist_title_padding"
+                        tools:ignore="MissingPrefix" />
+
+                </RelativeLayout>
             </android.support.v4.widget.NestedScrollView>
+
+
+            //TODO:FIX TAG POSITIONS
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/nestedScrollView">
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/popup_first_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="87dp"
+                    android:layout_marginTop="119dp"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/popup_second_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/popup_first_tag"
+                    android:layout_below="@+id/popup_first_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/popup_third_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/popup_second_tag"
+                    android:layout_below="@+id/popup_second_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/popup_fourth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/popup_third_tag"
+                    android:layout_below="@+id/popup_third_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/popup_fifth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/popup_fourth_tag"
+                    android:layout_below="@+id/popup_fourth_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+            </RelativeLayout>
 
         </RelativeLayout>
 

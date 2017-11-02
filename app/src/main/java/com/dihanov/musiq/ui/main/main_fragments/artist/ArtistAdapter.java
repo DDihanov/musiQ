@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main.main_fragments;
+package com.dihanov.musiq.ui.main.main_fragments.artist;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
 
@@ -24,11 +23,8 @@ import butterknife.ButterKnife;
  */
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyViewHolder> {
-
-
     private MainActivity mainActivity;
     private List<Artist> artistList;
-    private LastFmApiClient lastFmApiClient;
     private ArtistResultFragmentPresenter artistResultFragmentPresenter;
 
     public ArtistAdapter(MainActivity context, List<Artist> albumList, ArtistResultFragmentPresenter artistResultFragmentPresenter) {
