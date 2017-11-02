@@ -192,6 +192,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     }
 
     private void initCollapsingToolbar() {
+        collapsingToolbar.setTitle(" ");
         Constants.setToolbarFont(collapsingToolbar, this);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.artist_details_appbar);
         appBarLayout.setExpanded(true);
@@ -211,7 +212,8 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
                     collapsingToolbar.setTitle(" ");
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+//                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle(" ");
                     isShow = false;
                 }
             }

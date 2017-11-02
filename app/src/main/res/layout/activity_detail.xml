@@ -41,8 +41,28 @@
                 android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="enterAlwaysCollapsed"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"></android.support.v7.widget.Toolbar>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
+
+                <ProgressBar
+                    android:id="@+id/artist_details_progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="44dp"
+                    android:indeterminate="true"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -64,65 +84,66 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.35" />
 
-                <!--TODO:FIX LABEL POSITIONS-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.veinhorn.tagview.TagView
-                        android:id="@+id/first_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="20dp"
-                        android:textSize="10sp"
-                        app:tagType="trapezium"
-                        app:tagUpperCase="true" />
-
-                    <com.veinhorn.tagview.TagView
-                        android:id="@+id/second_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/first_tag"
-                        android:layout_below="@+id/first_tag"
-                        android:textSize="10sp"
-                        app:tagType="trapezium"
-                        app:tagUpperCase="true" />
-
-                    <com.veinhorn.tagview.TagView
-                        android:id="@+id/third_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/second_tag"
-                        android:layout_below="@+id/second_tag"
-                        android:textSize="10sp"
-                        app:tagType="trapezium"
-                        app:tagUpperCase="true" />
-
-                    <com.veinhorn.tagview.TagView
-                        android:id="@+id/fourth_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/third_tag"
-                        android:layout_below="@+id/third_tag"
-                        android:textSize="10sp"
-                        app:tagType="trapezium"
-                        app:tagUpperCase="true" />
-
-                    <com.veinhorn.tagview.TagView
-                        android:id="@+id/fifth_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/fourth_tag"
-                        android:layout_below="@+id/fourth_tag"
-                        android:textSize="10sp"
-                        app:tagType="trapezium"
-                        app:tagUpperCase="true" />
-                </RelativeLayout>
-
             </android.support.constraint.ConstraintLayout>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/artist_details_bird"
+                android:layout_marginTop="56dp">
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/first_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="20dp"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/second_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/first_tag"
+                    android:layout_below="@+id/first_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/third_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/second_tag"
+                    android:layout_below="@+id/second_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/fourth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/third_tag"
+                    android:layout_below="@+id/third_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+
+                <com.veinhorn.tagview.TagView
+                    android:id="@+id/fifth_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/fourth_tag"
+                    android:layout_below="@+id/fourth_tag"
+                    android:textSize="10sp"
+                    app:tagType="trapezium"
+                    app:tagUpperCase="true" />
+            </RelativeLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -166,30 +187,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <ProgressBar
-            android:id="@+id/artist_details_progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="44dp"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
-
-    <!--seperator line-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -199,16 +196,15 @@
         <TextView
             android:id="@+id/artist_details_name"
             fontPath="fonts/cabin_bold.ttf"
-            android:layout_width="215dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="61dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="11dp"
+            android:layout_marginStart="20dp"
             android:background="@color/transparent"
             android:elegantTextHeight="false"
-            android:gravity="center"
-            android:textAlignment="center"
+            android:textAlignment="viewStart"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             tools:ignore="MissingPrefix" />
@@ -224,8 +220,8 @@
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="15dp"
             android:text="@string/app_bird"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"

@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
         android:elevation="3dp"
-        card_view:cardCornerRadius="@dimen/card_artist_radius">
+        card_view:cardCornerRadius="@dimen/popup_card_radius">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,6 +37,7 @@
                 android:paddingLeft="@dimen/artist_title_padding"
                 android:paddingRight="@dimen/artist_title_padding"
                 android:paddingTop="@dimen/artist_title_padding"
+                android:paddingBottom="@dimen/artist_title_padding"
                 android:textAlignment="center"
                 android:textColor="@color/artist_title"
                 android:textSize="@dimen/artist_title"

@@ -41,7 +41,7 @@ public class Constants {
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
 
-    public static final String formatNumberWithSeperator(int number){
+    public static String formatNumberWithSeperator(int number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 
@@ -50,7 +50,7 @@ public class Constants {
 
         return formatter.format(number);
     }
-    public static final String formatNumberWithSeperator(double number){
+    public static String formatNumberWithSeperator(double number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 
@@ -59,7 +59,7 @@ public class Constants {
 
         return formatter.format(number);
     }
-    public static final String formatNumberWithSeperator(long number){
+    public static String formatNumberWithSeperator(long number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 
@@ -68,7 +68,7 @@ public class Constants {
 
         return formatter.format(number);
     }
-    public static final String formatNumberWithSeperator(String number){
+    public static String formatNumberWithSeperator(String number){
         return formatNumberWithSeperator(Long.parseLong(number));
     }
 
@@ -88,7 +88,6 @@ public class Constants {
 
     public static void setToolbarFont(CollapsingToolbarLayout toolbarLayout, Context context){
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/cabin_regular.ttf");
-        toolbarLayout.setTitle(context.getString(R.string.app_name));
         toolbarLayout.setExpandedTitleTypeface(typeface);
         toolbarLayout.setCollapsedTitleTypeface(typeface);
     }

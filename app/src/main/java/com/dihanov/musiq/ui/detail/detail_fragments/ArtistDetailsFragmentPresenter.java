@@ -113,7 +113,7 @@ public class ArtistDetailsFragmentPresenter implements ArtistDetailsFragmentCont
         StringBuilder sb = new StringBuilder();
         for (Track track : album.getTracks().getTrack()) {
             long millis = Long.parseLong(track.getDuration());
-            String duration = String.format("%d:%d",
+            String duration = String.format("%02d:%02d",
                     TimeUnit.SECONDS.toMinutes(millis),
                     TimeUnit.SECONDS.toSeconds(millis) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(millis)));
@@ -134,7 +134,7 @@ public class ArtistDetailsFragmentPresenter implements ArtistDetailsFragmentCont
 
         popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 
-        albumDetails.setOnTouchListener(new View.OnTouchListener() {
+        cover.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 popupWindow.dismiss();
