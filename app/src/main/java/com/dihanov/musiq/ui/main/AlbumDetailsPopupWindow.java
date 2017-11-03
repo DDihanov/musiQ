@@ -116,9 +116,26 @@ public class AlbumDetailsPopupWindow {
         initTags(album, albumDetails);
         tracks.setText(sb.toString());
         title.setText(album.getName());
-        String modifiedBio = formatText(album.getWiki().getSummary());
-        wiki.setText(Html.fromHtml(modifiedBio));
-        wiki.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+        if(album.getWiki() != null){
+            String toModify = album.getWiki().getSummary();
+            String fullWiki = album.getWiki().getContent();
+            String modifiedBio = "";
+            if(toModify == null){
+                toModify = fullWiki;
+                if(toModify != null){
+                    modifiedBio = formatText(toModify);
+                }
+            } else {
+                modifiedBio = formatText(toModify);
+            }
+
+            wiki.setText(Html.fromHtml(modifiedBio));
+            wiki.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
+
         Glide.with(activity)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
                 .into(cover);
@@ -152,7 +169,7 @@ public class AlbumDetailsPopupWindow {
             return;
         }
 
-        //this is very ugly, however since there is no lambda what can you do
+        //this is very ugly, however since there is no sort lambda what can you do
         List<String> firstFive = new ArrayList<String>() {
             {
                 for (int i = 0; i < tagText.size(); i++) {
