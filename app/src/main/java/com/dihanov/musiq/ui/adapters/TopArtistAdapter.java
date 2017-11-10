@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main;
+package com.dihanov.musiq.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,30 +7,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.main.MainActivityPresenter;
+import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
-import com.veinhorn.tagview.TagView;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by dimitar.dihanov on 9/27/2017.
  */
 
-public class TopArtistAdapter extends RecyclerView.Adapter<TopArtistAdapter.TopArtistsViewHolder> {
+public class TopArtistAdapter extends RecyclerView.Adapter<TopArtistsViewHolder> {
+    private MainActivityPresenter mainActivityPresenter;
     private Context context;
     private List<Artist> topArtist;
 
-    public TopArtistAdapter(Context context, List<Artist> topArtist) {
+    public TopArtistAdapter(Context context, List<Artist> topArtist, MainActivityPresenter mainActivityPresenter) {
         this.context = context;
         this.topArtist = topArtist;
+        this.mainActivityPresenter = mainActivityPresenter;
     }
 
     @Override
@@ -46,10 +45,16 @@ public class TopArtistAdapter extends RecyclerView.Adapter<TopArtistAdapter.TopA
         Glide.with(context)
                 .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
                 .crossFade(2000)
-                .into(holder.artist);
-        holder.name.setText(artist.getName().toLowerCase());
-        holder.name.setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));
-        holder.name.setTagCircleRadius(10f);
+                .into(holder.getThumbnail());
+        holder.getName().setText(artist.getName().toLowerCase());
+        holder.getName().setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));
+        holder.getName().setTagCircleRadius(10f);
+        holder.getThumbnail().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivityPresenter.addOnArtistResultClickedListener(holder, artist.getName());
+            }
+        });
 
     }
 
@@ -58,16 +63,6 @@ public class TopArtistAdapter extends RecyclerView.Adapter<TopArtistAdapter.TopA
         return this.topArtist.size();
     }
 
-    public class TopArtistsViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.top_artist_name)
-        TagView name;
-        @BindView(R.id.top_artist_image)
-        ImageView artist;
 
-        public TopArtistsViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 
 }

@@ -49,7 +49,6 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
     private String serializedArtist;
     private String serializedAlbumList;
-    private String serializedTags;
     private Artist artist;
 
     @Inject

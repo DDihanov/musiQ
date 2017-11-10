@@ -3,20 +3,25 @@ package com.dihanov.musiq.ui.main;
 
 import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
 
+import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
+import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.ui.adapters.TopArtistAdapter;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -24,13 +29,13 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivityPresenter implements MainActivityContract.Presenter {
+public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl implements MainActivityContract.Presenter{
     private static final String LOADING_ARTISTS = "loading this week's top artists...";
     private static final long NETWORK_CHECK_THREAD_TIMEOUT = 5000;
     private static int TOP_ARTIST_LIMIT = 6;
 
     private MainActivityContract.View mainActivityView;
-    private Disposable disposable;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RecyclerView recyclerView;
 
     @Inject
@@ -48,7 +53,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void leaveView() {
-        disposable.dispose();
+        compositeDisposable.clear();
         this.mainActivityView = null;
     }
 
@@ -64,9 +69,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         }
 
         lastFmApiClient.getLastFmApiService().chartTopArtists(TOP_ARTIST_LIMIT)
-//                .flatMapIterable(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
-//                .delay(3000L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Artist>>() {
@@ -74,12 +77,12 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     public void onSubscribe(Disposable d) {
                         Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
                         mainActivity.showProgressBar();
-                        disposable = d;
+                        compositeDisposable.add(d);
                     }
 
                     @Override
                     public void onNext(List<Artist> artists) {
-                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists);
+                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists, MainActivityPresenter.this);
                         recyclerView.setAdapter(topArtistAdapter);
                         recyclerView.postDelayed(new Runnable() {
                             @Override
@@ -97,6 +100,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     @Override
                     public void onComplete() {
                         mainActivity.hideProgressBar();
+                        compositeDisposable.clear();
                     }
                 });
     }
@@ -129,35 +133,13 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
 
-    //unused method to cycle through images
-    private void initBackdropImageChanger(MainActivity mainActivity, ImageView backdrop, List<Artist> artists) {
-//        Handler handler = new Handler();
-//        //this method checks the artist list, and if it's not empty, it loads the images onto the backdrop
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while(true){
-//                    if(!artists.isEmpty()){
-//                        for (Artist artist : artists) {
-//                            try {
-//                                Thread.sleep(5000);
-//                                String url = artist.getImage().get(4).getText();
-//
-//                                handler.post(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        Glide.with(mainActivity).load(url).asBitmap()
-//                                                .format(DecodeFormat.PREFER_ARGB_8888)
-//                                                .crossFade(1000).into(backdrop);
-//                                    }
-//                                });
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }).start();
+    @Override
+    public void addOnArtistResultClickedListener(ClickableArtistViewHolder viewHolder, String artistName) {
+        RxView.clicks(viewHolder.getThumbnail())
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(click -> {
+                    this.showArtistDetailsIntent(artistName, mainActivityView);
+                });
     }
 }

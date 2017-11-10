@@ -6,27 +6,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by dimitar.dihanov on 11/2/2017.
+ * Created by dimitar.dihanov on 11/10/2017.
  */
 
-public class AlbumViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.album_title)
+public class ArtistViewHolder extends RecyclerView.ViewHolder implements ClickableArtistViewHolder {
+    @BindView(R.id.title)
     TextView title;
 
-    @BindView(R.id.album_song_count)
+    @BindView(R.id.count)
     TextView count;
 
-    @BindView(R.id.album_thumbnail)
+    @BindView(R.id.thumbnail)
     ImageView thumbnail;
 
-    public AlbumViewHolder(View view) {
+    public ArtistViewHolder(View view) {
         super(view);
         ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public ImageView getThumbnail() {
+        return this.thumbnail;
     }
 
     public TextView getTitle() {
@@ -35,9 +41,5 @@ public class AlbumViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getCount() {
         return count;
-    }
-
-    public ImageView getThumbnail() {
-        return thumbnail;
     }
 }

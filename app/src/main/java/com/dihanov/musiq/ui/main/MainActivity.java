@@ -19,12 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.KeyboardHelper;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -38,7 +34,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View, MainViewFunctionable {
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View{
     private static final String search = "search for artists";
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
@@ -200,6 +196,5 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new TopArtistAdapter(this, new ArrayList<Artist>()));
     }
 }

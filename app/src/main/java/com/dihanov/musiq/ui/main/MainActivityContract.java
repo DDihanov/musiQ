@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.main;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -12,7 +13,7 @@ import com.dihanov.musiq.ui.BaseView;
 
 public interface MainActivityContract {
 
-    interface View extends BaseView<Presenter>{
+    interface View extends BaseView<Presenter>, MainViewFunctionable{
         SearchView getSearchBar();
 
         RecyclerView getRecyclerView();

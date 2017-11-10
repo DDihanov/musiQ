@@ -57,7 +57,7 @@ public class AlbumDetailsPopupWindow {
 
     public void showPopupWindow(MainViewFunctionable activity, AlbumViewHolder viewHolder, String artistName, String albumName, int mainWindowId) {
         final Album[] loadedAlbum = new Album[1];
-        RxView.clicks(viewHolder.thumbnail)
+        RxView.clicks(viewHolder.getThumbnail())
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(click -> {

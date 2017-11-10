@@ -46,15 +46,15 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumViewHolder> {
         }
         Album album = artistAlbumsList.get(position);
 
-        holder.title.setText(album.getName().toLowerCase());
+        holder.getTitle().setText(album.getName().toLowerCase());
         if(album.getPlaycount() != null){
-            holder.count.setText(Constants.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
+            holder.getCount().setText(Constants.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
         }
 
         // loading album cover using Glide library
         Glide.with(context)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
-                .into(holder.thumbnail);
+                .into(holder.getThumbnail());
 
         this.presenter.setClickListenerFetchEntireAlbumInfo(holder, album.getArtist().toString(), album.getName());
     }
