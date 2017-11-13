@@ -9,8 +9,8 @@ The application features a beautiful material design, and makes use of cutting-e
     <li>RxBinding</li> 
     <li>ButterKnife</li> 
     <li>OkHttp</li>
-     <li>Gson</li> 
-     <li>Glide</li>
+    <li>Gson</li> 
+    <li>Glide</li>
 </ul>
 The API for all the information is the LastFM API.
 
@@ -19,7 +19,7 @@ and Google's support libraries.
 
 This application is meant to be a musical library for anyone who might enjoy having a cool app, which fetches information
 fast and accurate from a reliable musical site, with up-to-date information about artists, albums and songs.
-The program is very versatile, because it makes use of all the features the last.fm API provides such as top artists, top songs, top songs,
+The program is very versatile, because it makes use of all the features the last.fm API provides such as top artists, top songs,
 top songs per artist, top artists by geographical region etc...
 
 The current version is still alpha.
