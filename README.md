@@ -2,9 +2,18 @@
 a musical encyclopedia
 
 This application is designed using the MVP pattern.
-The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:<br>
-Dagger2, Retrofit2, RxBinding, ButterKnife, OkHttp, Gson, and Glide.<br>
-The API for all the information is the LastFM API.<br>
+The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:
+<ul>
+    <li>Dagger2</li> 
+    <li>Retrofit2</li> 
+    <li>RxBinding</li> 
+    <li>ButterKnife</li> 
+    <li>OkHttp</li>
+     <li>Gson</li> 
+     <li>Glide</li>
+</ul>
+The API for all the information is the LastFM API.
+
 Other third-party libraries include custom labels, tooltips, Calligraphy library for fonts,
 and Google's support libraries.
 
@@ -14,10 +23,12 @@ The program is very versatile, because it makes use of all the features the last
 top songs per artist, top artists by geographical region etc...
 
 The current version is still alpha.
-Features to be implemented will be:<br>
-Ability to fetch artist events.<br>
-More detailed information about albums and tracks.<br>
-Ability to favorite specific artist and albums into a list.<br>
-And more...<br>
+Features to be implemented will be:
+<ul>
+    <li>Ability to fetch artist events.</li>
+    <li>More detailed information about albums and tracks.</li>
+    <li>Ability to favorite specific artist and albums into a list.</li>
+    <li>And more...</li>
+</ul>
 
 If you have any recommendations feel free to email me.
