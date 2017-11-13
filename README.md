@@ -4,17 +4,19 @@ a musical encyclopedia
 This application is designed using the MVP pattern.
 The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:
 <ul>
-    <li>Dagger2</li> 
-    <li>Retrofit2</li> 
-    <li>RxBinding</li> 
-    <li>ButterKnife</li> 
+	<li>RxJava2</li>
+    <li>Dagger2</li>
+    <li>Retrofit2</li>
+    <li>RxBinding</li>
+    <li>ButterKnife</li>
     <li>OkHttp</li>
-    <li>Gson</li> 
+    <li>Gson</li>
     <li>Glide</li>
 </ul>
+
 The API for all the information is the LastFM API.
 
-Other third-party libraries include custom labels, tooltips, Calligraphy library for fonts,
+Other libraries include custom labels, tooltips, Calligraphy library for fonts,
 and Google's support libraries.
 
 This application is meant to be a musical library for anyone who might enjoy having a cool app, which fetches information
