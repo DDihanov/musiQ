@@ -8,9 +8,9 @@ import android.util.Log;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.main.MainActivityContract;
-import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
 

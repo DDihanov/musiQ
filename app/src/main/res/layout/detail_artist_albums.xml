@@ -53,18 +53,15 @@
                 android:paddingRight="@dimen/artist_title_padding"
                 android:textAlignment="center"
                 tools:ignore="MissingPrefix" />
-            <!--android:textSize="@dimen/songs_count" />-->
-            <!--android:paddingBottom="@dimen/songs_count_padding_bottom"-->
 
-            <!--<ImageView-->
-            <!--android:id="@+id/overflow"-->
-            <!--android:layout_width="@dimen/ic_artist_overflow_width"-->
-            <!--android:layout_height="@dimen/ic_artist_overflow_height"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_below="@id/thumbnail"-->
-            <!--android:layout_marginTop="@dimen/ic_artist_overflow_margin_top"-->
-            <!--android:scaleType="centerCrop" />-->
-            <!--android:src="@drawable/ic_dots" />-->
+            <ImageView
+                android:id="@+id/album_overflow"
+                style="?android:attr/actionOverflowButtonStyle"
+                android:layout_width="@dimen/ic_artist_overflow_width"
+                android:layout_height="@dimen/ic_artist_overflow_height"
+                android:layout_alignEnd="@+id/album_thumbnail"
+                android:layout_below="@+id/album_thumbnail"
+                android:scaleType="centerCrop" />
 
         </RelativeLayout>
 

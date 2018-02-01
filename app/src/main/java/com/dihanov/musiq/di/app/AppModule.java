@@ -26,6 +26,7 @@ public class AppModule {
         return application;
     }
 
+    //shared preferences for Android context classes
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences(Application application) {
