@@ -1,15 +1,15 @@
 package com.dihanov.musiq.ui.adapters;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Dimitar Dihanov on 19.9.2017 г..
  */
 
-public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumViewHolder> {
+public class AlbumDetailsAdapter extends AbstractAdapter {
     private Activity context;
     private List<Album> artistAlbumsList;
     private SpecificAlbumSearchable presenter;
@@ -40,7 +40,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(AlbumViewHolder holder, int position) {
+    public void onBindViewHolder(AbstractViewHolder holder, int position) {
         if (artistAlbumsList.isEmpty()) {
             return;
         }
@@ -56,7 +56,19 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumViewHolder> {
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
                 .into(holder.getThumbnail());
 
-        this.presenter.setClickListenerFetchEntireAlbumInfo(holder, album.getArtist().toString(), album.getName());
+        ((AlbumViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.showPopupMenu(context, ((AlbumViewHolder)holder).getOverflow());
+            }
+        });
+
+        this.presenter.setClickListenerFetchEntireAlbumInfo((AlbumViewHolder)holder, album.getArtist().toString(), album.getName());
+        this.setIsFavorited(holder, Constants.FAVORITE_ALBUMS_KEY);
+    }
+
+    public void addAlbum(Album album){
+        this.artistAlbumsList.add(album);
     }
 
     @Override

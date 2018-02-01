@@ -1,15 +1,15 @@
 package com.dihanov.musiq.ui.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragmentPresenter;
+import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
 
@@ -19,15 +19,15 @@ import java.util.List;
  * Created by Dimitar Dihanov on 19.9.2017 г..
  */
 
-public class ArtistAdapter extends RecyclerView.Adapter<ArtistViewHolder> {
-    private MainActivity mainActivity;
+public class ArtistAdapter extends AbstractAdapter {
+    private Context mainActivity;
     private List<Artist> artistList;
-    private ArtistResultFragmentPresenter artistResultFragmentPresenter;
+    private SpecificArtistSearchable specificArtistSearchable;
 
-    public ArtistAdapter(MainActivity context, List<Artist> albumList, ArtistResultFragmentPresenter artistResultFragmentPresenter) {
+    public ArtistAdapter(Context context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable) {
         this.mainActivity = context;
         this.artistList = albumList;
-        this.artistResultFragmentPresenter = artistResultFragmentPresenter;
+        this.specificArtistSearchable = specificArtistSearchable;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ArtistViewHolder holder, int position) {
+    public void onBindViewHolder(AbstractViewHolder holder, int position) {
         if (artistList.isEmpty()) {
             return;
         }
@@ -53,11 +53,24 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistViewHolder> {
                 .load(artist.getImage().get(Constants.IMAGE_LARGE).getText())
                 .into(holder.getThumbnail());
 
-        this.artistResultFragmentPresenter.addOnArtistResultClickedListener(holder, artist.getName());
+        ((ArtistViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.showPopupMenu(mainActivity, ((ArtistViewHolder)holder).getOverflow());
+            }
+        });
+
+        this.specificArtistSearchable.addOnArtistResultClickedListener(holder, artist.getName());
+
+    }
+
+    public void addArtist(Artist artist){
+        this.artistList.add(artist);
     }
 
     @Override
     public int getItemCount() {
         return this.artistList.size();
     }
+
 }

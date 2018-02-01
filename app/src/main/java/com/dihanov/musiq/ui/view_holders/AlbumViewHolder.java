@@ -1,11 +1,16 @@
 package com.dihanov.musiq.ui.view_holders;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
+import android.support.v7.widget.PopupMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.ui.listeners.MyMenuItemClickListener;
+import com.dihanov.musiq.util.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -14,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumViewHolder extends RecyclerView.ViewHolder {
+public class AlbumViewHolder extends AbstractViewHolder {
     @BindView(R.id.album_title)
     TextView title;
 
@@ -24,11 +29,36 @@ public class AlbumViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.album_thumbnail)
     ImageView thumbnail;
 
+    @BindView(R.id.album_overflow)
+    ImageView overflow;
+
     public AlbumViewHolder(View view) {
         super(view);
         ButterKnife.bind(this, view);
     }
 
+    @Override
+    public void showPopupMenu(Context context, View view)  {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_artist, popup.getMenu());
+        Menu menu = popup.getMenu();
+
+        if(!this.getIsFavorited()){
+            menu.findItem(R.id.action_remove_favorite).setVisible(false);
+            menu.findItem(R.id.action_add_favourite).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_remove_favorite).setVisible(true);
+            menu.findItem(R.id.action_add_favourite).setVisible(false);
+        }
+
+
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.getTitle().getText().toString(), this, Constants.FAVORITE_ALBUMS_KEY));
+        popup.show();
+    }
+
+    @Override
     public TextView getTitle() {
         return title;
     }
@@ -39,5 +69,9 @@ public class AlbumViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView getThumbnail() {
         return thumbnail;
+    }
+
+    public ImageView getOverflow(){
+        return this.overflow;
     }
 }

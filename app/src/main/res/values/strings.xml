@@ -4,4 +4,6 @@
     <string name="app_bird">🐦</string>
     <string name="top_artists_text">loading this week\'s top artists...</string>
     <string name="searchTitle">Search for artists</string>
+    <string name="action_add_favourite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
 </resources>

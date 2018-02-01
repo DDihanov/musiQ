@@ -37,6 +37,8 @@ public class Constants {
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
     public static final int BIRD_COLOR = Color.parseColor("#37B4E2");
+    public static String FAVORITE_ARTISTS_KEY = "favorite_artists";
+    public static String FAVORITE_ALBUMS_KEY = "favorite_albums";
 
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;

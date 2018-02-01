@@ -40,7 +40,4 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"chart.gettopartists")
     Observable<TopArtistsResult> chartTopArtists(@Query("limit") Integer limit);
-
-//    @GET(METHOD_CALL+"artist.getinfo")
-//    Call<Artist> getArtistInfoCall(@Query("artist") String artistName);
 }

@@ -5,6 +5,7 @@ import com.dihanov.musiq.di.modules.AlbumResultFragmentModule;
 import com.dihanov.musiq.di.modules.ArtistDetailsActivityModule;
 import com.dihanov.musiq.di.modules.ArtistDetailsFragmentModule;
 import com.dihanov.musiq.di.modules.ArtistResultFragmentModule;
+import com.dihanov.musiq.di.modules.FavoriteFragmentModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsAlbumFragment;
@@ -12,6 +13,8 @@ import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsBiographyFragme
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
 import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsFragment;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -45,4 +48,13 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = ArtistDetailsFragmentModule.class)
     abstract ArtistDetailsAlbumFragment bindArtistDetailsAlbumsFragment();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = FavoriteFragmentModule.class)
+    abstract FavoriteAlbumsFragment bindFavoriteAlbumsFragment();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = FavoriteFragmentModule.class)
+    abstract FavoriteArtistFragment bindFavoriteArtistFragment();
+
 }
