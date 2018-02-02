@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -16,6 +17,6 @@ public interface FavoriteArtistsFragmentContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-        void loadFavoriteArtists(Set<String> favorites);
+        void loadFavoriteArtists(Set<String> favorites, MainViewFunctionable mainViewFunctionable, RecyclerView recyclerView);
     }
 }

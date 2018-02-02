@@ -8,6 +8,7 @@ import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -39,7 +40,14 @@ public class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListene
                 viewHolder.setIsFavorited(true);
                 return true;
             case (R.id.action_remove_favorite):
-                stringSet.remove(stringValue);
+                Iterator<String> it = stringSet.iterator();
+                while(it.hasNext()){
+                    String entry = it.next();
+                    if(entry.equals(stringValue)){
+                        it.remove();
+                        break;
+                    }
+                }
                 App.getSharedPreferences().edit().putStringSet(key, stringSet).apply();
                 viewHolder.setIsFavorited(false);
                 return true;

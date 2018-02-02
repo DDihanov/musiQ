@@ -114,7 +114,6 @@ public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAl
         return this.recyclerView;
     }
 
-
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;

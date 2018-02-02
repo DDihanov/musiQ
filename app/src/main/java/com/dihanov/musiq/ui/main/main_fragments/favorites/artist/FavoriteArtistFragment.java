@@ -12,8 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.inject.Inject;
 
@@ -64,12 +69,11 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
         initRecyclerView();
 
         this.favoriteFragmentPresenter.takeView(this);
+        this.favoriteFragmentPresenter.loadFavoriteArtists(
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>()),
+                mainActivity,
+                recyclerView);
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void initRecyclerView() {
@@ -89,6 +93,7 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(new ArtistAdapter(mainActivity, new ArrayList<>(), favoriteFragmentPresenter));
     }
 
     @Override
@@ -101,6 +106,8 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
         super.onDestroy();
         this.favoriteFragmentPresenter.leaveView();
     }
+
+
 
     @Override
     public RecyclerView getRecyclerView() {

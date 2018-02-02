@@ -46,25 +46,30 @@ public class ArtistAdapter extends AbstractAdapter {
         Artist artist = artistList.get(position);
 
         holder.getTitle().setText(artist.getName().toLowerCase());
-        holder.getCount().setText(Constants.formatNumberWithSeperator(artist.getListeners()) + " listeners");
+
+        if (artist.getListeners() != null) {
+            holder.getCount().setText(Constants.formatNumberWithSeperator(artist.getListeners()) + " listeners");
+        }
+
 
         // loading album cover using Glide library
         Glide.with(mainActivity)
                 .load(artist.getImage().get(Constants.IMAGE_LARGE).getText())
                 .into(holder.getThumbnail());
 
-        ((ArtistViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {
+        ((ArtistViewHolder) holder).getOverflow().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.showPopupMenu(mainActivity, ((ArtistViewHolder)holder).getOverflow());
+                holder.showPopupMenu(mainActivity, ((ArtistViewHolder) holder).getOverflow());
             }
         });
 
         this.specificArtistSearchable.addOnArtistResultClickedListener(holder, artist.getName());
+        this.setIsFavorited(holder, Constants.FAVORITE_ARTISTS_KEY);
 
     }
 
-    public void addArtist(Artist artist){
+    public void addArtist(Artist artist) {
         this.artistList.add(artist);
     }
 
