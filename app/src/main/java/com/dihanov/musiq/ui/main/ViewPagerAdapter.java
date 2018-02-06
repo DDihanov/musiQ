@@ -8,13 +8,14 @@ import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
 import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsFragment;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistFragment;
+import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragment;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 4;
+    private static int TAB_COUNT = 5;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,14 +26,20 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return ArtistResultFragment.newInstance();
+                return NowPlayingFragment.newInstance();
             case 1:
-                return AlbumResultFragment.newInstance();
+                return ArtistResultFragment.newInstance();
+
             case 2:
-                return FavoriteArtistFragment.newInstance();
+                return AlbumResultFragment.newInstance();
+
             case 3:
+                return FavoriteArtistFragment.newInstance();
+
+            case 4:
                 return FavoriteAlbumsFragment.newInstance();
         }
+
         return null;
     }
 
@@ -45,12 +52,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return ArtistResultFragment.TITLE;
+                return NowPlayingFragment.TITLE;
             case 1:
-                return AlbumResultFragment.TITLE;
+                return ArtistResultFragment.TITLE;
             case 2:
-                return FavoriteArtistFragment.TITLE;
+                return AlbumResultFragment.TITLE;
             case 3:
+                return FavoriteArtistFragment.TITLE;
+            case 4:
                 return FavoriteAlbumsFragment.TITLE;
         }
         return super.getPageTitle(position);

@@ -56,11 +56,18 @@ public class NetworkModule {
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
             HttpUrl originalHttpUrl = original.url();
+            HttpUrl url;
 
-            HttpUrl url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("api_key", Config.API_KEY)
-                    .addQueryParameter("format", Config.FORMAT)
-                    .build();
+
+            if(!originalHttpUrl.toString().equals(Config.LAST_FM_API_URL)){
+                url = originalHttpUrl.newBuilder()
+                        .addQueryParameter("api_key", Config.API_KEY)
+                        .addQueryParameter("format", Config.FORMAT)
+                        .build();
+            } else {
+                url = originalHttpUrl;
+            }
+
 
             // Request customization: add request headers
             Request.Builder requestBuilder = original.newBuilder()

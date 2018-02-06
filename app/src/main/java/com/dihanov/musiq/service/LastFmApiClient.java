@@ -1,7 +1,5 @@
 package com.dihanov.musiq.service;
 
-import javax.inject.Inject;
-
 import retrofit2.Retrofit;
 
 /**
@@ -9,7 +7,7 @@ import retrofit2.Retrofit;
  */
 
 public class LastFmApiClient{
-    LastFmApiService lastFmApiService;
+    private LastFmApiService lastFmApiService;
 
     public LastFmApiClient(Retrofit retrofit){
         lastFmApiService = retrofit.create(LastFmApiService.class);
@@ -18,4 +16,5 @@ public class LastFmApiClient{
     public LastFmApiService getLastFmApiService() {
         return lastFmApiService;
     }
+
 }

@@ -1,0 +1,18 @@
+package com.dihanov.musiq.ui.main.main_fragments.now_playing;
+
+import com.dihanov.musiq.ui.BasePresenter;
+import com.dihanov.musiq.ui.BaseView;
+
+/**
+ * Created by dimitar.dihanov on 2/6/2018.
+ */
+
+public interface NowPlayingFragmentContract {
+    interface View extends BaseView<Presenter>{
+
+    }
+
+    interface Presenter extends BasePresenter<View> {
+
+    }
+}

@@ -15,9 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -37,8 +41,12 @@ public class Constants {
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
     public static final int BIRD_COLOR = Color.parseColor("#37B4E2");
+    public static final String USER_SESSION = "user_session";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
     public static String FAVORITE_ARTISTS_KEY = "favorite_artists";
     public static String FAVORITE_ALBUMS_KEY = "favorite_albums";
+    public static String AUTH_MOBILE_SESSION = "auth.getMobileSession";
 
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
@@ -162,7 +170,42 @@ public class Constants {
     }
 
 
-    public static void showNetworkErrorTooltip(Activity activity) {
+    public static void showNetworkErrorTooltip(MainActivity activity) {
         Constants.showTooltip(activity, ((MainActivity)activity).getBirdIcon(), NO_NETWORK_CONN_FOUND, 15f);
+    }
+
+    public static void showNetworkErrorTooltip(Activity activity, View view) {
+        Constants.showTooltip(activity, view, NO_NETWORK_CONN_FOUND, 15f);
+    }
+
+    public static String generateSig(String username, String password){
+        String toCypher = "api_key" + Config.API_KEY + "methodauth.getMobileSessionpassword" + password + "username" + username + Config.API_SECRET;
+        String md5 = "";
+        try {
+             byte[] arr = MessageDigest.getInstance("MD5").digest(toCypher.getBytes("UTF-8"));
+             md5 = byteArrayToHex(arr);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(Constants.class.getSimpleName(), e.getMessage());
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(Constants.class.getSimpleName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        return md5;
+    }
+
+    public static String byteArrayToHex(byte[] a) {
+        StringBuilder sb = new StringBuilder(a.length * 2);
+        for(byte b: a)
+            sb.append(String.format("%02x", b));
+        return sb.toString();
+    }
+
+    public static void setLayoutChildrenEnabled(boolean status, ViewGroup viewGroup){
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            child.setEnabled(status);
+        }
     }
 }
