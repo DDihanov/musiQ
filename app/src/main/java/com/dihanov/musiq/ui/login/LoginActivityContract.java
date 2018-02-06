@@ -1,5 +1,7 @@
 package com.dihanov.musiq.ui.login;
 
+import android.content.Context;
+
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -13,6 +15,6 @@ public interface LoginActivityContract{
     }
 
     interface Presenter extends BasePresenter<View> {
-        void authenticateUser(String username, String password);
+        void authenticateUser(String username, String password, Context context);
     }
 }

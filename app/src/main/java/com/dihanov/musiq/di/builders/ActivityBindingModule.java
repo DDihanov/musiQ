@@ -8,7 +8,9 @@ import com.dihanov.musiq.di.modules.ArtistResultFragmentModule;
 import com.dihanov.musiq.di.modules.FavoriteFragmentModule;
 import com.dihanov.musiq.di.modules.LoginActivityModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
+import com.dihanov.musiq.di.modules.MediaPlayerControlServiceModule;
 import com.dihanov.musiq.di.modules.NowPlayingFragmentModule;
+import com.dihanov.musiq.service.MediaPlayerControlService;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsAlbumFragment;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsBiographyFragment;
@@ -68,4 +70,8 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = NowPlayingFragmentModule.class)
     abstract NowPlayingFragment bindNowPlayingFragment();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = MediaPlayerControlServiceModule.class)
+    abstract MediaPlayerControlService bindMediaPlayerControlService();
 }

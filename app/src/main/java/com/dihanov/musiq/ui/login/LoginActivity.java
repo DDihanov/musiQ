@@ -57,8 +57,13 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        loginActivityPresenter.takeView(this);
+        loginActivityPresenter.takeView(LoginActivity.this);
+    }
+
+    @Override
+    protected void onResume() {
         checkIntent(getIntent());
+        super.onResume();
     }
 
     @OnClick(R.id.sign_in)
@@ -66,7 +71,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
         String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
 
-        loginActivityPresenter.authenticateUser(usernameString, passwordString);
+        loginActivityPresenter.authenticateUser(usernameString, passwordString, this);
     }
 
     private void checkIntent(Intent intent) {
@@ -77,7 +82,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
             Constants.setLayoutChildrenEnabled(false, layout);
             this.username.setText(username);
             this.password.setText(password);
-            loginActivityPresenter.authenticateUser(username, password);
+            loginActivityPresenter.authenticateUser(username, password, this);
         }
     }
 

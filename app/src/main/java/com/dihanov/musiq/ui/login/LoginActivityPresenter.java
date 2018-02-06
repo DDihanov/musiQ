@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.service.MediaPlayerControlService;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
@@ -47,7 +49,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
     }
 
     @Override
-    public void authenticateUser(String username, String password) {
+    public void authenticateUser(String username, String password, Context context) {
         if (checkConnection()) return;
 
         lastFmApiClient.getLastFmApiService()
@@ -80,6 +82,8 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                     @Override
                     public void onComplete() {
                         persistUserInfo(username, password);
+                        //if login is successful we can start the service
+                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaPlayerControlService.class));
                         compositeDisposable.clear();
                         loginActivity.hideProgressBar();
                         Intent intent = new Intent(loginActivity, MainActivity.class);

@@ -94,4 +94,11 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.google.dagger:dagger-android:$daggerVersion"
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
+
+    //DBFlow
+    def dbflow_version = 'develop-SNAPSHOT'
+
+    annotationProcessor "com.github.raizlabs.dbflow:dbflow-processor:$dbflow_version"
+    compile "com.github.raizlabs.dbflow:dbflow-core:$dbflow_version"
+    compile "com.github.raizlabs.dbflow:dbflow:$dbflow_version"
 }

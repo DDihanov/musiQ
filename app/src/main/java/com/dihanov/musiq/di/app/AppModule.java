@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.dihanov.musiq.di.modules.LastFmApiServiceModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
+import com.dihanov.musiq.di.modules.ScrobbleServiceModule;
 
 import javax.inject.Singleton;
 
@@ -18,7 +19,8 @@ import dagger.Provides;
  */
 
 @Module(includes = {NetworkModule.class,
-        LastFmApiServiceModule.class})
+        LastFmApiServiceModule.class,
+        ScrobbleServiceModule.class})
 public class AppModule {
     @Provides
     @Singleton

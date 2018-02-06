@@ -27,4 +27,8 @@
     <string name="error_username_password">oops! wrong username or password!</string>
     <string name="welcome_string">welcome!</string>
     <string name="nothing_playing">Nothing is currently playing</string>
+    <string name="notification_listener_service">Notification permission</string>
+    <string name="notification_listener_service_explanation">Would you like to enable notification access for this application? (Note: this is required for the application to work)</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 </resources>
