@@ -9,6 +9,7 @@ import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
 import android.os.IBinder;
+import android.service.notification.NotificationListenerService;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -21,13 +22,12 @@ import java.util.ListIterator;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.DaggerService;
 
 /**
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class MediaPlayerControlService extends DaggerService
+public class MediaPlayerControlService extends NotificationListenerService
         implements MediaSessionManager.OnActiveSessionsChangedListener{
     private static final String TAG = MediaPlayerControlService.class.getSimpleName();
 

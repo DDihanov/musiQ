@@ -28,15 +28,14 @@
         <activity android:name=".ui.detail.ArtistDetailsActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login">
-        </activity>
-        <service android:name=".service.MediaPlayerControlService">
-            <!--TODO: Might need to remove this later-->
-            <!--android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"-->
-            <!--<intent-filter>-->
-                <!--TODO: this as well-->
-                <!--<action android:name="android.service.notification.NotificationListenerService"/>-->
-            <!--</intent-filter>-->
+            android:label="@string/title_activity_login"></activity>
+
+        <service
+            android:name=".service.MediaPlayerControlService"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
         </service>
     </application>
 
