@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.service.scrobble.Scrobbler;
 
 import java.util.ArrayList;
 import java.util.List;

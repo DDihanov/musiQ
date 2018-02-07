@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
@@ -26,6 +27,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
@@ -41,12 +44,13 @@ public class Constants {
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
     public static final int BIRD_COLOR = Color.parseColor("#37B4E2");
-    public static final String USER_SESSION = "user_session";
+    public static final String USER_SESSION_KEY = "user_session";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static String FAVORITE_ARTISTS_KEY = "favorite_artists";
     public static String FAVORITE_ALBUMS_KEY = "favorite_albums";
-    public static String AUTH_MOBILE_SESSION = "auth.getMobileSession";
+    public static String AUTH_MOBILE_SESSION_METHOD = "auth.getMobileSession";
+    public static String TRACK_SCROBBLE_METHOD = "track.scrobble";
 
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
@@ -184,6 +188,34 @@ public class Constants {
         try {
              byte[] arr = MessageDigest.getInstance("MD5").digest(toCypher.getBytes("UTF-8"));
              md5 = byteArrayToHex(arr);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(Constants.class.getSimpleName(), e.getMessage());
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(Constants.class.getSimpleName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        return md5;
+    }
+
+    public static String generateSig(String... params){
+        TreeMap<String, String> sorted = new TreeMap<>();
+        String toCypher = "";
+        String md5 = "";
+        sorted.put("api_key", Config.API_KEY);
+        sorted.put("sk", App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""));
+        for (int i = 0; i < params.length - 1; i+=2) {
+            sorted.put(params[i], params[i+1]);
+        }
+
+        for (Map.Entry<String, String> stringStringEntry : sorted.entrySet()) {
+            toCypher += stringStringEntry.getKey() + stringStringEntry.getValue();
+        }
+        toCypher += Config.API_SECRET;
+        try {
+            byte[] arr = MessageDigest.getInstance("MD5").digest(toCypher.getBytes("UTF-8"));
+            md5 = byteArrayToHex(arr);
         } catch (NoSuchAlgorithmException e) {
             Log.e(Constants.class.getSimpleName(), e.getMessage());
             e.printStackTrace();

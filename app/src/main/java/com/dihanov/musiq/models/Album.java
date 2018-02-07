@@ -15,6 +15,9 @@ import java.util.List;
 
 public class Album {
 
+    @SerializedName("corrected")
+    @Expose
+    private String corrected;
     @SerializedName("name")
     @Expose
     private String name;
@@ -126,6 +129,14 @@ public class Album {
 
     public void setWiki(Wiki wiki) {
         this.wiki = wiki;
+    }
+
+    public String getCorrected() {
+        return corrected;
+    }
+
+    public void setCorrected(String corrected) {
+        this.corrected = corrected;
     }
 
     //this is necessary as API returns different types

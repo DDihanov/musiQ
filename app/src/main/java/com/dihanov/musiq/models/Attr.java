@@ -6,6 +6,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class Attr {
 
+    @SerializedName("accepted")
+    @Expose
+    private Integer accepted;
+    @SerializedName("ignored")
+    @Expose
+    private Integer ignored;
     @SerializedName("artist")
     @Expose
     private String artist;
@@ -27,6 +33,22 @@ public class Attr {
     @SerializedName("rank")
     @Expose
     private String rank;
+
+    public Integer getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Integer accepted) {
+        this.accepted = accepted;
+    }
+
+    public Integer getIgnored() {
+        return ignored;
+    }
+
+    public void setIgnored(Integer ignored) {
+        this.ignored = ignored;
+    }
 
     public String getArtist() {
         return artist;

@@ -1,7 +1,7 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.Scrobbler;
+import com.dihanov.musiq.service.scrobble.Scrobbler;
 
 import javax.inject.Singleton;
 

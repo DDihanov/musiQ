@@ -7,6 +7,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Artist {
+    @SerializedName("corrected")
+    @Expose
+    private String corrected;
+    @SerializedName("#text")
+    @Expose
+    private String text;
     @SerializedName("name")
     @Expose
     private String name;
@@ -43,6 +49,22 @@ public class Artist {
 
     public String getListeners() {
         return listeners;
+    }
+
+    public String getCorrected() {
+        return corrected;
+    }
+
+    public void setCorrected(String corrected) {
+        this.corrected = corrected;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void setListeners(String listeners) {

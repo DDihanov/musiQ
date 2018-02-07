@@ -53,7 +53,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
         if (checkConnection()) return;
 
         lastFmApiClient.getLastFmApiService()
-                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION, username, password, Config.API_KEY, Constants.generateSig(username, password), Config.FORMAT)
+                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, Constants.generateSig(username, password), Config.FORMAT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
@@ -68,7 +68,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                     @Override
                     public void onNext(User user) {
                         SharedPreferences sharedPreferences = App.getSharedPreferences();
-                        sharedPreferences.edit().putString(Constants.USER_SESSION, user.getSession().getKey()).apply();
+                        sharedPreferences.edit().putString(Constants.USER_SESSION_KEY, user.getSession().getKey()).apply();
                     }
 
                     @Override
