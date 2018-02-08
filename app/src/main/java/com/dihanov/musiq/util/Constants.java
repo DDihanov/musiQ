@@ -3,6 +3,7 @@ package com.dihanov.musiq.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +40,9 @@ public class Constants {
     public static final String ARTIST = "artist";
     public static final String ALBUM = "album";
     public static final String TAGS = "tags";
+    public static final String TRACK = "track";
+    public static final String TIMESTAMP = "timestamp";
+    public static final String METHOD = "method";
     public static final String LAST_SEARCH = "lastSearch";
     public static final int ARTIST_LIMIT = 6;
     public static final int ALBUM_LIMIT = 20;
@@ -47,13 +52,17 @@ public class Constants {
     public static final String USER_SESSION_KEY = "user_session";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static String FAVORITE_ARTISTS_KEY = "favorite_artists";
-    public static String FAVORITE_ALBUMS_KEY = "favorite_albums";
-    public static String AUTH_MOBILE_SESSION_METHOD = "auth.getMobileSession";
-    public static String TRACK_SCROBBLE_METHOD = "track.scrobble";
+    public static final String FAVORITE_ARTISTS_KEY = "favorite_artists";
+    public static final String FAVORITE_ALBUMS_KEY = "favorite_albums";
+    public static final String AUTH_MOBILE_SESSION_METHOD = "auth.getMobileSession";
+    public static final String TRACK_SCROBBLE_METHOD = "track.scrobble";
+    public static final String UPDATE_NOW_PLAYING_METHOD = "track.updateNowPlaying";
+    public static final String LOVE_TRACK_METHOD = "track.love";
+
 
     private static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     private static final long NETWORK_CHECK_DELAY = 10000;
+    public static String MESSAGE_OK = "ok";
 
     public static String formatNumberWithSeperator(int number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
@@ -239,5 +248,19 @@ public class Constants {
             View child = viewGroup.getChildAt(i);
             child.setEnabled(status);
         }
+    }
+
+    public static void setLayoutChildrenVisibility(int visibility, ViewGroup viewGroup){
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            child.setVisibility(visibility);
+        }
+    }
+
+    public static byte[] bitmapToByte(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.dihanov.musiq.di.modules.DbModule;
 import com.dihanov.musiq.di.modules.LastFmApiServiceModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
 import com.dihanov.musiq.di.modules.ScrobblerModule;
@@ -20,7 +21,8 @@ import dagger.Provides;
 
 @Module(includes = {NetworkModule.class,
         LastFmApiServiceModule.class,
-        ScrobblerModule.class})
+        ScrobblerModule.class,
+        DbModule.class})
 public class AppModule {
     @Provides
     @Singleton

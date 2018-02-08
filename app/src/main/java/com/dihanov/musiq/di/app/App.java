@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
+import com.dihanov.musiq.db.ScrobbleDB;
 import com.dihanov.musiq.di.modules.NetworkModule;
 import com.dihanov.musiq.util.Constants;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -28,6 +29,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class App extends Application implements HasActivityInjector, HasServiceInjector{
     private static SharedPreferences sharedPreferences;
+
+    @Inject
+    ScrobbleDB scrobbleDB;
 
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
@@ -58,6 +62,12 @@ public class App extends Application implements HasActivityInjector, HasServiceI
         if(!sharedPreferences.contains(Constants.FAVORITE_ALBUMS_KEY)){
             sharedPreferences.edit().putStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>()).apply();
         }
+
+        checkScrobbleCache();
+    }
+
+    private void checkScrobbleCache() {
+        //TODO
     }
 
     @Override

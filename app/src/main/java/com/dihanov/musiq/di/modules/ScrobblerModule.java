@@ -1,5 +1,8 @@
 package com.dihanov.musiq.di.modules;
 
+import android.content.Context;
+
+import com.dihanov.musiq.db.ScrobbleDB;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 
@@ -16,7 +19,7 @@ import dagger.Provides;
 public class ScrobblerModule {
     @Provides
     @Singleton
-    Scrobbler provideScrobbler(LastFmApiClient lastFmApiClient){
-        return new Scrobbler(lastFmApiClient);
+    Scrobbler provideScrobbler(LastFmApiClient lastFmApiClient, Context context, ScrobbleDB scrobbleDB){
+        return new Scrobbler(lastFmApiClient, context, scrobbleDB);
     }
 }

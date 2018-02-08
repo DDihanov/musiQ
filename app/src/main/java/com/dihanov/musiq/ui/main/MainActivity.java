@@ -143,6 +143,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Override
     protected void onResume() {
         super.onResume();
+        initViewPager();
         this.invalidateOptionsMenu();
     }
 

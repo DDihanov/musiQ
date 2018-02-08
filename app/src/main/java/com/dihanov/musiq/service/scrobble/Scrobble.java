@@ -1,5 +1,7 @@
 package com.dihanov.musiq.service.scrobble;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by dimitar.dihanov on 2/7/2018.
  */
@@ -10,28 +12,33 @@ public class Scrobble {
     private String albumName;
     private long duration;
     private long timestamp;
-    private String imageUrl;
+    private Bitmap albumArt;
 
     public Scrobble() {
     }
 
-    public Scrobble(String artistName, String trackName, String albumName, long duration, long timestamp, String imageUrl) {
+    public Scrobble(String artistName, String trackName, String albumName, long duration, long timestamp, Bitmap albumArt) {
         this.artistName = artistName;
         this.trackName = trackName;
         this.albumName = albumName;
         this.duration = duration;
         this.timestamp = timestamp;
-        this.imageUrl = imageUrl;
+        this.albumArt = albumArt;
     }
 
-    public Scrobble(String artistName, String trackName, String albumName, long timestamp, String imageUrl) {
+    public Scrobble(String artistName, String trackName, String albumName, long timestamp, Bitmap albumArt) {
         this.artistName = artistName;
         this.trackName = trackName;
         this.albumName = albumName;
         this.timestamp = timestamp;
-        this.imageUrl = imageUrl;
+        this.albumArt = albumArt;
     }
 
+    public Scrobble(String artistName, String trackName, long timestamp) {
+        this.artistName = artistName;
+        this.trackName = trackName;
+        this.timestamp = timestamp;
+    }
 
     public String getArtistName() {
         return artistName;
@@ -73,11 +80,11 @@ public class Scrobble {
         this.timestamp = timestamp;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public void setAlbumArt(Bitmap albumArt) {
+        this.albumArt = albumArt;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public Bitmap getAlbumArt() {
+        return albumArt;
     }
 }

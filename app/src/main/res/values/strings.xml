@@ -32,4 +32,6 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="scrobble_single_track_success">Scrobbled %s - %s</string>
+    <string name="track_loved">Track loved.</string>
+    <string name="error_track_love">Could not love track. Please try again.</string>
 </resources>

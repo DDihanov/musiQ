@@ -64,7 +64,7 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
     }
 
     private void loadBackdrop(MainActivity mainActivity) {
-        if (Constants.isTablet(mainActivity) && Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
+        if (Constants.isTablet(mainActivity) || Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
             TOP_ARTIST_LIMIT = 10;
         }
 

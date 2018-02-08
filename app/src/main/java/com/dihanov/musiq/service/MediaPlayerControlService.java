@@ -3,7 +3,6 @@ package com.dihanov.musiq.service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
@@ -13,7 +12,6 @@ import android.service.notification.NotificationListenerService;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 
 import java.util.ArrayList;
@@ -29,13 +27,12 @@ import dagger.android.AndroidInjection;
  */
 
 public class MediaPlayerControlService extends NotificationListenerService
-        implements MediaSessionManager.OnActiveSessionsChangedListener{
+        implements MediaSessionManager.OnActiveSessionsChangedListener {
     private static final String TAG = MediaPlayerControlService.class.getSimpleName();
 
     @Inject
     Scrobbler scrobbler;
 
-    private SharedPreferences sharedPreferences = App.getSharedPreferences();
     private List<MediaController> currentControllers = new ArrayList<>();
 
     @Override
@@ -48,6 +45,11 @@ public class MediaPlayerControlService extends NotificationListenerService
 
         ComponentName componentName = new ComponentName(this, this.getClass());
         mediaSessionManager.addOnActiveSessionsChangedListener(this, componentName);
+
+        //force trigger the event before user presses a button, if this is not called, then the media
+        //controller will be found only after the user interacts with the media player, thus, skipping a track
+        List<MediaController> initialSessions = mediaSessionManager.getActiveSessions(componentName);
+        onActiveSessionsChanged(initialSessions);
     }
 
     @Nullable
@@ -64,12 +66,12 @@ public class MediaPlayerControlService extends NotificationListenerService
         MediaController.Callback callback = new MediaController.Callback() {
             @Override
             public void onPlaybackStateChanged(@NonNull PlaybackState state) {
-                super.onPlaybackStateChanged(state);
+                scrobbler.setStatus(state);
             }
 
             @Override
             public void onMetadataChanged(@Nullable MediaMetadata metadata) {
-                super.onMetadataChanged(metadata);
+                scrobbler.updateTrackInfo(metadata);
             }
         };
 
@@ -78,13 +80,13 @@ public class MediaPlayerControlService extends NotificationListenerService
             boolean contains = false;
 
             for (MediaController controller : controllers) {
-                if(controller.getPackageName().equals(element.getPackageName())){
+                if (controller.getPackageName().equals(element.getPackageName())) {
                     contains = true;
                     break;
                 }
             }
 
-            if(!contains){
+            if (!contains) {
                 element.unregisterCallback(callback);
                 iterator.remove();
             }
@@ -93,13 +95,13 @@ public class MediaPlayerControlService extends NotificationListenerService
         for (MediaController controller : controllers) {
             boolean contains = false;
             for (MediaController currentController : currentControllers) {
-                if(currentController.getPackageName().equals(controller.getPackageName())){
+                if (currentController.getPackageName().equals(controller.getPackageName())) {
                     contains = true;
                     break;
                 }
             }
 
-            if(!contains){
+            if (!contains) {
                 controller.registerCallback(callback);
                 toAdd.add(controller);
             }
@@ -107,6 +109,4 @@ public class MediaPlayerControlService extends NotificationListenerService
 
         currentControllers.addAll(toAdd);
     }
-
-
 }

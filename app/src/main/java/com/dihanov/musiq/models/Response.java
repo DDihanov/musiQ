@@ -17,6 +17,9 @@ public class Response {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("_status")
+    @Expose
+    private String status;
 
     public Integer getError() {
         return error;
@@ -42,4 +45,11 @@ public class Response {
         this.scrobbles = scrobbles;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

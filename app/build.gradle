@@ -96,7 +96,7 @@ dependencies {
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
 
     //DBFlow
-    def dbflow_version = 'develop-SNAPSHOT'
+    def dbflow_version = '4.2.4'
 
     annotationProcessor "com.github.raizlabs.dbflow:dbflow-processor:$dbflow_version"
     compile "com.github.raizlabs.dbflow:dbflow-core:$dbflow_version"

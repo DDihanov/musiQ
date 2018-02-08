@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
+import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -13,6 +14,6 @@ public interface NowPlayingFragmentContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-
+        void loveTrack(Scrobble scrobble);
     }
 }

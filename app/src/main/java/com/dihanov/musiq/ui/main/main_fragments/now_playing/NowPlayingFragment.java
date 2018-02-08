@@ -6,12 +6,21 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.util.Constants;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.support.DaggerFragment;
 
 /**
@@ -20,6 +29,27 @@ import dagger.android.support.DaggerFragment;
 
 public class NowPlayingFragment extends DaggerFragment implements NowPlayingFragmentContract.View {
     public static final String TITLE = "now playing";
+
+    @BindView(R.id.now_playing_fragment_layout)
+    RelativeLayout nowPlayingLayout;
+
+    @BindView(R.id.now_playing_nothing)
+    TextView nowPlayingNothing;
+
+    @BindView(R.id.now_playing_art)
+    ImageView nowPlayingArtistImage;
+
+    @BindView(R.id.now_playing_album)
+    TextView nowPlayingAlbum;
+
+    @BindView(R.id.now_playing_title)
+    TextView nowPlayingTitle;
+
+    @BindView(R.id.now_playing_artist)
+    TextView nowPlayingArtist;
+
+    @Inject
+    Scrobbler scrobbler;
 
     @Inject
     NowPlayingFragmentPresenter nowPlayingFragmentPresenter;
@@ -43,7 +73,26 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
         ButterKnife.bind(this, view);
 
         nowPlayingFragmentPresenter.takeView(this);
+
+        Scrobble nowPlaying = scrobbler.getNowPlaying();
+        if(nowPlaying == null){
+            nowPlayingNothing.setVisibility(View.VISIBLE);
+            Constants.setLayoutChildrenVisibility(View.GONE, nowPlayingLayout);
+        } else {
+            Constants.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
+            nowPlayingNothing.setVisibility(View.INVISIBLE);
+            Glide.with(nowPlayingArtistImage.getContext()).load(Constants.bitmapToByte(nowPlaying.getAlbumArt())).asBitmap().into(nowPlayingArtistImage);
+            nowPlayingArtist.setText(nowPlaying.getArtistName());
+            nowPlayingTitle.setText(nowPlaying.getTrackName());
+            nowPlayingAlbum.setText(nowPlaying.getAlbumName());
+        }
+
         return view;
+    }
+
+    @OnClick(R.id.love_track_full)
+    void loveTrack(View view){
+        nowPlayingFragmentPresenter.loveTrack(scrobbler.getNowPlaying());
     }
 
     @Override

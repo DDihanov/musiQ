@@ -5,6 +5,7 @@ import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.models.ArtistTopTags;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
+import com.dihanov.musiq.models.LovedTracks;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.SpecificAlbum;
 import com.dihanov.musiq.models.SpecificArtist;
@@ -47,6 +48,9 @@ public interface LastFmApiService{
     @GET(METHOD_CALL+"chart.gettopartists")
     Observable<TopArtistsResult> chartTopArtists(@Query("limit") Integer limit);
 
+    @GET(METHOD_CALL+"user.getlovedtracks")
+    Observable<LovedTracks> getUserLovedTracks(@Query("user") String username, @Query("limit") String limit);
+
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
     Observable<User> getMobileSessionToken(@Field("method") String authMethod, @Field("username") String username, @Field("password") String password, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("format") String format);
@@ -54,4 +58,12 @@ public interface LastFmApiService{
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
     Observable<Response> scrobbleTrack(@Field("method") String scrobbleMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("timestamp") long timestamp, @Field("sk") String sessionKey,@Field("format") String format);
+
+    @FormUrlEncoded
+    @POST(Config.LAST_FM_API_URL)
+    Observable<Response> updateNowPlaying(@Field("method") String updateNowPlayingMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("sk") String sessionKey,@Field("format") String format);
+
+    @FormUrlEncoded
+    @POST(Config.LAST_FM_API_URL)
+    Observable<Response> loveTrack(@Field("method") String trackLoveMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("sk") String sessionKey,@Field("format") String format);
 }
