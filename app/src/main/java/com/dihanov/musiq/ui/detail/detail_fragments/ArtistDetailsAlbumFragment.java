@@ -15,7 +15,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -95,12 +95,12 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     private void initRecyclerView() {
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (Constants.isTablet(artistDetailsActivity)){
+        if (HelperMethods.isTablet(artistDetailsActivity)){
             layoutManager = new GridLayoutManager(artistDetailsActivity, 3);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, artistDetailsActivity), true));
+            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, artistDetailsActivity), true));
         } else {
             layoutManager = new GridLayoutManager(artistDetailsActivity, 2);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, artistDetailsActivity), true));
+            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, artistDetailsActivity), true));
         }
 
         if(layoutManager == null){

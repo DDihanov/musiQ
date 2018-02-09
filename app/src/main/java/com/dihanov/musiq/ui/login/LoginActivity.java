@@ -14,6 +14,7 @@ import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
 
@@ -79,7 +80,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
             String username = intent.getStringExtra(Constants.USERNAME);
             String password = intent.getStringExtra(Constants.PASSWORD);
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.login_layout);
-            Constants.setLayoutChildrenEnabled(false, layout);
+            HelperMethods.setLayoutChildrenEnabled(false, layout);
             this.username.setText(username);
             this.password.setText(password);
             loginActivityPresenter.authenticateUser(username, password, this);
@@ -89,6 +90,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
     @OnClick(R.id.continue_without_sign_in)
     public void onClick(TextView editText){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

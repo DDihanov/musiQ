@@ -12,6 +12,7 @@ import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
 
         holder.getTitle().setText(album.getName().toLowerCase());
         if(album.getPlaycount() != null){
-            holder.getCount().setText(Constants.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
+            holder.getCount().setText(HelperMethods.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
         }
 
         // loading album cover using Glide library

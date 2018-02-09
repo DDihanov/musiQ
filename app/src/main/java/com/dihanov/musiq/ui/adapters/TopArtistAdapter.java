@@ -43,7 +43,7 @@ public class TopArtistAdapter extends AbstractAdapter {
     @Override
     public void onBindViewHolder(AbstractViewHolder holder, int position) {
         Artist artist = topArtist.get(position);
-        Glide.with(context)
+        Glide.with(context.getApplicationContext())
                 .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
                 .crossFade(2000)
                 .into(holder.getThumbnail());

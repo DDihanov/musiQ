@@ -16,6 +16,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.login.LoginActivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,8 +39,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
-        handleNotificationAccess();
     }
 
     private void handleNotificationAccess() {
@@ -51,8 +50,7 @@ public class SplashScreen extends AppCompatActivity {
             Thread timer = new Thread() {
                 public void run() {
                     try {
-                        Constants.showTooltip(SplashScreen.this, splashLogo, SplashScreen.this.getString(R.string.welcome_string));
-                        //Display for 3 seconds
+                        HelperMethods.showTooltip(SplashScreen.this, splashLogo, SplashScreen.this.getString(R.string.welcome_string));
                         sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -67,8 +65,8 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        handleNotificationAccess();
         super.onResume();
+        handleNotificationAccess();
     }
 
     private void checkForSavedCredentials() {
@@ -78,10 +76,11 @@ public class SplashScreen extends AppCompatActivity {
         if (sharedPreferences.contains(Constants.USERNAME) && sharedPreferences.contains(Constants.PASSWORD)) {
             loginRedirect.putExtra(Constants.USERNAME, sharedPreferences.getString(Constants.USERNAME, ""));
             loginRedirect.putExtra(Constants.PASSWORD, sharedPreferences.getString(Constants.PASSWORD, ""));
+            loginRedirect.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         }
 
-        loginRedirect.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(loginRedirect);
+        finish();
     }
 
     private boolean isNotificationServiceEnabled(){

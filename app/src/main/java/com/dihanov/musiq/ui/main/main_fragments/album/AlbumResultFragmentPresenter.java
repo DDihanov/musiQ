@@ -13,7 +13,7 @@ import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            Constants.checkConnection(mainActivity);
+                            HelperMethods.checkConnection(mainActivity);
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())

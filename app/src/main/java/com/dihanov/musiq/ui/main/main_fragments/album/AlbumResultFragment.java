@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
 
@@ -86,12 +86,12 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
     private void initRecyclerView() {
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (Constants.isTablet(mainActivity)){
+        if (HelperMethods.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){

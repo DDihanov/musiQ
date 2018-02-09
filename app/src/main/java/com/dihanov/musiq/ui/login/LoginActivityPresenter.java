@@ -10,10 +10,11 @@ import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.MediaPlayerControlService;
+import com.dihanov.musiq.service.MediaControlListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
 
@@ -50,19 +51,22 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void authenticateUser(String username, String password, Context context) {
-        if (checkConnection()) return;
+        if (checkConnection()){
+            HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
+            return;
+        }
 
         lastFmApiClient.getLastFmApiService()
-                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, Constants.generateSig(username, password), Config.FORMAT)
+                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, HelperMethods.generateSig(username, password), Config.FORMAT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Constants.setLayoutChildrenEnabled(false, loginActivity.findViewById(R.id.login_layout));
+                        HelperMethods.setLayoutChildrenEnabled(false, loginActivity.findViewById(R.id.login_layout));
                         compositeDisposable.add(d);
                         loginActivity.showProgressBar();
-                        Constants.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.logging_in_text)));
+                        HelperMethods.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.logging_in_text)));
                     }
 
                     @Override
@@ -73,8 +77,8 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Constants.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.error_username_password)));
-                        Constants.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
+                        HelperMethods.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.error_username_password)));
+                        HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
                         loginActivity.hideProgressBar();
                         Log.e(this.getClass().toString(), e.getMessage());
                     }
@@ -83,13 +87,12 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                     public void onComplete() {
                         persistUserInfo(username, password);
                         //if login is successful we can start the service
-                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaPlayerControlService.class));
+                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaControlListenerService.class));
                         compositeDisposable.clear();
                         loginActivity.hideProgressBar();
                         Intent intent = new Intent(loginActivity, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         loginActivity.startActivity(intent);
-                        loginActivity.finish();
                     }
                 });
 
@@ -102,7 +105,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     private boolean checkConnection() {
         if(!Connectivity.isConnected(loginActivity)){
-            Constants.showNetworkErrorTooltip(loginActivity, loginActivity.getBirdIcon());
+            HelperMethods.showNetworkErrorTooltip(loginActivity, loginActivity.getBirdIcon());
             return true;
         }
         return false;

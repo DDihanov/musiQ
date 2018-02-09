@@ -10,7 +10,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.TopArtistAdapter;
 import com.dihanov.musiq.util.Connectivity;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
     }
 
     private void loadBackdrop(MainActivity mainActivity) {
-        if (Constants.isTablet(mainActivity) || Constants.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
+        if (HelperMethods.isTablet(mainActivity) || HelperMethods.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
             TOP_ARTIST_LIMIT = 10;
         }
 
@@ -75,7 +75,7 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Constants.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
+                        HelperMethods.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
                         mainActivity.showProgressBar();
                         compositeDisposable.add(d);
                     }
@@ -111,7 +111,7 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
             public void run() {
                 while (!Connectivity.isConnected(mainActivity)) {
                     try {
-                        Constants.showNetworkErrorTooltip(mainActivity);
+                        HelperMethods.showNetworkErrorTooltip(mainActivity);
                         Thread.sleep(NETWORK_CHECK_THREAD_TIMEOUT);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

@@ -61,6 +61,11 @@ public interface LastFmApiService{
 
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
+    Observable<Response> scrobbleTrack(@Field("method") String scrobbleMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("timestamp") String timestamp, @Field("sk") String sessionKey,@Field("format") String format);
+
+
+    @FormUrlEncoded
+    @POST(Config.LAST_FM_API_URL)
     Observable<Response> updateNowPlaying(@Field("method") String updateNowPlayingMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("sk") String sessionKey,@Field("format") String format);
 
     @FormUrlEncoded

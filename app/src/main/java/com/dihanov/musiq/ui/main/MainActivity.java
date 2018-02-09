@@ -1,12 +1,14 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +17,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.ui.login.LoginActivity;
+import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
 
 import javax.inject.Inject;
@@ -34,14 +43,21 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View{
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
     private static final String search = "search for artists";
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
-    @Inject MainActivityPresenter mainActivityPresenter;
+    @Inject
+    MainActivityPresenter mainActivityPresenter;
 
     @BindView(R.id.bird)
     TextView bird;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.nav_list)
+    ListView optionList;
 
     @BindView(R.id.main_gridview)
     RecyclerView recyclerView;
@@ -49,15 +65,20 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.appbar) AppBarLayout appBarLayout;
+    @BindView(R.id.appbar)
+    AppBarLayout appBarLayout;
 
-    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
 
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
-    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
 
     private SearchView searchBar;
     private String lastSearch;
@@ -71,10 +92,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             this.lastSearch = savedInstanceState.getString(TAG_LAST_SEARCH);
         }
 
@@ -83,9 +104,49 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
 
+        initNavigationDrawer();
+
         appBarLayout.setExpanded(true);
         mainActivityPresenter.takeView(this);
         mainActivityPresenter.setBackdropImageChangeListener(this);
+    }
+
+    private void initNavigationDrawer() {
+        String[] options = getResources().getStringArray(R.array.navigation_options);
+
+        optionList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, options));
+
+        optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch((int)id){
+                    case(1):
+                        openSettings();
+                        break;
+                    case(2):
+                        logOut();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+
+
+    }
+
+    private void openSettings() {
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    private void logOut() {
+        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).apply();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -102,11 +163,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposes property,
         //in the xml, and the fonts are set programatically
-        Constants.changeTabsFont(this, tabLayout);
+        HelperMethods.changeTabsFont(this, tabLayout);
     }
 
     private void initCollapsingToolbar() {
-        Constants.setToolbarFont(collapsingToolbar, this);
+        HelperMethods.setToolbarFont(collapsingToolbar, this);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -154,7 +215,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
         this.searchBar = (SearchView) myActionMenuItem.getActionView();
 
-        if(this.lastSearch != null){
+        if (this.lastSearch != null) {
             this.searchBar.setQuery(lastSearch, true);
         }
 

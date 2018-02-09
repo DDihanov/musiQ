@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
 
@@ -48,6 +48,9 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @BindView(R.id.now_playing_artist)
     TextView nowPlayingArtist;
 
+    @BindView(R.id.love_track_full)
+    ImageView loveTrackImage;
+
     @Inject
     Scrobbler scrobbler;
 
@@ -77,11 +80,18 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
         Scrobble nowPlaying = scrobbler.getNowPlaying();
         if(nowPlaying == null){
             nowPlayingNothing.setVisibility(View.VISIBLE);
-            Constants.setLayoutChildrenVisibility(View.GONE, nowPlayingLayout);
+            HelperMethods.setLayoutChildrenVisibility(View.GONE, nowPlayingLayout);
         } else {
-            Constants.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
+            HelperMethods.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
             nowPlayingNothing.setVisibility(View.INVISIBLE);
-            Glide.with(nowPlayingArtistImage.getContext()).load(Constants.bitmapToByte(nowPlaying.getAlbumArt())).asBitmap().into(nowPlayingArtistImage);
+            if(nowPlaying.getAlbumArt() != null){
+                Glide.with(nowPlayingArtistImage.getContext()).load(HelperMethods.bitmapToByte(nowPlaying.getAlbumArt())).asBitmap().into(nowPlayingArtistImage);
+            } else {
+                Glide.with(nowPlayingArtistImage.getContext())
+                        .load(getResources()
+                                .getIdentifier("ic_missing_image", "drawable", this.getContext().getPackageName()))
+                        .into(nowPlayingArtistImage);
+            }
             nowPlayingArtist.setText(nowPlaying.getArtistName());
             nowPlayingTitle.setText(nowPlaying.getTrackName());
             nowPlayingAlbum.setText(nowPlaying.getAlbumName());

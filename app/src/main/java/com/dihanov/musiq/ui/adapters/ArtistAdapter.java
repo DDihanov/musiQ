@@ -12,6 +12,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ArtistAdapter extends AbstractAdapter {
         holder.getTitle().setText(artist.getName().toLowerCase());
 
         if (artist.getListeners() != null) {
-            holder.getCount().setText(Constants.formatNumberWithSeperator(artist.getListeners()) + " listeners");
+            holder.getCount().setText(HelperMethods.formatNumberWithSeperator(artist.getListeners()) + " listeners");
         }
 
 

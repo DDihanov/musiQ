@@ -5,67 +5,75 @@
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/now_playing_fragment_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/now_playing_artist_image"
-            android:layout_width="280dp"
-            android:layout_height="280dp"
-            android:layout_centerHorizontal="true">
-
-            <ImageView
-                android:id="@+id/now_playing_art"
+            <RelativeLayout
+                android:id="@+id/now_playing_fragment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
-        </android.support.v7.widget.CardView>
+                android:layout_marginTop="48dp">
 
-        <TextView
-            android:id="@+id/now_playing_title"
-            style="@android:style/TextAppearance.Large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/now_playing_artist_image"
-            android:layout_marginTop="16dp"
-            android:text="Track"
-            android:textAlignment="center" />
+                <android.support.v7.widget.CardView
+                    android:id="@+id/now_playing_artist_image"
+                    android:layout_width="280dp"
+                    android:layout_height="280dp"
+                    android:layout_centerHorizontal="true">
 
-        <TextView
-            android:id="@+id/now_playing_artist"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/now_playing_title"
-            android:text="Artist"
-            android:textAlignment="center" />
+                    <ImageView
+                        android:id="@+id/now_playing_art"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/love_track_full"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_launcher" />
 
-        <TextView
-            android:id="@+id/now_playing_album"
-            style="@android:style/TextAppearance.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/now_playing_artist"
-            android:text="Album"
-            android:textAlignment="center" />
+                </android.support.v7.widget.CardView>
 
-        <ImageView
-            android:id="@+id/love_track_full"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/now_playing_fragment_layout"
-            android:layout_marginEnd="77dp"
-            android:layout_marginTop="103dp"
-            android:src="@drawable/ic_favorite_black_48dp" />
+                <TextView
+                    android:id="@+id/now_playing_title"
+                    style="@android:style/TextAppearance.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/now_playing_artist_image"
+                    android:layout_marginTop="16dp"
+                    android:text="Track"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/now_playing_artist"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/now_playing_title"
+                    android:text="Artist"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/now_playing_album"
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/now_playing_artist"
+                    android:text="Album"
+                    android:textAlignment="center" />
+
+                <ImageView
+                    android:id="@+id/love_track_full"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/now_playing_album"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_favorite_black_48dp" />
 
 
-    </RelativeLayout>
+            </RelativeLayout>
 
     <TextView
         android:id="@+id/now_playing_nothing"
@@ -76,5 +84,9 @@
         android:text="@string/nothing_playing"
         android:textAlignment="center"
         android:visibility="invisible" />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
 
@@ -47,7 +48,7 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
 
     @Override
     public void loveTrack(Scrobble scrobble) {
-        String apiSig = Constants.generateSig(Constants.ARTIST, scrobble.getArtistName(),
+        String apiSig = HelperMethods.generateSig(Constants.ARTIST, scrobble.getArtistName(),
                 Constants.TRACK, scrobble.getTrackName(),
                 Constants.METHOD, Constants.LOVE_TRACK_METHOD);
 

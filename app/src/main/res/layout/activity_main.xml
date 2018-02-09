@@ -16,6 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -147,4 +148,5 @@
     <include
         android:id="@+id/include"
         layout="@layout/content_main" />
+
 </android.support.design.widget.CoordinatorLayout>

@@ -16,6 +16,7 @@ import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,12 +82,12 @@ public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAl
     private void initRecyclerView() {
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (Constants.isTablet(mainActivity)){
+        if (HelperMethods.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(3, Constants.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(2, Constants.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){

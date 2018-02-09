@@ -12,6 +12,7 @@ import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.ui.main.MainActivityContract;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
     public void showArtistDetailsIntent(String artistName, MainActivityContract.View mainActivity) {
         Intent showArtistDetailsIntent = new Intent((Context)mainActivity, ArtistDetailsActivity.class);
         showArtistDetailsIntent.putExtra(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
-        Constants.showTooltip((Activity)mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
+        HelperMethods.showTooltip((Activity)mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
         mainActivity.showProgressBar();
 
         Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()

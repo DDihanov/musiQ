@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
@@ -14,7 +13,13 @@ import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.Notificator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,7 +47,7 @@ public class Scrobbler {
     }
 
     public void scrobble(Scrobble scrobble) {
-        String apiSig = Constants.generateSig(Constants.ARTIST, scrobble.getArtistName(),
+        String apiSig = HelperMethods.generateSig(Constants.ARTIST, scrobble.getArtistName(),
                 Constants.TRACK, scrobble.getTrackName(),
                 Constants.TIMESTAMP, String.valueOf(scrobble.getTimestamp()),
                 Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
@@ -65,10 +70,8 @@ public class Scrobbler {
 
                     @Override
                     public void onNext(Response response) {
-                        if(response.getError() == null){
-                            Toast.makeText(context, String.format(context.getString(R.string.scrobble_single_track_success),
-                                    scrobble.getArtistName(),
-                                    scrobble.getAlbumName()), Toast.LENGTH_SHORT).show();
+                        if (response.getError() == null) {
+                            Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getAlbumName()));
                         } else {
                             handleErrorResponse(response, scrobble);
                         }
@@ -108,9 +111,17 @@ public class Scrobbler {
         return this.nowPlaying;
     }
 
-    public void setNowPlaying(Scrobble nowPlaying) {
+    private void setNowPlaying(Scrobble nowPlaying) {
+
+        if(nowPlaying == null){
+            this.nowPlaying = null;
+            return;
+        }
+
+        Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+
         this.nowPlaying = nowPlaying;
-        String apiSig = Constants.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),
+        String apiSig = HelperMethods.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),
                 Constants.TRACK, nowPlaying.getTrackName(),
                 Constants.METHOD, Constants.UPDATE_NOW_PLAYING_METHOD);
 
@@ -148,7 +159,19 @@ public class Scrobbler {
 
     public void setStatus(PlaybackState playbackState) {
         int state = playbackState.getState();
-        this.state.handleStatusChanged(state);
+        if(playbackState.getState() == PlaybackState.STATE_NONE){
+            this.setNowPlaying(null);
+        } else {
+            this.state.handleStatusChanged(state);
+        }
+    }
+
+    public void setStatus(int status){
+        if(status == PlaybackState.STATE_NONE){
+            this.manageScrobble(nowPlaying);
+            Notificator.cancelNotification(context, Notificator.NOTIFICATION_ID);
+            this.setNowPlaying(null);
+        }
     }
 
 
@@ -160,8 +183,71 @@ public class Scrobbler {
         scrobbleDB.writeScrobble(scrobble);
     }
 
-    private void scrobbleFromCache() {
-        //TODO
+    public void scrobbleFromCache() {
+        List<Scrobble> cached = scrobbleDB.getCachedScrobbles();
+
+        if(cached.isEmpty()) return;
+
+        List<Observable<Response>> observables = new ArrayList<>();
+        String apiSig = "";
+
+        for (int i = 0; i < 50 && i < cached.size(); i++) {
+            Scrobble scrobble = cached.get(i);
+            String formattedArtistName = scrobble.getArtistName() + String.format("[%s]", i);
+            String formattedTrackName = scrobble.getTrackName() + String.format("[%s]", i);
+            String formattedTimestamp = String.valueOf(scrobble.getTimestamp()) + String.format("[%s]", i);
+            apiSig = HelperMethods.generateSig(Constants.ARTIST, formattedArtistName,
+                    Constants.TRACK, formattedTrackName,
+                    Constants.TIMESTAMP, formattedTimestamp,
+                    Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
+
+
+            observables.add(lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
+                    formattedArtistName,
+                    formattedTrackName,
+                    Config.API_KEY,
+                    apiSig,
+                    formattedTimestamp,
+                    App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                    Config.FORMAT)
+                    .subscribeOn(Schedulers.io()));
+        }
+
+        Observable.zipIterable(observables, objects -> {
+            List<Response> result = new ArrayList<>();
+            for (Object object : objects) {
+                result.add((Response) object);
+            }
+            return result;
+        }, false, 10)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<List<Response>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(List<Response> responses) {
+                        for (Response respons : responses) {
+                            Log.d(TAG, "Scrobbled " +
+                                    respons.getScrobbles().getScrobble().getArtist().getText() +
+                                    " - " +
+                                    respons.getScrobbles().getScrobble().getTrack().getText());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        compositeDisposable.clear();
+                        scrobbleDB.clearCache();
+                    }
+                });
     }
 
     public void updateTrackInfo(MediaMetadata metadata) {
@@ -193,6 +279,9 @@ public class Scrobbler {
         }
 
         Scrobble scrobble = new Scrobble(trackArtistName, trackName, trackAlbumName, trackDuration, timestamp, albumArt);
+
+        if (!scrobble.isScrobbleValid()) return;
+
         this.setNowPlaying(scrobble);
     }
 

@@ -12,7 +12,7 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainActivityContract;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -77,7 +77,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            Constants.checkConnection(mainActivity);
+                            HelperMethods.checkConnection(mainActivity);
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())

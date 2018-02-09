@@ -40,6 +40,10 @@ public class Scrobble {
         this.timestamp = timestamp;
     }
 
+    public boolean isScrobbleValid() {
+        return !getArtistName().equals("") && !getTrackName().equals("");
+    }
+
     public String getArtistName() {
         return artistName;
     }

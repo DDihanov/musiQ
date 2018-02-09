@@ -25,6 +25,7 @@ import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.veinhorn.tagview.TagView;
 
@@ -70,7 +71,7 @@ public class AlbumDetailsPopupWindow {
                                 @Override
                                 public void onSubscribe(Disposable d) {
                                     activity.showProgressBar();
-                                    Constants.showTooltip((Activity) activity, activity.getBirdIcon(), LOADING_ALBUM);
+                                    HelperMethods.showTooltip((Activity) activity, activity.getBirdIcon(), LOADING_ALBUM);
                                 }
 
                                 @Override

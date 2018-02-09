@@ -8,8 +8,6 @@
     <uses-permission android:name="android.Manifest.permission.MEDIA_CONTENT_CONTROL " />
 
     <!-- permissions -->
-
-
     <application
         android:name=".di.app.App"
         android:allowBackup="true"
@@ -21,22 +19,27 @@
         <activity android:name=".ui.main.splash.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"></activity>
+        <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.detail.ArtistDetailsActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
 
         <service
-            android:name=".service.MediaPlayerControlService"
+            android:name=".service.MediaControlListenerService"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ui.main.main_fragments.settings.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

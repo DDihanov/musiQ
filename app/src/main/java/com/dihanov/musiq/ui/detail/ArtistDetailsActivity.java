@@ -23,6 +23,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.Gson;
 import com.veinhorn.tagview.TagView;
 
@@ -186,12 +187,12 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
         //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposed property,
         //in the xml, and the fonts are set programatically
-        Constants.changeTabsFont(this, tabLayout);
+        HelperMethods.changeTabsFont(this, tabLayout);
     }
 
     private void initCollapsingToolbar() {
         collapsingToolbar.setTitle(" ");
-        Constants.setToolbarFont(collapsingToolbar, this);
+        HelperMethods.setToolbarFont(collapsingToolbar, this);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.artist_details_appbar);
         appBarLayout.setExpanded(true);
 
