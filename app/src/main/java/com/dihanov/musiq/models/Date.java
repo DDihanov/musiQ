@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Date {
 
-    @SerializedName("_uts")
+    @SerializedName("uts")
     @Expose
     private String uts;
-    @SerializedName("__text")
+    @SerializedName("#text")
     @Expose
     private String text;
 

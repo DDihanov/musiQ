@@ -1,16 +1,22 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Response;
+import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,6 +31,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.Presenter {
+    private static final int RECENT_SCROBBLES_LIMIT = 20;
+    private static final String TAG = NowPlayingFragmentPresenter.class.getSimpleName();
+
     @Inject
     LastFmApiClient lastFmApiClient;
 
@@ -76,6 +85,46 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
                     @Override
                     public void onError(Throwable e) {
                         Log.d(NowPlayingFragmentPresenter.class.getSimpleName(), e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        compositeDisposable.clear();
+                    }
+                });
+    }
+
+    @Override
+    public void loadRecentScrobbles(ListView listView) {
+        lastFmApiClient.getLastFmApiService()
+                .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<RecentTracksWrapper>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(RecentTracksWrapper recentTracksWrapper) {
+                        List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
+
+                        String[] trackNames = new String[result.size()];
+
+                        for (int i = 0; i < result.size(); i++) {
+                            trackNames[i] = result.get(i).toString();
+                        }
+
+                        ArrayAdapter<String> arrayAdapter =
+                                new ArrayAdapter<>(nowPlayingFragment.getContext(), android.R.layout.simple_list_item_1, trackNames);
+
+                        listView.setAdapter(arrayAdapter);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, e.getMessage());
                     }
 
                     @Override

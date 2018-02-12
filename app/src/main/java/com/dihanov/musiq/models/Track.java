@@ -1,8 +1,16 @@
 
 package com.dihanov.musiq.models;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.lang.reflect.Type;
 
 public class Track {
     @SerializedName("corrected")
@@ -25,7 +33,7 @@ public class Track {
     private Attr attr;
     @SerializedName("streamable")
     @Expose
-    private Streamable streamable;
+    private Object streamable;
     @SerializedName("artist")
     @Expose
     private Artist artist;
@@ -78,11 +86,11 @@ public class Track {
         this.attr = attr;
     }
 
-    public Streamable getStreamable() {
+    public Object getStreamable() {
         return streamable;
     }
 
-    public void setStreamable(Streamable streamable) {
+    public void setStreamable(Object streamable) {
         this.streamable = streamable;
     }
 
@@ -94,4 +102,30 @@ public class Track {
         this.artist = artist;
     }
 
+    @Override
+    public String toString(){
+        return this.artist.getText() + " - " + this.name;
+    }
+
+    //this is necessary as API returns different types
+    public static class TrackDataStateDeserializer implements JsonDeserializer<Track> {
+        @Override
+        public Track deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Track track = new Gson().fromJson(json, Track.class);
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            if (jsonObject.has("streamable")) {
+                JsonElement elem = jsonObject.get("streamable");
+                if (elem != null && !elem.isJsonNull()) {
+                    if (elem.isJsonPrimitive()) {
+                        track.setStreamable(elem.getAsString());
+                    } else {
+                        track.setStreamable(new Gson().fromJson(elem, Streamable.class));
+                    }
+                }
+            }
+
+            return track;
+        }
+    }
 }

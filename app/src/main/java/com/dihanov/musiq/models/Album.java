@@ -15,6 +15,9 @@ import java.util.List;
 
 public class Album {
 
+    @SerializedName("#text")
+    @Expose
+    private String text;
     @SerializedName("corrected")
     @Expose
     private String corrected;
@@ -50,6 +53,14 @@ public class Album {
     @SerializedName("wiki")
     @Expose
     private Wiki wiki;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public void setArtist(Object artist) {
         this.artist = artist;
@@ -149,18 +160,18 @@ public class Album {
             if (jsonObject.has("artist")) {
                 JsonElement elem = jsonObject.get("artist");
                 if (elem != null && !elem.isJsonNull()) {
-                    if(elem.isJsonPrimitive()){
+                    if (elem.isJsonPrimitive()) {
                         album.setArtist(elem.getAsString());
-                    }else{
+                    } else {
                         album.setArtist(new Gson().fromJson(elem, Artist.class));
                     }
                 }
             }
 
-            if(jsonObject.has("playcount")){
+            if (jsonObject.has("playcount")) {
                 JsonElement elem = jsonObject.get("playcount");
-                if (elem != null && !elem.isJsonNull()){
-                    if(elem.isJsonPrimitive()){
+                if (elem != null && !elem.isJsonNull()) {
+                    if (elem.isJsonPrimitive()) {
                         album.setPlaycount(elem.getAsInt());
                     } else {
                         album.setPlaycount(elem.getAsString());

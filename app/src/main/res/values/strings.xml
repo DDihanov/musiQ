@@ -115,4 +115,5 @@
     <string name="scrobble_auto_detect">Enable auto-detection of players</string>
     <string name="auto_detect">Auto-detect</string>
     <string name="remember_me">Remember me</string>
+    <string name="recentrly_scrobbled_text">Recently scrobbled tracks:</string>
 </resources>

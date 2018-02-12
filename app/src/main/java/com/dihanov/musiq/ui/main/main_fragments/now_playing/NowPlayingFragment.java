@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,9 +34,6 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @BindView(R.id.now_playing_fragment_layout)
     RelativeLayout nowPlayingLayout;
 
-    @BindView(R.id.now_playing_nothing)
-    TextView nowPlayingNothing;
-
     @BindView(R.id.now_playing_art)
     ImageView nowPlayingArtistImage;
 
@@ -50,6 +48,9 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
 
     @BindView(R.id.love_track_full)
     ImageView loveTrackImage;
+
+    @BindView(R.id.recent_tracks)
+    ListView recentTracks;
 
     @Inject
     Scrobbler scrobbler;
@@ -79,11 +80,9 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
 
         Scrobble nowPlaying = scrobbler.getNowPlaying();
         if(nowPlaying == null){
-            nowPlayingNothing.setVisibility(View.VISIBLE);
             HelperMethods.setLayoutChildrenVisibility(View.GONE, nowPlayingLayout);
         } else {
             HelperMethods.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
-            nowPlayingNothing.setVisibility(View.INVISIBLE);
             if(nowPlaying.getAlbumArt() != null){
                 Glide.with(nowPlayingArtistImage.getContext()).load(HelperMethods.bitmapToByte(nowPlaying.getAlbumArt())).asBitmap().into(nowPlayingArtistImage);
             } else {
@@ -96,6 +95,8 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
             nowPlayingTitle.setText(nowPlaying.getTrackName());
             nowPlayingAlbum.setText(nowPlaying.getAlbumName());
         }
+
+        nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks);
 
         return view;
     }
