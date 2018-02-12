@@ -112,4 +112,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="player_preference">Manage players for scrobbling</string>
+    <string name="scrobble_auto_detect">Enable auto-detection of players</string>
+    <string name="auto_detect">Auto-detect</string>
+    <string name="remember_me">Remember me</string>
 </resources>

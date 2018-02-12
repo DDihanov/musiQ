@@ -15,6 +15,6 @@ public interface LoginActivityContract{
     }
 
     interface Presenter extends BasePresenter<View> {
-        void authenticateUser(String username, String password, Context context);
+        void authenticateUser(String username, String password, Context context, boolean rememberMe);
     }
 }

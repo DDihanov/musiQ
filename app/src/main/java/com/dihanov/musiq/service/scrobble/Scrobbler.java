@@ -71,7 +71,7 @@ public class Scrobbler {
                     @Override
                     public void onNext(Response response) {
                         if (response.getError() == null) {
-                            Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getAlbumName()));
+                            Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
                         } else {
                             handleErrorResponse(response, scrobble);
                         }
@@ -112,6 +112,8 @@ public class Scrobbler {
     }
 
     private void setNowPlaying(Scrobble nowPlaying) {
+        //check to see if user is logged in before continuing
+        if(!App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) return;
 
         if(nowPlaying == null){
             this.nowPlaying = null;
@@ -142,7 +144,7 @@ public class Scrobbler {
 
                     @Override
                     public void onNext(Response response) {
-                        Log.d(TAG, response.getMessage());
+                        Log.d(TAG, String.format("Updated now playing: %s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
                     }
 
                     @Override
@@ -169,7 +171,6 @@ public class Scrobbler {
     public void setStatus(int status){
         if(status == PlaybackState.STATE_NONE){
             this.manageScrobble(nowPlaying);
-            Notificator.cancelNotification(context, Notificator.NOTIFICATION_ID);
             this.setNowPlaying(null);
         }
     }
@@ -193,21 +194,21 @@ public class Scrobbler {
 
         for (int i = 0; i < 50 && i < cached.size(); i++) {
             Scrobble scrobble = cached.get(i);
-            String formattedArtistName = scrobble.getArtistName() + String.format("[%s]", i);
-            String formattedTrackName = scrobble.getTrackName() + String.format("[%s]", i);
-            String formattedTimestamp = String.valueOf(scrobble.getTimestamp()) + String.format("[%s]", i);
-            apiSig = HelperMethods.generateSig(Constants.ARTIST, formattedArtistName,
-                    Constants.TRACK, formattedTrackName,
-                    Constants.TIMESTAMP, formattedTimestamp,
+            String artistName = scrobble.getArtistName();
+            String trackName = scrobble.getTrackName();
+            String timestamp = String.valueOf(scrobble.getTimestamp());
+            apiSig = HelperMethods.generateSig(Constants.ARTIST, artistName,
+                    Constants.TRACK, trackName,
+                    Constants.TIMESTAMP, timestamp,
                     Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
 
 
             observables.add(lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
-                    formattedArtistName,
-                    formattedTrackName,
+                    artistName,
+                    trackName,
                     Config.API_KEY,
                     apiSig,
-                    formattedTimestamp,
+                    timestamp,
                     App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
                     Config.FORMAT)
                     .subscribeOn(Schedulers.io()));
@@ -254,6 +255,10 @@ public class Scrobbler {
         if (this.nowPlaying != null) {
             this.getStatus().setState(State.PREP_SCROBBLE_STATE);
             manageScrobble(this.nowPlaying);
+        }
+
+        if(metadata == null){
+            return;
         }
 
         this.getStatus().setPenalty(0);

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.login.LoginActivity;
 import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 import com.dihanov.musiq.util.Constants;
@@ -142,9 +143,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     }
 
     private void logOut() {
-        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).apply();
+        App.getSharedPreferences().edit().remove(Constants.USERNAME)
+                .remove(Constants.PASSWORD)
+                .remove(Constants.USER_SESSION_KEY)
+                .remove(Constants.REMEMBER_ME)
+                .apply();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        stopService(new Intent(this, MediaControllerListenerService.class));
         startActivity(intent);
         finish();
     }

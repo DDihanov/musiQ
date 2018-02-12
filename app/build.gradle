@@ -85,6 +85,7 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
     def daggerVersion = '2.11'
     def butterKnifeVersion = '8.7.0'

@@ -17,6 +17,7 @@ import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 import com.dihanov.musiq.util.NetworkConnectionReceiver;
+import com.dihanov.musiq.util.Notificator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +33,13 @@ import dagger.android.AndroidInjection;
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class MediaControlListenerService extends NotificationListenerService
+public class MediaControllerListenerService extends NotificationListenerService
         implements MediaSessionManager.OnActiveSessionsChangedListener,
         SharedPreferences.OnSharedPreferenceChangeListener{
     public static final String CONTROLLER_PREFIX = "media_controller.";
 
-    private static final String TAG = MediaControlListenerService.class.getSimpleName();
+    private static final String TAG = MediaControllerListenerService.class.getSimpleName();
+    private static String currentPlayingControllerPackageName;
 
     @Inject
     Scrobbler scrobbler;
@@ -66,6 +68,8 @@ public class MediaControlListenerService extends NotificationListenerService
 
     @Override
     public void onActiveSessionsChanged(@Nullable List<MediaController> controllers) {
+        boolean enableAutoDetect = App.getSharedPreferences().getBoolean("enable_auto_detect", true);
+
         MediaController.Callback callback = new MediaController.Callback() {
             @Override
             public void onPlaybackStateChanged(@NonNull PlaybackState state) {
@@ -81,6 +85,7 @@ public class MediaControlListenerService extends NotificationListenerService
 
         for (ListIterator<MediaController> iterator = controllers.listIterator(); iterator.hasNext(); ) {
             MediaController element = iterator.next();
+            String packageName = element.getPackageName();
             boolean contains = false;
             ListIterator<MediaController> currControllerIterator = currentControllers.listIterator();
 
@@ -92,8 +97,10 @@ public class MediaControlListenerService extends NotificationListenerService
             }
 
             if (!contains) {
-                if(!App.getSharedPreferences().getBoolean(SettingsActivity.PLAYER_PREFIX + element.getPackageName(), true)){
-                    continue;
+                if(!enableAutoDetect){
+                    if(!App.getSharedPreferences().getBoolean(SettingsActivity.PLAYER_PREFIX + element.getPackageName(), true)){
+                        continue;
+                    }
                 }
                 element.registerCallback(callback);
                 currControllerIterator.add(element);
@@ -122,14 +129,20 @@ public class MediaControlListenerService extends NotificationListenerService
                 iterator.remove();
             }
         }
+
+        //manage currently active controller info
+        for (MediaController currentController : currentControllers) {
+            if(currentController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING){
+                currentPlayingControllerPackageName = currentController.getPackageName();
+                break;
+            }
+        }
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        for (MediaController currentController : currentControllers) {
-            if (sbn.getPackageName().equals(currentController.getPackageName())) {
-                scrobbler.setStatus(PlaybackState.STATE_NONE);
-            }
+        if(sbn.getPackageName().equals(currentPlayingControllerPackageName)){
+            Notificator.cancelNotification(this);
         }
     }
 
@@ -138,11 +151,13 @@ public class MediaControlListenerService extends NotificationListenerService
         if(key.startsWith(SettingsActivity.PLAYER_PREFIX)){
             String packageName = key.substring(14, key.length());
 
-            if(!sharedPreferences.getBoolean(key, false)){
+            if(!sharedPreferences.getBoolean(key, true)){
                 for(ListIterator<MediaController> iterator = currentControllers.listIterator(); iterator.hasNext(); ){
                     MediaController mediaController = iterator.next();
                     if(mediaController.getPackageName().equals(packageName)){
-                        mediaController.unregisterCallback(callbacks.get(packageName));
+                        if(callbacks.containsKey(packageName)){
+                            mediaController.unregisterCallback(callbacks.get(packageName));
+                        }
                         iterator.remove();
                     }
                 }

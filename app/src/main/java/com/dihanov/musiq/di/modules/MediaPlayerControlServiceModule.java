@@ -3,7 +3,7 @@ package com.dihanov.musiq.di.modules;
 import android.app.Service;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.service.MediaControlListenerService;
+import com.dihanov.musiq.service.MediaControllerListenerService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,7 +16,7 @@ import dagger.Provides;
 public class MediaPlayerControlServiceModule {
     @Provides
     @PerActivity
-    Service provideService(MediaControlListenerService mediaControlListenerService){
-        return mediaControlListenerService;
+    Service provideService(MediaControllerListenerService mediaControllerListenerService){
+        return mediaControllerListenerService;
     }
 }

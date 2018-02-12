@@ -1,4 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="enable_auto_detect"
+        android:summary="@string/scrobble_auto_detect"
+        android:title="@string/auto_detect"/>
 </PreferenceScreen>

@@ -1,8 +1,10 @@
 package com.dihanov.musiq.ui.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -46,6 +49,9 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
     @BindView(R.id.login_progress)
     ProgressBar progressBar;
 
+    @BindView(R.id.remember_me_checkbox)
+    AppCompatCheckBox rememberMeCheckBox;
+
     @Inject
     LoginActivityPresenter loginActivityPresenter;
 
@@ -58,6 +64,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        rememberMeCheckBox.setChecked(App.getSharedPreferences().getBoolean(Constants.REMEMBER_ME, false));
         loginActivityPresenter.takeView(LoginActivity.this);
     }
 
@@ -72,18 +79,19 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
         String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
 
-        loginActivityPresenter.authenticateUser(usernameString, passwordString, this);
+        loginActivityPresenter.authenticateUser(usernameString, passwordString, this, rememberMeCheckBox.isChecked());
     }
 
     private void checkIntent(Intent intent) {
-        if(intent.hasExtra(Constants.USERNAME) && intent.hasExtra(Constants.PASSWORD)){
-            String username = intent.getStringExtra(Constants.USERNAME);
-            String password = intent.getStringExtra(Constants.PASSWORD);
+        SharedPreferences sharedPreferences = App.getSharedPreferences();
+        if(intent.hasExtra(Constants.REMEMBER_ME)){
+            String username = sharedPreferences.getString(Constants.USERNAME, "");
+            String password = sharedPreferences.getString(Constants.PASSWORD, "");
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.login_layout);
             HelperMethods.setLayoutChildrenEnabled(false, layout);
             this.username.setText(username);
             this.password.setText(password);
-            loginActivityPresenter.authenticateUser(username, password, this);
+            loginActivityPresenter.authenticateUser(username, password, this, rememberMeCheckBox.isChecked());
         }
     }
 

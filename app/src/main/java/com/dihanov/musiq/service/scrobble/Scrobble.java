@@ -2,6 +2,9 @@ package com.dihanov.musiq.service.scrobble;
 
 import android.graphics.Bitmap;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by dimitar.dihanov on 2/7/2018.
  */
@@ -24,6 +27,7 @@ public class Scrobble {
         this.duration = duration;
         this.timestamp = timestamp;
         this.albumArt = albumArt;
+        fixTrackData();
     }
 
     public Scrobble(String artistName, String trackName, String albumName, long timestamp, Bitmap albumArt) {
@@ -32,12 +36,27 @@ public class Scrobble {
         this.albumName = albumName;
         this.timestamp = timestamp;
         this.albumArt = albumArt;
+        fixTrackData();
     }
+
 
     public Scrobble(String artistName, String trackName, long timestamp) {
         this.artistName = artistName;
         this.trackName = trackName;
         this.timestamp = timestamp;
+        fixTrackData();
+    }
+
+    private void fixTrackData() {
+        String pattern = "^(.*?)\\s-\\s(.*?)$";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(trackName);
+
+        if(m.find()){
+            this.trackName = m.group(2);
+            this.artistName = m.group(1);
+        }
+
     }
 
     public boolean isScrobbleValid() {

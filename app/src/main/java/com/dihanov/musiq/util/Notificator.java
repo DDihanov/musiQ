@@ -17,7 +17,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 
 public class Notificator {
-    public static final int NOTIFICATION_ID = 9237;
+    private static final int NOTIFICATION_ID = 9237;
 
     public static void buildNotification(Context context, String title, String content) {
         NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -37,15 +37,16 @@ public class Notificator {
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                         R.mipmap.ic_launcher));
-        builder.setDefaults(Notification.DEFAULT_ALL);
-        builder.setVibrate(null);
+//        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setVibrate(new long[]{});
+        builder.setOnlyAlertOnce(false);
 
         Notification notification = builder.build();
         nm.notify(NOTIFICATION_ID, notification);
     }
 
-    public static void cancelNotification(Context context, int id) {
+    public static void cancelNotification(Context context) {
         NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        nm.cancel(id);
+        nm.cancel(NOTIFICATION_ID);
     }
 }

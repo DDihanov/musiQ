@@ -10,7 +10,7 @@ import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.MediaControlListenerService;
+import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
@@ -50,7 +50,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
     }
 
     @Override
-    public void authenticateUser(String username, String password, Context context) {
+    public void authenticateUser(String username, String password, Context context, boolean rememberMe) {
         if (checkConnection()){
             HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
             return;
@@ -85,9 +85,9 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
                     @Override
                     public void onComplete() {
-                        persistUserInfo(username, password);
+                        persistUserInfo(username, password, rememberMe);
                         //if login is successful we can start the service
-                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaControlListenerService.class));
+                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaControllerListenerService.class));
                         compositeDisposable.clear();
                         loginActivity.hideProgressBar();
                         Intent intent = new Intent(loginActivity, MainActivity.class);
@@ -98,9 +98,12 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     }
 
-    private void persistUserInfo(String username, String password) {
+    private void persistUserInfo(String username, String password, boolean rememberMe) {
         SharedPreferences sharedPreferences = App.getSharedPreferences();
-        sharedPreferences.edit().putString(Constants.USERNAME, username).putString(Constants.PASSWORD, password).apply();
+        sharedPreferences.edit().putString(Constants.USERNAME, username)
+                .putString(Constants.PASSWORD, password)
+                .putBoolean(Constants.REMEMBER_ME, rememberMe)
+                .apply();
     }
 
     private boolean checkConnection() {

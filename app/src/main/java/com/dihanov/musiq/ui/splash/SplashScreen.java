@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main.splash;
+package com.dihanov.musiq.ui.splash;
 
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -73,12 +73,11 @@ public class SplashScreen extends AppCompatActivity {
         Intent loginRedirect = new Intent(this, LoginActivity.class);
         SharedPreferences sharedPreferences = App.getSharedPreferences();
 
-        if (sharedPreferences.contains(Constants.USERNAME) && sharedPreferences.contains(Constants.PASSWORD)) {
-            loginRedirect.putExtra(Constants.USERNAME, sharedPreferences.getString(Constants.USERNAME, ""));
-            loginRedirect.putExtra(Constants.PASSWORD, sharedPreferences.getString(Constants.PASSWORD, ""));
-            loginRedirect.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (sharedPreferences.getBoolean(Constants.REMEMBER_ME, false)) {
+            loginRedirect.putExtra(Constants.REMEMBER_ME, sharedPreferences.getBoolean(Constants.REMEMBER_ME, false));
         }
 
+        loginRedirect.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(loginRedirect);
         finish();
     }

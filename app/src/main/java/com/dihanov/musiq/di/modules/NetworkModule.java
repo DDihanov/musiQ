@@ -51,6 +51,9 @@ public class NetworkModule {
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient() {
+        //for logging
+        // HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        // interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
@@ -76,6 +79,8 @@ public class NetworkModule {
             Request request = requestBuilder.build();
             return chain.proceed(request);
         });
+        //for logging
+        //.addInterceptor(interceptor);
 
         return httpClient
                 //need these otherwise app crashes when using RxJava2

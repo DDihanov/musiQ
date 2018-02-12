@@ -25,7 +25,7 @@ import android.view.MenuItem;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.service.MediaControlListenerService;
+import com.dihanov.musiq.service.MediaControllerListenerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +190,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             PackageManager packageManager = root.getContext().getApplicationContext().getPackageManager();
             List<String> players = new ArrayList<>();
             for (String s : all.keySet()) {
-                if(s.startsWith(MediaControlListenerService.CONTROLLER_PREFIX)){
+                if(s.startsWith(MediaControllerListenerService.CONTROLLER_PREFIX)){
                     players.add(s.substring(17, s.length()));
                 }
             }
