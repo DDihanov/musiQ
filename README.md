@@ -12,6 +12,7 @@ The application features a beautiful material design, and makes use of cutting-e
     <li>OkHttp</li>
     <li>Gson</li>
     <li>Glide</li>
+    <li>DBFlow</li>
 </ul>
 
 The API for all the information is the LastFM API.
@@ -24,13 +25,23 @@ fast and accurate from a reliable musical site, with up-to-date information abou
 The program is very versatile, because it makes use of all the features the last.fm API provides such as top artists, top songs,
 top songs per artist, top artists by geographical region etc...
 
-The current version is still alpha.
+Recently I added scrobbling integration, so the application now scrobbles to last.fm from music players like:
+<ul>
+	<li>YouTube</li>
+    <li>Google Play Music</li>
+    <li>Spotify</li>
+    <li>Pandora</li>
+    <li>SoundCloud</li>
+    <li>VLC</li>
+    <li>and more...</li>
+</ul>
+
 Features to be implemented will be:
 <ul>
     <li>Ability to fetch artist events.</li>
-    <li>More detailed information about albums and tracks.</li>
-    <li>Ability to favorite specific artist and albums into a list.</li>
-    <li>And more...</li>
+    <li>Specific user statistics</li>
+    <li>Specific user scrobbles on specific artist, track etc...</li>
+    <li>Optimisations</li>
 </ul>
 
 If you have any recommendations feel free to email me.
