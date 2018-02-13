@@ -1,6 +1,9 @@
 # musiQ
 a musical encyclopedia
 
+Link to Google Play Store:
+https://play.google.com/store/apps/details?id=com.dihanov.musiq
+
 This application is designed using the MVP pattern.
 The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:
 <ul>
@@ -43,9 +46,5 @@ Features to be implemented will be:
     <li>Specific user scrobbles on specific artist, track etc...</li>
     <li>Optimisations</li>
 </ul>
-
-
-Link to Google Play Store:
-https://play.google.com/store/apps/details?id=com.dihanov.musiq
 
 If you have any recommendations feel free to email me.
