@@ -44,4 +44,8 @@ Features to be implemented will be:
     <li>Optimisations</li>
 </ul>
 
+
+Link to Google Play Store:
+https://play.google.com/store/apps/details?id=com.dihanov.musiq
+
 If you have any recommendations feel free to email me.
