@@ -120,7 +120,9 @@ public class Scrobbler {
             return;
         }
 
-        Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+        if(App.getSharedPreferences().getBoolean("scrobble_notifications", true) && App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
+            Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+        }
 
         this.nowPlaying = nowPlaying;
         String apiSig = HelperMethods.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),

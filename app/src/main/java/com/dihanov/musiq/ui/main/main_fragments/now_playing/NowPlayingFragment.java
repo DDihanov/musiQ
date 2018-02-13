@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
@@ -105,7 +107,9 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
             nowPlayingAlbum.setText(nowPlaying.getAlbumName());
         }
 
-        nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks);
+        if(App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
+            nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks);
+        }
 
         return view;
     }

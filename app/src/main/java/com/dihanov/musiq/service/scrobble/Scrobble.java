@@ -60,6 +60,9 @@ public class Scrobble {
     }
 
     public boolean isScrobbleValid() {
+        if(getArtistName() == null || getTrackName() == null){
+            return false;
+        }
         return !getArtistName().equals("") && !getTrackName().equals("");
     }
 
