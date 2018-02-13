@@ -94,12 +94,12 @@ public class HelperMethods {
     public static void showTooltip(Activity activity, View view, String text){
         ViewTooltip.on(view)
                 .corner(60)
+                .color(R.color.colorSecondary)
                 .textSize(TypedValue.COMPLEX_UNIT_DIP, 20)
                 .align(ViewTooltip.ALIGN.CENTER)
                 .textTypeFace(Typeface.createFromAsset(activity.getAssets(), "fonts/cabin_regular.ttf"))
                 .position(ViewTooltip.Position.BOTTOM)
                 .text(text)
-                .color(Constants.BIRD_COLOR)
                 .textColor(Color.WHITE)
                 .animation(new ViewTooltip.FadeTooltipAnimation())
                 .show();
@@ -113,7 +113,7 @@ public class HelperMethods {
                 .textTypeFace(Typeface.createFromAsset(activity.getAssets(), "fonts/cabin_regular.ttf"))
                 .position(ViewTooltip.Position.BOTTOM)
                 .text(text)
-                .color(Constants.BIRD_COLOR)
+                .color(R.color.colorSecondary)
                 .textColor(Color.WHITE)
                 .animation(new ViewTooltip.FadeTooltipAnimation())
                 .show();

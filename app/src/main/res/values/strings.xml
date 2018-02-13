@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/tools">
     <string name="app_name">musiQ</string>
-    <string name="app_name_bird">musiQ🐦</string>
-    <string name="app_bird">🐦</string>
+    <string name="app_name_bird">musiQ🐧</string>
+    <string name="app_bird">🐧</string>
     <string name="top_artists_text">loading this week\'s top artists...</string>
     <string name="searchTitle">Search for artists</string>
     <string name="action_add_favourite">Add to favorites</string>
@@ -112,8 +112,11 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="player_preference">Manage players for scrobbling</string>
-    <string name="scrobble_auto_detect">Enable auto-detection of players</string>
-    <string name="auto_detect">Auto-detect</string>
-    <string name="remember_me">Remember me</string>
-    <string name="recentrly_scrobbled_text">Recently scrobbled tracks:</string>
+    <string name="scrobble_auto_detect">Enable auto-configuration of players</string>
+    <string name="auto_detect">Auto-configuration</string>
+    <string name="remember_me">Remember me:</string>
+    <string name="recentrly_scrobbled_text">History:</string>
+    <string name="about">About</string>
+    <string name="about_message">musiQ 1.00\n\nA musical encyclopedia that supports scrobbling.\n\nOpen sourced with ❤ at:\n https://github.com/DDihanov/musiQ\n\nDedicated to ponzi4</string>
+    <string name="dialog_action_dismiss">DISMISS</string>
 </resources>

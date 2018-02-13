@@ -33,10 +33,10 @@ public class Notificator {
         builder.setContentIntent(contentIntent);
         builder.setContentText(content);
         builder.setContentTitle(title);
-        builder.setOngoing(true);
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder.setOngoing(false);
+        builder.setSmallIcon(R.drawable.ic_notification_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
-                        R.mipmap.ic_launcher));
+                        R.drawable.ic_launcher_icon_large));
 //        builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setVibrate(new long[]{});
         builder.setOnlyAlertOnce(false);

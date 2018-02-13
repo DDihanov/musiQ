@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
-import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
 
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.BasePresenter;
@@ -18,6 +18,6 @@ public interface NowPlayingFragmentContract {
     interface Presenter extends BasePresenter<View> {
         void loveTrack(Scrobble scrobble);
 
-        void loadRecentScrobbles(ListView listView);
+        void loadRecentScrobbles(RecyclerView recyclerView);
     }
 }

@@ -132,9 +132,11 @@ public class MediaControllerListenerService extends NotificationListenerService
 
         //manage currently active controller info
         for (MediaController currentController : currentControllers) {
-            if(currentController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING){
-                currentPlayingControllerPackageName = currentController.getPackageName();
-                break;
+            if(currentController != null && currentController.getPlaybackState() != null){
+                if(currentController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING){
+                    currentPlayingControllerPackageName = currentController.getPackageName();
+                    break;
+                }
             }
         }
     }

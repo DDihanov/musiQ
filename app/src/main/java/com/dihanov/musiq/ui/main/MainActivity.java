@@ -9,11 +9,15 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,12 +125,15 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch((int)id){
-                    case(1):
+                switch ((int) id) {
+                    case (1):
                         openSettings();
                         break;
-                    case(2):
+                    case (2):
                         logOut();
+                        break;
+                    case (3):
+                        openAbout();
                         break;
                     default:
                         break;
@@ -135,7 +142,27 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         });
 
 
+    }
 
+    private void openAbout() {
+//        LinearLayout layout = (LinearLayout)findViewById(R.id.about_layout_id);
+        View layout  = getLayoutInflater().inflate(R.layout.about_layout, null);
+        TextView aboutMessage = layout.findViewById(R.id.about_message);
+        SpannableString s =
+                new SpannableString(getString(R.string.about_message));
+        Linkify.addLinks(s, Linkify.WEB_URLS);
+        aboutMessage.setMovementMethod(LinkMovementMethod.getInstance());
+        aboutMessage.setText(s);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        alertDialogBuilder.setTitle(R.string.about);
+        alertDialogBuilder
+                .setView(layout)
+                .setCancelable(true)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton(R.string.dialog_action_dismiss, null)
+                .create()
+                .show();
     }
 
     private void openSettings() {

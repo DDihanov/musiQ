@@ -4,5 +4,6 @@
         <item> </item>
         <item>Settings</item>
         <item>Log out</item>
+        <item>About</item>
     </string-array>
 </resources>

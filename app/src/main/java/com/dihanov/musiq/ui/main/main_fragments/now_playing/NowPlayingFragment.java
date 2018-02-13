@@ -3,11 +3,12 @@ package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,9 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @BindView(R.id.now_playing_art)
     ImageView nowPlayingArtistImage;
 
+    @BindView(R.id.now_playing_artist_cardview)
+    CardView cardView;
+
     @BindView(R.id.now_playing_album)
     TextView nowPlayingAlbum;
 
@@ -49,8 +53,8 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @BindView(R.id.love_track_full)
     ImageView loveTrackImage;
 
-    @BindView(R.id.recent_tracks)
-    ListView recentTracks;
+    @BindView(R.id.recently_scrobbled_recyclerview)
+    RecyclerView recentTracks;
 
     @Inject
     Scrobbler scrobbler;
@@ -80,7 +84,12 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
 
         Scrobble nowPlaying = scrobbler.getNowPlaying();
         if(nowPlaying == null){
-            HelperMethods.setLayoutChildrenVisibility(View.GONE, nowPlayingLayout);
+            nowPlayingArtistImage.setVisibility(View.GONE);
+            nowPlayingArtist.setVisibility(View.GONE);
+            nowPlayingAlbum.setVisibility(View.GONE);
+            nowPlayingTitle.setVisibility(View.GONE);
+            loveTrackImage.setVisibility(View.GONE);
+            cardView.setVisibility(View.GONE);
         } else {
             HelperMethods.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
             if(nowPlaying.getAlbumArt() != null){

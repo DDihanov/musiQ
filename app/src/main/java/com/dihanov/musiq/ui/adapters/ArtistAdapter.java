@@ -67,7 +67,6 @@ public class ArtistAdapter extends AbstractAdapter {
 
         this.specificArtistSearchable.addOnArtistResultClickedListener(holder, artist.getName());
         this.setIsFavorited(holder, Constants.FAVORITE_ARTISTS_KEY);
-
     }
 
     public void addArtist(Artist artist) {

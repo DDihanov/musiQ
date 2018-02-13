@@ -93,6 +93,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                         Intent intent = new Intent(loginActivity, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         loginActivity.startActivity(intent);
+                        loginActivity.finish();
                     }
                 });
 

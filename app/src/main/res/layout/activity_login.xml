@@ -33,12 +33,15 @@
             android:layout_marginBottom="84dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/action_sign_in"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/remember_me_checkbox"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/continue_without_sign_in"
@@ -75,10 +78,10 @@
             android:textColorHint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.271" />
+            app:layout_constraintVertical_bias="0.409" />
 
         <EditText
             android:id="@+id/password"
@@ -145,8 +148,8 @@
 
     <TextView
         android:id="@+id/login_bird"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="8dp"
@@ -157,7 +160,7 @@
         android:text="@string/app_bird"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="100sp"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

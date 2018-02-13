@@ -204,7 +204,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     preference.setTitle(packageManager.getApplicationLabel(musicPlayer));
                     preference.setIcon(packageManager.getApplicationIcon(musicPlayer));
                     preference.setKey(PLAYER_PREFIX + name);
-                    preference.setEnabled(true);
+                    preference.setDefaultValue(false);
                     root.addPreference(preference);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();

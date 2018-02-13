@@ -1,8 +1,9 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
@@ -13,9 +14,11 @@ import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -95,7 +98,7 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
     }
 
     @Override
-    public void loadRecentScrobbles(ListView listView) {
+    public void loadRecentScrobbles(RecyclerView recyclerView) {
         lastFmApiClient.getLastFmApiService()
                 .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -110,16 +113,20 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
                     public void onNext(RecentTracksWrapper recentTracksWrapper) {
                         List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
 
-                        String[] trackNames = new String[result.size()];
+                        List<String> trackNames = new ArrayList<>();
 
                         for (int i = 0; i < result.size(); i++) {
-                            trackNames[i] = result.get(i).toString();
+                            trackNames.add(result.get(i).toString());
                         }
 
-                        ArrayAdapter<String> arrayAdapter =
-                                new ArrayAdapter<>(nowPlayingFragment.getContext(), android.R.layout.simple_list_item_1, trackNames);
+                        RecentlyScrobbledAdapter adapter =
+                                new RecentlyScrobbledAdapter(trackNames);
 
-                        listView.setAdapter(arrayAdapter);
+                        recyclerView.setAdapter(adapter);
+                        RecyclerView.LayoutManager layoutManager =
+                                new LinearLayoutManager(nowPlayingFragment.getContext(), GridLayoutManager.VERTICAL, false);
+                        recyclerView.setLayoutManager(layoutManager);
+                        recyclerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
