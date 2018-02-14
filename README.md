@@ -52,11 +52,7 @@ Some features this app. supports:
 
 
 Features to be implemented will be:
-<ul>
-    <li>Ability to fetch artist events.</li>
-    <li>Specific user statistics</li>
-    <li>Specific user scrobbles on specific artist, track etc...</li>
-    <li>Optimisations</li>
-</ul>
+- User-specific statistics and playcharts from last.fm
+- More user-specific information from last.fm
 
 If you have any recommendations feel free to email me.
