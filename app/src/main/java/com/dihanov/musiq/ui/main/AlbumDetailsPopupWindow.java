@@ -57,6 +57,7 @@ public class AlbumDetailsPopupWindow {
     }
 
     public void showPopupWindow(MainViewFunctionable activity, AlbumViewHolder viewHolder, String artistName, String albumName, int mainWindowId) {
+        //just a small proof of concept
         final Album[] loadedAlbum = new Album[1];
         RxView.clicks(viewHolder.getThumbnail())
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
@@ -77,6 +78,7 @@ public class AlbumDetailsPopupWindow {
                                 @Override
                                 public void onNext(SpecificAlbum specificAlbum) {
                                     Album fullAlbum = specificAlbum.getAlbum();
+                                    //just a small proof of concept
                                     loadedAlbum[0] = fullAlbum;
                                 }
 
