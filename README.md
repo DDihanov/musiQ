@@ -39,6 +39,19 @@ Recently I added scrobbling integration, so the application now scrobbles to las
     <li>and more...</li>
 </ul>
 
+Some features this app. supports:
+- Search for artists and albums
+- Add artists and albums to your favorites for quicker access
+- Select a specific artists to view more detailed information about them like their genres, biography and albums
+- Select a specific album to view detailed information about it.
+- Different phones support different emojis - you will have an unique penguin mascot for your device!
+- Scrobbling notifications
+- Currently scrobbling track information
+- Scrobble history
+- 'Love track' button
+- Scrobbling from cache(e.g. offline scrobbles to be scrobbled at a later point)
+
+
 Features to be implemented will be:
 <ul>
     <li>Ability to fetch artist events.</li>
