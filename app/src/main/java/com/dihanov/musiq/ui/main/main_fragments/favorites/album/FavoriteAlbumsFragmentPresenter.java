@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.MainActivityContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 
 import java.util.ArrayList;
@@ -36,20 +38,20 @@ public class FavoriteAlbumsFragmentPresenter implements FavoriteAlbumsFragmentCo
     private static final int LIMIT = 1;
     private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;
 
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
-    private FavoriteAlbumsFragment albumResultFragment;
+    private FavoriteAlbumsFragmentContract.View albumResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MainActivity mainActivity;
+    private MainActivityContract.View mainActivity;
 
     @Inject
-    public FavoriteAlbumsFragmentPresenter() {
+    public FavoriteAlbumsFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(FavoriteAlbumsFragmentContract.View view) {
-        this.albumResultFragment = (FavoriteAlbumsFragment) view;
+        this.albumResultFragment = view;
         this.mainActivity = albumResultFragment.getMainActivity();
     }
 
@@ -64,14 +66,14 @@ public class FavoriteAlbumsFragmentPresenter implements FavoriteAlbumsFragmentCo
 
     @Override
     public void setClickListenerFetchEntireAlbumInfo(AlbumViewHolder viewHolder, String artistName, String albumName) {
-        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, mainActivity);
+        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, (MainActivity)mainActivity);
         albumDetailsPopupWindow.showPopupWindow(mainActivity, viewHolder, artistName, albumName, R.id.main_content);
     }
 
     @Override
     public void loadFavoriteAlbums(Set<String> favorites, MainViewFunctionable mainActivity, RecyclerView recyclerView) {
         //resetting the adapter
-        recyclerView.setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), FavoriteAlbumsFragmentPresenter.this));
+        recyclerView.setAdapter(new AlbumDetailsAdapter((Activity)this.mainActivity, new ArrayList<>(), FavoriteAlbumsFragmentPresenter.this));
 
 
         List<Observable<GeneralAlbumSearch>> observables = new ArrayList<>();

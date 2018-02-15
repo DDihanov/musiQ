@@ -15,6 +15,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
+import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.GsonBuilder;
 
@@ -93,6 +94,7 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     }
 
     private void initRecyclerView() {
+        ArtistDetailsActivity artistDetailsActivity = (ArtistDetailsActivity) this.artistDetailsActivity;
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
         if (HelperMethods.isTablet(artistDetailsActivity)){
@@ -109,12 +111,12 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AlbumDetailsAdapter(this.artistDetailsActivity, this.artistAlbums, artistDetailsFragmentPresenter));
+        recyclerView.setAdapter(new AlbumDetailsAdapter(artistDetailsActivity, this.artistAlbums, artistDetailsFragmentPresenter));
     }
 
     @Override
     public Context getContext() {
-        return this.artistDetailsActivity;
+        return (Context)this.artistDetailsActivity;
     }
 
 

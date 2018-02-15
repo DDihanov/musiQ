@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
+import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
+import com.dihanov.musiq.ui.main.MainActivity;
 
 import java.util.Set;
 
@@ -18,9 +20,11 @@ public interface FavoriteAlbumsFragmentContract {
         RecyclerView getRecyclerView();
 
         Context getContext();
+
+        MainActivity getMainActivity();
     }
 
-    interface Presenter extends BasePresenter<FavoriteAlbumsFragmentContract.View> {
+    interface Presenter extends BasePresenter<FavoriteAlbumsFragmentContract.View>, SpecificAlbumSearchable {
         void loadFavoriteAlbums(Set<String> favorites, MainViewFunctionable mainViewFunctionable, RecyclerView recyclerView);
     }
 }

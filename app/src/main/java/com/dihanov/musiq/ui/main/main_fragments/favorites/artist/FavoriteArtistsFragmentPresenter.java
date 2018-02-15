@@ -35,21 +35,20 @@ import io.reactivex.schedulers.Schedulers;
 public class FavoriteArtistsFragmentPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsFragmentContract.Presenter{
     private static final long DELAY_IN_MILLIS = 500;
 
-    @Inject LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
-    private FavoriteArtistFragment artistResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private RecyclerView recyclerView;
+    private FavoriteArtistsFragmentContract.View artistResultFragment;
     private MainActivityContract.View mainActivity;
 
     @Inject
-    public FavoriteArtistsFragmentPresenter() {
+    public FavoriteArtistsFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(FavoriteArtistsFragmentContract.View view) {
-        this.artistResultFragment = (FavoriteArtistFragment) view;
-        this.recyclerView = view.getRecyclerView();
+        this.artistResultFragment = view;
         this.mainActivity = artistResultFragment.getMainActivity();
     }
 

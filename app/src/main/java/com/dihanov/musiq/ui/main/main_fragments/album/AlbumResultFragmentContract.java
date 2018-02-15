@@ -17,6 +17,8 @@ public interface AlbumResultFragmentContract {
         RecyclerView getRecyclerView();
 
         Context getContext();
+
+        MainActivity getMainActivity();
     }
 
     interface Presenter extends BasePresenter<AlbumResultFragmentContract.View> {

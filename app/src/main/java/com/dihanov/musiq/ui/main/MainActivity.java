@@ -53,7 +53,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
     @Inject
-    MainActivityPresenter mainActivityPresenter;
+    MainActivityContract.Presenter mainActivityPresenter;
 
     @BindView(R.id.bird)
     TextView bird;

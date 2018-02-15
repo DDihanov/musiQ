@@ -11,7 +11,6 @@ public class ArtistDetailsActivityPresenter implements ArtistDetailsActivityCont
 
     @Inject
     public ArtistDetailsActivityPresenter(){
-
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    @Inject ArtistResultFragmentPresenter artistResultFragmentPresenter;
+    @Inject ArtistResultFragmentContract.Presenter artistResultFragmentPresenter;
 
     private MainActivity mainActivity;
 

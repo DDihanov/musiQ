@@ -38,7 +38,7 @@ public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAl
     RecyclerView recyclerView;
 
     @Inject
-    FavoriteAlbumsFragmentPresenter favoriteFragmentsPresenter;
+    FavoriteAlbumsFragmentContract.Presenter favoriteFragmentsPresenter;
 
     private MainActivity mainActivity;
 

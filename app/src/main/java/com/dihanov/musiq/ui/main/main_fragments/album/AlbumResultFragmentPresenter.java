@@ -1,18 +1,19 @@
 package com.dihanov.musiq.ui.main.main_fragments.album;
 
-import android.support.v7.widget.RecyclerView;
+import android.app.Activity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
-import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
@@ -40,22 +41,20 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
     private static final int limit = 20;
     private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;
 
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
-    private AlbumResultFragment albumResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private RecyclerView recyclerView;
-    private MainActivity mainActivity;
+    private AlbumResultFragmentContract.View albumResultFragment;
+    private MainActivityContract.View mainActivity;
 
     @Inject
-    public AlbumResultFragmentPresenter() {
+    public AlbumResultFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(AlbumResultFragmentContract.View view) {
-        this.albumResultFragment = (AlbumResultFragment) view;
-        this.recyclerView = view.getRecyclerView();
+        this.albumResultFragment = view;
         this.mainActivity = albumResultFragment.getMainActivity();
     }
 
@@ -81,7 +80,7 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            HelperMethods.checkConnection(mainActivity);
+                            HelperMethods.checkConnection((MainActivity)mainActivity);
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())
@@ -115,9 +114,9 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
                             result = Collections.emptyList();
                         }
 
-                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter(mainActivity, result, albumResultFragmentPresenter);
+                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter((Activity)mainActivity, result, albumResultFragmentPresenter);
 
-                        recyclerView.setAdapter(albumAdapter);
+                        mainActivity.getRecyclerView().setAdapter(albumAdapter);
                         mainActivity.hideKeyboard();
                         mainActivity.hideProgressBar();
                     }
@@ -140,7 +139,7 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
 
     @Override
     public void setClickListenerFetchEntireAlbumInfo(AlbumViewHolder viewHolder, String artistName, String albumName) {
-        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, mainActivity);
+        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, (Activity)mainActivity);
         albumDetailsPopupWindow.showPopupWindow(mainActivity, viewHolder, artistName, albumName, R.id.main_content);
     }
 }

@@ -34,7 +34,7 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
     RecyclerView recyclerView;
 
     @Inject
-    AlbumResultFragmentPresenter albumResultFragmentPresenter;
+    AlbumResultFragmentContract.Presenter albumResultFragmentPresenter;
 
     private MainActivity mainActivity;
 

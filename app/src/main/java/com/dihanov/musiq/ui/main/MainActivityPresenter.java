@@ -36,18 +36,16 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
 
     private MainActivityContract.View mainActivityView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private RecyclerView recyclerView;
+
+    private final LastFmApiClient lastFmApiClient;
 
     @Inject
-    LastFmApiClient lastFmApiClient;
-
-    @Inject
-    public MainActivityPresenter() {
+    public MainActivityPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(MainActivityContract.View view) {
-        this.recyclerView = view.getRecyclerView();
         this.mainActivityView = view;
     }
 
@@ -82,6 +80,7 @@ public class MainActivityPresenter extends ArtistDetailsIntentShowableImpl imple
 
                     @Override
                     public void onNext(List<Artist> artists) {
+                        RecyclerView recyclerView = mainActivity.getRecyclerView();
                         TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists, MainActivityPresenter.this);
                         recyclerView.setAdapter(topArtistAdapter);
                         recyclerView.postDelayed(new Runnable() {

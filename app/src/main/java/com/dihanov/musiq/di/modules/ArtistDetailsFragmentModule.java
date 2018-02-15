@@ -1,6 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.di.annotations.PerFragment;
+import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsFragment;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsFragmentContract;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsFragmentPresenter;
@@ -15,10 +15,10 @@ import dagger.Module;
 @Module
 public abstract class ArtistDetailsFragmentModule {
     @Binds
-    @PerFragment
+    @PerActivity
     abstract ArtistDetailsFragmentContract.View provideArtistDetailsFragmentView(ArtistDetailsFragment artistDetailsFragment);
 
     @Binds
-    @PerFragment
+    @PerActivity
     abstract ArtistDetailsFragmentContract.Presenter provideArtistDetailsFragmentPresenter(ArtistDetailsFragmentPresenter artistDetailsFragmentPresenter);
 }

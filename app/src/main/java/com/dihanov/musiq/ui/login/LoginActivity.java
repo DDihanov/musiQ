@@ -53,7 +53,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
     AppCompatCheckBox rememberMeCheckBox;
 
     @Inject
-    LoginActivityPresenter loginActivityPresenter;
+    LoginActivityContract.Presenter loginActivityPresenter;
 
     @Inject
     LastFmApiClient lastFmApiClient;

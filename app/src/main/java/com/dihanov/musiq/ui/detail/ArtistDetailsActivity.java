@@ -53,7 +53,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     private Artist artist;
 
     @Inject
-    ArtistDetailsActivityPresenter presenter;
+    ArtistDetailsActivityContract.Presenter presenter;
 
     @BindView(R.id.artist_details_collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;

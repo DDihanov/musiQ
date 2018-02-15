@@ -11,7 +11,9 @@ import com.dihanov.musiq.ui.BaseView;
 
 public interface LoginActivityContract{
     interface View extends BaseView<Presenter> {
+        void showProgressBar();
 
+        android.view.View getBirdIcon();
     }
 
     interface Presenter extends BasePresenter<View> {

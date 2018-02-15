@@ -1,6 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
@@ -39,21 +38,20 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
     private static final long DELAY_IN_MILLIS = 500;
     private static final int limit = 20;
 
-    @Inject LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
     private ArtistResultFragment artistResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private RecyclerView recyclerView;
     private MainActivityContract.View mainActivity;
 
     @Inject
-    public ArtistResultFragmentPresenter() {
+    public ArtistResultFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(ArtistResultFragmentContract.View view) {
         this.artistResultFragment = (ArtistResultFragment) view;
-        this.recyclerView = view.getRecyclerView();
         this.mainActivity = artistResultFragment.getMainActivity();
     }
 
@@ -113,7 +111,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
 
                         ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, artistResultFragmentPresenter);
 
-                        recyclerView.setAdapter(artistAdapter);
+                        mainActivity.getRecyclerView().setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();
                         mainActivity.hideProgressBar();
                     }

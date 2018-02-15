@@ -9,6 +9,7 @@ import com.dihanov.musiq.ui.BaseView;
 
 public interface ArtistDetailsFragmentContract {
     interface View extends BaseView<ArtistDetailsFragmentContract.Presenter> {
+
     }
 
     interface Presenter extends BasePresenter<ArtistDetailsFragmentContract.View> {

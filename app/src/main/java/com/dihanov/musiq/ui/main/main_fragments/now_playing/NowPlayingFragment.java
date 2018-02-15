@@ -62,7 +62,7 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     Scrobbler scrobbler;
 
     @Inject
-    NowPlayingFragmentPresenter nowPlayingFragmentPresenter;
+    NowPlayingFragmentContract.Presenter nowPlayingFragmentPresenter;
 
     public static NowPlayingFragment newInstance() {
         Bundle args = new Bundle();
@@ -123,5 +123,10 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     public void onDestroy() {
         nowPlayingFragmentPresenter.leaveView();
         super.onDestroy();
+    }
+
+    @Override
+    public Context getContext(){
+        return this.getContext();
     }
 }

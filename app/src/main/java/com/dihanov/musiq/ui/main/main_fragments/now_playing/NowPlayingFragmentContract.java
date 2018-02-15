@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.dihanov.musiq.service.scrobble.Scrobble;
@@ -12,7 +13,7 @@ import com.dihanov.musiq.ui.BaseView;
 
 public interface NowPlayingFragmentContract {
     interface View extends BaseView<Presenter>{
-
+        Context getContext();
     }
 
     interface Presenter extends BasePresenter<View> {

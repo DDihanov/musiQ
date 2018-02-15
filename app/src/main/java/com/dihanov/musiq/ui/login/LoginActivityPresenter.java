@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,19 +30,19 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class LoginActivityPresenter implements LoginActivityContract.Presenter {
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private LoginActivity loginActivity;
+    private LoginActivityContract.View loginActivity;
 
     @Inject
-    LoginActivityPresenter(){
+    LoginActivityPresenter(LastFmApiClient lastFmApiClient){
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(LoginActivityContract.View view) {
-        loginActivity = (LoginActivity)view;
+        loginActivity = view;
     }
 
     @Override
@@ -51,6 +52,7 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void authenticateUser(String username, String password, Context context, boolean rememberMe) {
+        LoginActivity loginActivity = ((LoginActivity)this.loginActivity);
         if (checkConnection()){
             HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
             return;
@@ -108,8 +110,8 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
     }
 
     private boolean checkConnection() {
-        if(!Connectivity.isConnected(loginActivity)){
-            HelperMethods.showNetworkErrorTooltip(loginActivity, loginActivity.getBirdIcon());
+        if(!Connectivity.isConnected((Context)loginActivity)){
+            HelperMethods.showNetworkErrorTooltip((Activity)loginActivity, loginActivity.getBirdIcon());
             return true;
         }
         return false;

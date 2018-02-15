@@ -16,14 +16,15 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class ArtistDetailsFragmentPresenter implements ArtistDetailsFragmentContract.Presenter, SpecificAlbumSearchable {
-    @Inject LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
     private ArtistDetailsFragment artistDetailsFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ArtistDetailsActivity artistDetailsActivity;
 
     @Inject
-    public ArtistDetailsFragmentPresenter() {
+    public ArtistDetailsFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override

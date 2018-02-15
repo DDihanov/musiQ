@@ -36,7 +36,7 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    @Inject FavoriteArtistsFragmentPresenter favoriteFragmentPresenter;
+    @Inject FavoriteArtistsFragmentContract.Presenter favoriteFragmentPresenter;
 
     private MainActivity mainActivity;
 

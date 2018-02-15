@@ -37,20 +37,20 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
     private static final int RECENT_SCROBBLES_LIMIT = 20;
     private static final String TAG = NowPlayingFragmentPresenter.class.getSimpleName();
 
-    @Inject
-    LastFmApiClient lastFmApiClient;
+    private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private NowPlayingFragment nowPlayingFragment;
+    private NowPlayingFragmentContract.View nowPlayingFragment;
 
     @Inject
-    public NowPlayingFragmentPresenter() {
+    public NowPlayingFragmentPresenter(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 
 
     @Override
     public void takeView(NowPlayingFragmentContract.View view) {
-        this.nowPlayingFragment = (NowPlayingFragment) view;
+        this.nowPlayingFragment = view;
     }
 
     @Override
