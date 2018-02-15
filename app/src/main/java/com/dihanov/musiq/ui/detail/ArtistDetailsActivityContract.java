@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.detail;
 
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -9,7 +10,7 @@ import com.dihanov.musiq.ui.BaseView;
  */
 
 public interface ArtistDetailsActivityContract {
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView<Presenter>, MainViewFunctionable {
         String getArtistBiography();
 
         String getSerialiedAlbums();

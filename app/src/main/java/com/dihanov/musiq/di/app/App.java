@@ -80,6 +80,4 @@ public class App extends Application implements HasActivityInjector, HasServiceI
     public static SharedPreferences getSharedPreferences() {
         return sharedPreferences;
     }
-
-
 }

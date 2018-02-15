@@ -81,6 +81,7 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         albumResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity, mainActivity.getSearchBar());
+        mainActivity.getSearchBar().setIconified(false);
     }
 
     private void initRecyclerView() {

@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -9,15 +8,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.service.MediaControllerListenerService;
-import com.dihanov.musiq.ui.login.LoginActivity;
-import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
+import com.dihanov.musiq.util.SettingsManager;
 
 import javax.inject.Inject;
 
@@ -87,6 +79,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
     private SearchView searchBar;
     private String lastSearch;
+    private SettingsManager settingsManager = new SettingsManager(this);
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -97,7 +90,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_layout);
+        setContentView(R.layout.drawer_layout_main);
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
@@ -125,62 +118,13 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch ((int) id) {
-                    case (1):
-                        openSettings();
-                        break;
-                    case (2):
-                        logOut();
-                        break;
-                    case (3):
-                        openAbout();
-                        break;
-                    default:
-                        break;
-                }
+                settingsManager.manageSettings(id);
             }
         });
 
 
     }
 
-    private void openAbout() {
-//        LinearLayout layout = (LinearLayout)findViewById(R.id.about_layout_id);
-        View layout  = getLayoutInflater().inflate(R.layout.about_layout, null);
-        TextView aboutMessage = layout.findViewById(R.id.about_message);
-        SpannableString s =
-                new SpannableString(getString(R.string.about_message));
-        Linkify.addLinks(s, Linkify.WEB_URLS);
-        aboutMessage.setMovementMethod(LinkMovementMethod.getInstance());
-        aboutMessage.setText(s);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
-        alertDialogBuilder.setTitle(R.string.about);
-        alertDialogBuilder
-                .setView(layout)
-                .setCancelable(true)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setPositiveButton(R.string.dialog_action_dismiss, null)
-                .create()
-                .show();
-    }
-
-    private void openSettings() {
-        startActivity(new Intent(this, SettingsActivity.class));
-    }
-
-    private void logOut() {
-        App.getSharedPreferences().edit().remove(Constants.USERNAME)
-                .remove(Constants.PASSWORD)
-                .remove(Constants.USER_SESSION_KEY)
-                .remove(Constants.REMEMBER_ME)
-                .apply();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        stopService(new Intent(this, MediaControllerListenerService.class));
-        startActivity(intent);
-        finish();
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -291,5 +235,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+    }
+
+    public void setViewPagerSelection(int position){
+        this.viewPager.setCurrentItem(position, true);
     }
 }

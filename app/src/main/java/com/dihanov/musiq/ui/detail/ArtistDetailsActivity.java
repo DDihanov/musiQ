@@ -10,9 +10,13 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,6 +28,7 @@ import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.SettingsManager;
 import com.google.gson.Gson;
 import com.veinhorn.tagview.TagView;
 
@@ -55,6 +60,12 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     @Inject
     ArtistDetailsActivityContract.Presenter presenter;
 
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.nav_list)
+    ListView optionList;
+
     @BindView(R.id.artist_details_collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
@@ -81,6 +92,8 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
 
     TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 
+    private SettingsManager settingsManager = new SettingsManager(this);
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -90,7 +103,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.drawer_layout_details);
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
@@ -113,7 +126,24 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
         initViewPager();
         initArtistImage();
         setArtistTitle(artist.getName());
+
+        initNavigationDrawer();
     }
+
+    private void initNavigationDrawer() {
+        String[] options = getResources().getStringArray(R.array.navigation_options);
+
+        optionList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, options));
+
+        optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                settingsManager.manageSettings(id);
+            }
+        });
+    }
+
 
     @SuppressLint("ResourceType")
     private void initTags() {

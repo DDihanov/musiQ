@@ -18,7 +18,6 @@ import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -100,7 +99,7 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
     @Override
     public void loadRecentScrobbles(RecyclerView recyclerView, NowPlayingFragment nowPlayingFragment) {
         lastFmApiClient.getLastFmApiService()
-                .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT)
+                .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT, 1)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<RecentTracksWrapper>() {
@@ -113,14 +112,8 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
                     public void onNext(RecentTracksWrapper recentTracksWrapper) {
                         List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
 
-                        List<String> trackNames = new ArrayList<>();
-
-                        for (int i = 0; i < result.size(); i++) {
-                            trackNames.add(result.get(i).toString());
-                        }
-
                         RecentlyScrobbledAdapter adapter =
-                                new RecentlyScrobbledAdapter(trackNames);
+                                new RecentlyScrobbledAdapter(result);
 
                         recyclerView.setAdapter(adapter);
                         RecyclerView.LayoutManager layoutManager =

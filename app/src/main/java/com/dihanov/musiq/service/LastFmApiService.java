@@ -53,7 +53,7 @@ public interface LastFmApiService{
     Observable<LovedTracks> getUserLovedTracks(@Query("user") String username, @Query("limit") String limit);
 
     @GET(METHOD_CALL+"user.getrecenttracks")
-    Observable<RecentTracksWrapper> getUserRecentTracks(@Query("user") String username, @Query("limit") int limit);
+    Observable<RecentTracksWrapper> getUserRecentTracks(@Query("user") String username, @Query("limit") int limit, @Query("extended") int extended);
 
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
@@ -66,7 +66,6 @@ public interface LastFmApiService{
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
     Observable<Response> scrobbleTrack(@Field("method") String scrobbleMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("timestamp") String timestamp, @Field("sk") String sessionKey,@Field("format") String format);
-
 
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)

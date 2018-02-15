@@ -11,6 +11,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class Track {
     @SerializedName("corrected")
@@ -22,8 +23,10 @@ public class Track {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("url")
+    @SerializedName("loved")
     @Expose
+    private String loved;
+    @SerializedName("url")
     private String url;
     @SerializedName("duration")
     @Expose
@@ -37,6 +40,36 @@ public class Track {
     @SerializedName("artist")
     @Expose
     private Artist artist;
+    @SerializedName("date")
+    @Expose
+    private Date date;
+    @SerializedName("image")
+    @Expose
+    private List<Image> image = null;
+
+    public List<Image> getImage() {
+        return image;
+    }
+
+    public void setImage(List<Image> image) {
+        this.image = image;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getLoved() {
+        return loved;
+    }
+
+    public void setLoved(String loved) {
+        this.loved = loved;
+    }
 
     public String getCorrected() {
         return corrected;

@@ -7,7 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,6 +21,7 @@ import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.KeyboardHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,6 +68,7 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
         View view = inflater.inflate(R.layout.artist_search_fragment, container, false);
         ButterKnife.bind(this, view);
 
+
         //very important to call this - this enables us to use the below method(onCreateOptionsMenu), and allows us
         //to receive calls from MainActivity's onCreateOptionsMenu
         setHasOptionsMenu(true);
@@ -74,7 +80,25 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
                 App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>()),
                 mainActivity,
                 recyclerView);
+
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.getItem(0);
+        SearchView search = (SearchView)item.getActionView();
+        search.setIconified(true);
+        KeyboardHelper.hideKeyboard(getActivity());
+        search.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.setViewPagerSelection(Constants.ALBUM_POSITION);
+                KeyboardHelper.hideKeyboard(mainActivity);
+            }
+        });
     }
 
     private void initRecyclerView() {

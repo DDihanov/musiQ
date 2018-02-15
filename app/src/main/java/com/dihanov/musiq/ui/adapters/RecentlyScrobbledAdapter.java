@@ -4,9 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.models.Track;
 
 import java.util.List;
 
@@ -18,9 +20,9 @@ import butterknife.ButterKnife;
  */
 
 public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrobbledAdapter.ViewHolder> {
-    private List<String> scrobbles;
+    private List<Track> scrobbles;
 
-    public RecentlyScrobbledAdapter(List<String> scrobbles) {
+    public RecentlyScrobbledAdapter(List<Track> scrobbles) {
         this.scrobbles = scrobbles;
     }
 
@@ -34,8 +36,20 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String text = scrobbles.get(position);
-        holder.scrobble.setText(text);
+        Track track = scrobbles.get(position);
+        if(track == null){
+            return;
+        }
+        if(track.getArtist().getName() == null || track.getName() == null || track.getDate() == null){
+            return;
+        }
+        holder.scrobble.setText(track.getArtist().getName() + " - " + track.getName());
+        holder.time.setText(track.getDate().getText());
+        if(!track.getLoved().equals("0")){
+            holder.loved.setVisibility(View.VISIBLE);
+        } else {
+            holder.loved.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -47,6 +61,11 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
         @BindView(R.id.recently_scrobbled_adapter_text)
         TextView scrobble;
 
+        @BindView(R.id.recently_scrobbled_time)
+        TextView time;
+
+        @BindView(R.id.recently_scrobbled_love)
+        ImageView loved;
 
         public ViewHolder(View itemView) {
             super(itemView);

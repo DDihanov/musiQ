@@ -38,7 +38,7 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     private String serializedAlbums;
 
 
-    @Inject ArtistDetailsFragmentPresenter artistDetailsFragmentPresenter;
+    @Inject ArtistDetailsFragmentContract.Presenter artistDetailsFragmentPresenter;
     @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
 
     public ArtistDetailsAlbumFragment() {

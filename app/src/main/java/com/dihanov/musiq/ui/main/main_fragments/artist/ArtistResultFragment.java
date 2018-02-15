@@ -78,6 +78,7 @@ public class ArtistResultFragment extends DaggerFragment implements ArtistResult
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity, mainActivity.getSearchBar());
+        mainActivity.getSearchBar().setIconified(false);
     }
 
     @Override

@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,8 +21,10 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.KeyboardHelper;
 
 import javax.inject.Inject;
 
@@ -64,6 +70,11 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @Inject
     NowPlayingFragmentContract.Presenter nowPlayingFragmentPresenter;
 
+    @Inject
+    Context context;
+
+    private MainActivity mainActivity;
+
     public static NowPlayingFragment newInstance() {
         Bundle args = new Bundle();
         NowPlayingFragment nowPlayingFragment = new NowPlayingFragment();
@@ -74,6 +85,7 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.mainActivity = ((MainActivity)context);
     }
 
     @Nullable
@@ -81,6 +93,11 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.now_playing_fragment, container, false);
         ButterKnife.bind(this, view);
+
+
+        //very important to call this - this enables us to use the below method(onCreateOptionsMenu), and allows us
+        //to receive calls from MainActivity's onCreateOptionsMenu
+        setHasOptionsMenu(true);
 
         nowPlayingFragmentPresenter.takeView(this);
 
@@ -111,6 +128,7 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
             nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks, this);
         }
 
+
         return view;
     }
 
@@ -127,6 +145,23 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
 
     @Override
     public Context getContext(){
-        return this.getActivity().getApplicationContext();
+        return context;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.getItem(0);
+        SearchView search = (SearchView)item.getActionView();
+        search.setIconified(true);
+        KeyboardHelper.hideKeyboard(getActivity());
+        search.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.setViewPagerSelection(Constants.ALBUM_POSITION);
+                KeyboardHelper.hideKeyboard(mainActivity);
+            }
+        });
     }
 }
