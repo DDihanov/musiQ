@@ -56,3 +56,4 @@ Features to be implemented will be:
 - More user-specific information from last.fm
 
 If you have any recommendations feel free to email me.
+NOTE: If you fork this repo, be sure to add "API_KEY" and "API_SECRET" to your gradle.properties.
