@@ -1,7 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.di.annotations.PerFragment;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragment;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragmentContract;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragmentPresenter;
@@ -16,7 +15,7 @@ import dagger.Module;
 @Module
 public abstract class NowPlayingFragmentModule {
     @Binds
-    @PerFragment
+    @PerActivity
     abstract NowPlayingFragmentContract.View provideNowPlayingFragmentView(NowPlayingFragment nowPlayingFragment);
 
     @Binds

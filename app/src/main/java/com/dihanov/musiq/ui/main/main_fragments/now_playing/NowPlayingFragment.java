@@ -108,7 +108,7 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
         }
 
         if(App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
-            nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks);
+            nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks, this);
         }
 
         return view;
@@ -127,6 +127,6 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
 
     @Override
     public Context getContext(){
-        return this.getContext();
+        return this.getActivity().getApplicationContext();
     }
 }

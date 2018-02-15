@@ -19,6 +19,6 @@ public interface NowPlayingFragmentContract {
     interface Presenter extends BasePresenter<View> {
         void loveTrack(Scrobble scrobble);
 
-        void loadRecentScrobbles(RecyclerView recyclerView);
+        void loadRecentScrobbles(RecyclerView recyclerView, NowPlayingFragment nowPlayingFragment);
     }
 }

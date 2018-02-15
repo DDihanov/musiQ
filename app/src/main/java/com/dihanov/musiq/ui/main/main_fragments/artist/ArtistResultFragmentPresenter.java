@@ -40,7 +40,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
 
     private final LastFmApiClient lastFmApiClient;
 
-    private ArtistResultFragment artistResultFragment;
+    private ArtistResultFragmentContract.View artistResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private MainActivityContract.View mainActivity;
 
@@ -51,7 +51,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
 
     @Override
     public void takeView(ArtistResultFragmentContract.View view) {
-        this.artistResultFragment = (ArtistResultFragment) view;
+        this.artistResultFragment = view;
         this.mainActivity = artistResultFragment.getMainActivity();
     }
 
@@ -111,7 +111,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
 
                         ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, artistResultFragmentPresenter);
 
-                        mainActivity.getRecyclerView().setAdapter(artistAdapter);
+                        artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();
                         mainActivity.hideProgressBar();
                     }

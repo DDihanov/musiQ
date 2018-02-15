@@ -16,6 +16,8 @@ public interface ArtistResultFragmentContract {
     interface View extends BaseView<Presenter> {
         RecyclerView getRecyclerView();
 
+        MainActivity getMainActivity();
+
         Context getContext();
     }
 

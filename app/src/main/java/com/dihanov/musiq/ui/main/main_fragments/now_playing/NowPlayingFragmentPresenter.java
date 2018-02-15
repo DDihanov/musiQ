@@ -98,7 +98,7 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
     }
 
     @Override
-    public void loadRecentScrobbles(RecyclerView recyclerView) {
+    public void loadRecentScrobbles(RecyclerView recyclerView, NowPlayingFragment nowPlayingFragment) {
         lastFmApiClient.getLastFmApiService()
                 .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT)
                 .observeOn(AndroidSchedulers.mainThread())

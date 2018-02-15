@@ -116,7 +116,7 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
 
                         AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter((Activity)mainActivity, result, albumResultFragmentPresenter);
 
-                        mainActivity.getRecyclerView().setAdapter(albumAdapter);
+                        albumResultFragment.getRecyclerView().setAdapter(albumAdapter);
                         mainActivity.hideKeyboard();
                         mainActivity.hideProgressBar();
                     }
