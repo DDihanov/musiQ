@@ -4,11 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsFragment;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistFragment;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragment;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
+import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
@@ -26,18 +26,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return NowPlayingFragment.newInstance();
+                return NowPlaying.newInstance();
             case 1:
-                return ArtistResultFragment.newInstance();
+                return ArtistResult.newInstance();
 
             case 2:
-                return AlbumResultFragment.newInstance();
+                return AlbumResult.newInstance();
 
             case 3:
-                return FavoriteArtistFragment.newInstance();
+                return FavoriteArtist.newInstance();
 
             case 4:
-                return FavoriteAlbumsFragment.newInstance();
+                return FavoriteAlbums.newInstance();
         }
 
         return null;
@@ -52,15 +52,15 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return NowPlayingFragment.TITLE;
+                return NowPlaying.TITLE;
             case 1:
-                return ArtistResultFragment.TITLE;
+                return ArtistResult.TITLE;
             case 2:
-                return AlbumResultFragment.TITLE;
+                return AlbumResult.TITLE;
             case 3:
-                return FavoriteArtistFragment.TITLE;
+                return FavoriteArtist.TITLE;
             case 4:
-                return FavoriteAlbumsFragment.TITLE;
+                return FavoriteAlbums.TITLE;
         }
         return super.getPageTitle(position);
     }

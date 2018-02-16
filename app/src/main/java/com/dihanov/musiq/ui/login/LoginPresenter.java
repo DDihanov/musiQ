@@ -29,19 +29,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 2/5/2018.
  */
 
-public class LoginActivityPresenter implements LoginActivityContract.Presenter {
+public class LoginPresenter implements LoginContract.Presenter {
     private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private LoginActivityContract.View loginActivity;
+    private LoginContract.View loginActivity;
 
     @Inject
-    LoginActivityPresenter(LastFmApiClient lastFmApiClient){
+    LoginPresenter(LastFmApiClient lastFmApiClient){
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
-    public void takeView(LoginActivityContract.View view) {
+    public void takeView(LoginContract.View view) {
         loginActivity = view;
     }
 
@@ -52,9 +52,9 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void authenticateUser(String username, String password, Context context, boolean rememberMe) {
-        LoginActivity loginActivity = ((LoginActivity)this.loginActivity);
+        Login login = ((Login)this.loginActivity);
         if (checkConnection()){
-            HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
+            HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
             return;
         }
 
@@ -65,10 +65,10 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                 .subscribe(new Observer<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        HelperMethods.setLayoutChildrenEnabled(false, loginActivity.findViewById(R.id.login_layout));
+                        HelperMethods.setLayoutChildrenEnabled(false, login.findViewById(R.id.login_layout));
                         compositeDisposable.add(d);
-                        loginActivity.showProgressBar();
-                        HelperMethods.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.logging_in_text)));
+                        login.showProgressBar();
+                        HelperMethods.showTooltip(login, login.getBirdIcon(), login.getString((R.string.logging_in_text)));
                     }
 
                     @Override
@@ -79,9 +79,9 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        HelperMethods.showTooltip(loginActivity, loginActivity.getBirdIcon(), loginActivity.getString((R.string.error_username_password)));
-                        HelperMethods.setLayoutChildrenEnabled(true, loginActivity.findViewById(R.id.login_layout));
-                        loginActivity.hideProgressBar();
+                        HelperMethods.showTooltip(login, login.getBirdIcon(), login.getString((R.string.error_username_password)));
+                        HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
+                        login.hideProgressBar();
                         Log.e(this.getClass().toString(), e.getMessage());
                     }
 
@@ -89,13 +89,13 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                     public void onComplete() {
                         persistUserInfo(username, password, rememberMe);
                         //if login is successful we can start the service
-                        loginActivity.startService(new Intent(context.getApplicationContext(), MediaControllerListenerService.class));
+                        login.startService(new Intent(context.getApplicationContext(), MediaControllerListenerService.class));
                         compositeDisposable.clear();
-                        loginActivity.hideProgressBar();
-                        Intent intent = new Intent(loginActivity, MainActivity.class);
+                        login.hideProgressBar();
+                        Intent intent = new Intent(login, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        loginActivity.startActivity(intent);
-                        loginActivity.finish();
+                        login.startActivity(intent);
+                        login.finish();
                     }
                 });
 

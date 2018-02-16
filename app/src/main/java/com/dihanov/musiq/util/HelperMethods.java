@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
@@ -136,14 +137,14 @@ public class HelperMethods {
         }
     }
 
-    public static void checkConnection(MainActivity mainActivity) {
+    public static void checkConnection(MainViewFunctionable mainActivity) {
         Handler handler = new Handler();
 
         Thread networkCheckThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                     boolean isConnected = Connectivity.isConnected(mainActivity);
+                     boolean isConnected = Connectivity.isConnected((Context)mainActivity);
                     if (!isConnected) {
                         handler.post(() -> showNetworkErrorTooltip(mainActivity));
                     }
@@ -159,8 +160,8 @@ public class HelperMethods {
         }
     }
 
-    public static void showNetworkErrorTooltip(MainActivity activity) {
-        showTooltip(activity, ((MainActivity)activity).getBirdIcon(), Constants.NO_NETWORK_CONN_FOUND, 15f);
+    public static void showNetworkErrorTooltip(MainViewFunctionable activity) {
+        showTooltip((Activity)activity, ((MainActivity)activity).getBirdIcon(), Constants.NO_NETWORK_CONN_FOUND, 15f);
     }
 
     public static void showNetworkErrorTooltip(Activity activity, View view) {

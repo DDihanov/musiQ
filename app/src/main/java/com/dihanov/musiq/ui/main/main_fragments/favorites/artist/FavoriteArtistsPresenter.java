@@ -6,12 +6,12 @@ import android.util.Log;
 
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
-import com.dihanov.musiq.interfaces.MainViewFunctionable;
+import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
@@ -32,22 +32,22 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtistsFragmentPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsFragmentContract.Presenter{
+public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsContract.Presenter{
     private static final long DELAY_IN_MILLIS = 500;
 
     private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private FavoriteArtistsFragmentContract.View artistResultFragment;
-    private MainActivityContract.View mainActivity;
+    private FavoriteArtistsContract.View artistResultFragment;
+    private MainContract.View mainActivity;
 
     @Inject
-    public FavoriteArtistsFragmentPresenter(LastFmApiClient lastFmApiClient) {
+    public FavoriteArtistsPresenter(LastFmApiClient lastFmApiClient) {
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
-    public void takeView(FavoriteArtistsFragmentContract.View view) {
+    public void takeView(FavoriteArtistsContract.View view) {
         this.artistResultFragment = view;
         this.mainActivity = artistResultFragment.getMainActivity();
     }
@@ -72,9 +72,10 @@ public class FavoriteArtistsFragmentPresenter extends ArtistDetailsIntentShowabl
 
 
     @Override
-    public void loadFavoriteArtists(Set<String> favorites, MainViewFunctionable mainViewFunctionable, RecyclerView recyclerView) {
+    public void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
+        RecyclerView recyclerView = recyclerViewExposable.getRecyclerView();
         //resetting the adapter
-        recyclerView.setAdapter(new ArtistAdapter((Context) this.mainActivity, new ArrayList<>(), FavoriteArtistsFragmentPresenter.this));
+        recyclerView.setAdapter(new ArtistAdapter((Context) this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this));
 
 
         List<Observable<SpecificArtist>> observables = new ArrayList<>();

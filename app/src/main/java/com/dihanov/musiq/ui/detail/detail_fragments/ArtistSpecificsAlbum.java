@@ -15,7 +15,6 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
 import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.GsonBuilder;
 
@@ -31,23 +30,23 @@ import butterknife.ButterKnife;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
+public class ArtistSpecificsAlbum extends ArtistSpecifics {
     public static final String TITLE = "albums";
 
     private List<Album> artistAlbums;
     private String serializedAlbums;
 
 
-    @Inject ArtistDetailsFragmentContract.Presenter artistDetailsFragmentPresenter;
+    @Inject ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
     @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
 
-    public ArtistDetailsAlbumFragment() {
+    public ArtistSpecificsAlbum() {
         this.artistAlbums = new ArrayList<>();
     }
 
-    public static ArtistDetailsAlbumFragment newInstance() {
+    public static ArtistSpecificsAlbum newInstance() {
         Bundle args = new Bundle();
-        ArtistDetailsAlbumFragment artistDetailsAlbumFragment = new ArtistDetailsAlbumFragment();
+        ArtistSpecificsAlbum artistDetailsAlbumFragment = new ArtistSpecificsAlbum();
         artistDetailsAlbumFragment.setArguments(args);
         return artistDetailsAlbumFragment;
     }
@@ -94,15 +93,15 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
     }
 
     private void initRecyclerView() {
-        ArtistDetailsActivity artistDetailsActivity = (ArtistDetailsActivity) this.artistDetailsActivity;
+        com.dihanov.musiq.ui.detail.ArtistDetails artistDetails = (com.dihanov.musiq.ui.detail.ArtistDetails) this.artistDetailsActivity;
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (HelperMethods.isTablet(artistDetailsActivity)){
-            layoutManager = new GridLayoutManager(artistDetailsActivity, 3);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, artistDetailsActivity), true));
+        if (HelperMethods.isTablet(artistDetails)){
+            layoutManager = new GridLayoutManager(artistDetails, 3);
+            recyclerView.addItemDecoration(new ArtistSpecificsAlbum.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, artistDetails), true));
         } else {
-            layoutManager = new GridLayoutManager(artistDetailsActivity, 2);
-            recyclerView.addItemDecoration(new ArtistDetailsAlbumFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, artistDetailsActivity), true));
+            layoutManager = new GridLayoutManager(artistDetails, 2);
+            recyclerView.addItemDecoration(new ArtistSpecificsAlbum.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, artistDetails), true));
         }
 
         if(layoutManager == null){
@@ -111,7 +110,7 @@ public class ArtistDetailsAlbumFragment extends ArtistDetailsFragment {
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AlbumDetailsAdapter(artistDetailsActivity, this.artistAlbums, artistDetailsFragmentPresenter));
+        recyclerView.setAdapter(new AlbumDetailsAdapter(artistDetails, this.artistAlbums, artistDetailsFragmentPresenter));
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.detail.ArtistDetailsActivity"
+    tools:context=".ui.detail.ArtistDetails"
     tools:showIn="@layout/activity_detail">
     <!--android:background="@color/viewBg"-->
     <android.support.v4.view.ViewPager

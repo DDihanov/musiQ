@@ -166,7 +166,7 @@ public class Scrobbler {
         if(playbackState.getState() == PlaybackState.STATE_NONE){
             this.setNowPlaying(null);
         } else {
-            this.state.handleStatusChanged(state);
+            Scrobbler.state.handleStatusChanged(state);
         }
     }
 

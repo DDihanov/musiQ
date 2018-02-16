@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
+import android.content.Context;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
@@ -9,8 +10,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -34,23 +34,23 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableImpl implements ArtistResultFragmentContract.Presenter{
+public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl implements ArtistResultContract.Presenter{
     private static final long DELAY_IN_MILLIS = 500;
     private static final int limit = 20;
 
     private final LastFmApiClient lastFmApiClient;
 
-    private ArtistResultFragmentContract.View artistResultFragment;
+    private ArtistResultContract.View artistResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MainActivityContract.View mainActivity;
+    private MainContract.View mainActivity;
 
     @Inject
-    public ArtistResultFragmentPresenter(LastFmApiClient lastFmApiClient) {
+    public ArtistResultPresenter(LastFmApiClient lastFmApiClient) {
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
-    public void takeView(ArtistResultFragmentContract.View view) {
+    public void takeView(ArtistResultContract.View view) {
         this.artistResultFragment = view;
         this.mainActivity = artistResultFragment.getMainActivity();
     }
@@ -64,8 +64,9 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
     }
 
     @Override
-    public void addOnSearchBarTextChangedListener(MainActivity mainActivity, SearchView searchEditText) {
-        ArtistResultFragmentPresenter artistResultFragmentPresenter = this;
+    public void addOnSearchBarTextChangedListener(MainContract.View mainActivity) {
+        SearchView searchEditText = mainActivity.getSearchBar();
+        ArtistResultPresenter artistResultPresenter = this;
         if(searchEditText == null){
             return;
         }
@@ -109,7 +110,7 @@ public class ArtistResultFragmentPresenter extends ArtistDetailsIntentShowableIm
                             result = Collections.emptyList();
                         }
 
-                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, artistResultFragmentPresenter);
+                        ArtistAdapter artistAdapter = new ArtistAdapter((Context)mainActivity, result, artistResultPresenter);
 
                         artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();

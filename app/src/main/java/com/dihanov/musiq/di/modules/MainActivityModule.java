@@ -3,8 +3,8 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
-import com.dihanov.musiq.ui.main.MainActivityPresenter;
+import com.dihanov.musiq.ui.main.MainContract;
+import com.dihanov.musiq.ui.main.MainPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -18,9 +18,9 @@ import dagger.Module;
 public abstract class MainActivityModule {
     @Binds
     @PerActivity
-    abstract MainActivityContract.View provideMainActivityView(MainActivity mainActivity);
+    abstract MainContract.View provideMainActivityView(MainActivity mainActivity);
 
     @Binds
     @PerActivity
-    abstract MainActivityContract.Presenter provideMainActivityPresenter(MainActivityPresenter presenter);
+    abstract MainContract.Presenter provideMainActivityPresenter(MainPresenter presenter);
 }

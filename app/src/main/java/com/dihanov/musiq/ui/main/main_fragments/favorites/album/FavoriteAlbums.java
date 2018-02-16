@@ -36,21 +36,21 @@ import dagger.android.support.DaggerFragment;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAlbumsFragmentContract.View{
+public class FavoriteAlbums extends DaggerFragment implements FavoriteAlbumsContract.View{
     public static final String TITLE = "favorite albums";
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     @Inject
-    FavoriteAlbumsFragmentContract.Presenter favoriteFragmentsPresenter;
+    FavoriteAlbumsContract.Presenter favoriteFragmentsPresenter;
 
     private MainActivity mainActivity;
 
 
-    public static FavoriteAlbumsFragment newInstance() {
+    public static FavoriteAlbums newInstance() {
         Bundle args = new Bundle();
-        FavoriteAlbumsFragment albumResultFragment = new FavoriteAlbumsFragment();
+        FavoriteAlbums albumResultFragment = new FavoriteAlbums();
         albumResultFragment.setArguments(args);
         return albumResultFragment;
     }
@@ -79,8 +79,7 @@ public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAl
         this.favoriteFragmentsPresenter.takeView(this);
         this.favoriteFragmentsPresenter.loadFavoriteAlbums(
                 App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>()),
-                mainActivity,
-                recyclerView);
+                this);
 
         return view;
     }
@@ -90,10 +89,10 @@ public class FavoriteAlbumsFragment extends DaggerFragment implements FavoriteAl
         //check if tablet --> 3 columns instead of 2;
         if (HelperMethods.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteAlbums.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new FavoriteAlbumsFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteAlbums.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){

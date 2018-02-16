@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main.main_fragments.album;
+package com.dihanov.musiq.ui.main.main_fragments.artist;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -24,26 +24,23 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
 
 /**
- * Created by dimitar.dihanov on 11/2/2017.
+ * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class AlbumResultFragment extends DaggerFragment implements AlbumResultFragmentContract.View{
-    public static final String TITLE = "albums";
+public class ArtistResult extends DaggerFragment implements ArtistResultContract.View {
+    public static final String TITLE = "artists";
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    @Inject
-    AlbumResultFragmentContract.Presenter albumResultFragmentPresenter;
+    @Inject ArtistResultContract.Presenter artistResultFragmentPresenter;
 
     private MainActivity mainActivity;
 
-
-    public static AlbumResultFragment newInstance() {
+    public static ArtistResult newInstance() {
         Bundle args = new Bundle();
-        AlbumResultFragment albumResultFragment = new AlbumResultFragment();
-        albumResultFragment.setArguments(args);
-        return albumResultFragment;
+        ArtistResult artistResult = new ArtistResult();
+        artistResult.setArguments(args);
+        return artistResult;
     }
 
     public MainActivity getMainActivity() {
@@ -68,7 +65,7 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
 
         initRecyclerView();
 
-        this.albumResultFragmentPresenter.takeView(this);
+        this.artistResultFragmentPresenter.takeView(this);
         return view;
     }
 
@@ -80,8 +77,13 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        albumResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity, mainActivity.getSearchBar());
+        artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity);
         mainActivity.getSearchBar().setIconified(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initRecyclerView() {
@@ -89,10 +91,10 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
         //check if tablet --> 3 columns instead of 2;
         if (HelperMethods.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new ArtistResult.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new AlbumResultFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new ArtistResult.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){
@@ -111,7 +113,7 @@ public class AlbumResultFragment extends DaggerFragment implements AlbumResultFr
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.albumResultFragmentPresenter.leaveView();
+        this.artistResultFragmentPresenter.leaveView();
     }
 
     @Override

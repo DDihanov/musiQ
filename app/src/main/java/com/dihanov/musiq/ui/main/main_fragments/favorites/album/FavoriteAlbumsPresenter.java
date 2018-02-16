@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.interfaces.MainViewFunctionable;
+import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
@@ -13,7 +13,7 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 
 import java.util.ArrayList;
@@ -33,24 +33,22 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class FavoriteAlbumsFragmentPresenter implements FavoriteAlbumsFragmentContract.Presenter, SpecificAlbumSearchable {
-    private static final long DELAY_IN_MILLIS = 500;
+public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter, SpecificAlbumSearchable {
     private static final int LIMIT = 1;
-    private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;
 
     private final LastFmApiClient lastFmApiClient;
 
-    private FavoriteAlbumsFragmentContract.View albumResultFragment;
+    private FavoriteAlbumsContract.View albumResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MainActivityContract.View mainActivity;
+    private MainContract.View mainActivity;
 
     @Inject
-    public FavoriteAlbumsFragmentPresenter(LastFmApiClient lastFmApiClient) {
+    public FavoriteAlbumsPresenter(LastFmApiClient lastFmApiClient) {
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
-    public void takeView(FavoriteAlbumsFragmentContract.View view) {
+    public void takeView(FavoriteAlbumsContract.View view) {
         this.albumResultFragment = view;
         this.mainActivity = albumResultFragment.getMainActivity();
     }
@@ -71,9 +69,10 @@ public class FavoriteAlbumsFragmentPresenter implements FavoriteAlbumsFragmentCo
     }
 
     @Override
-    public void loadFavoriteAlbums(Set<String> favorites, MainViewFunctionable mainActivity, RecyclerView recyclerView) {
+    public void loadFavoriteAlbums(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
+        RecyclerView recyclerView = recyclerViewExposable.getRecyclerView();
         //resetting the adapter
-        recyclerView.setAdapter(new AlbumDetailsAdapter((Activity)this.mainActivity, new ArrayList<>(), FavoriteAlbumsFragmentPresenter.this));
+        recyclerView.setAdapter(new AlbumDetailsAdapter((Activity)this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this));
 
 
         List<Observable<GeneralAlbumSearch>> observables = new ArrayList<>();

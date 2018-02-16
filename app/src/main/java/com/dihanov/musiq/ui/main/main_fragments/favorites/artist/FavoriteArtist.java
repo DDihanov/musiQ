@@ -36,18 +36,18 @@ import dagger.android.support.DaggerFragment;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtistFragment extends DaggerFragment implements FavoriteArtistsFragmentContract.View {
+public class FavoriteArtist extends DaggerFragment implements FavoriteArtistsContract.View {
     public static final String TITLE = "favorite artists";
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    @Inject FavoriteArtistsFragmentContract.Presenter favoriteFragmentPresenter;
+    @Inject FavoriteArtistsContract.Presenter favoriteFragmentPresenter;
 
     private MainActivity mainActivity;
 
-    public static FavoriteArtistFragment newInstance() {
+    public static FavoriteArtist newInstance() {
         Bundle args = new Bundle();
-        FavoriteArtistFragment artistResultFragment = new FavoriteArtistFragment();
+        FavoriteArtist artistResultFragment = new FavoriteArtist();
         artistResultFragment.setArguments(args);
         return artistResultFragment;
     }
@@ -78,8 +78,7 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
         this.favoriteFragmentPresenter.takeView(this);
         this.favoriteFragmentPresenter.loadFavoriteArtists(
                 App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>()),
-                mainActivity,
-                recyclerView);
+                this);
 
         return view;
     }
@@ -106,10 +105,10 @@ public class FavoriteArtistFragment extends DaggerFragment implements FavoriteAr
         //check if tablet --> 3 columns instead of 2;
         if (HelperMethods.isTablet(mainActivity)){
             layoutManager = new GridLayoutManager(mainActivity, 3);
-            recyclerView.addItemDecoration(new FavoriteArtistFragment.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteArtist.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
             layoutManager = new GridLayoutManager(mainActivity, 2);
-            recyclerView.addItemDecoration(new FavoriteArtistFragment.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
+            recyclerView.addItemDecoration(new FavoriteArtist.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
         if(layoutManager == null){

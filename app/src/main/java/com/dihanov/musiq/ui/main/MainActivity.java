@@ -40,12 +40,12 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityContract.View {
+public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
     private static final String search = "search for artists";
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
     @Inject
-    MainActivityContract.Presenter mainActivityPresenter;
+    MainContract.Presenter mainActivityPresenter;
 
     @BindView(R.id.bird)
     TextView bird;

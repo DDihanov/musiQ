@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.ui.login.LoginActivity;
+import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
@@ -70,7 +70,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void checkForSavedCredentials() {
-        Intent loginRedirect = new Intent(this, LoginActivity.class);
+        Intent loginRedirect = new Intent(this, Login.class);
         SharedPreferences sharedPreferences = App.getSharedPreferences();
 
         if (sharedPreferences.getBoolean(Constants.REMEMBER_ME, false)) {

@@ -37,7 +37,7 @@ import dagger.android.support.DaggerFragment;
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class NowPlayingFragment extends DaggerFragment implements NowPlayingFragmentContract.View {
+public class NowPlaying extends DaggerFragment implements NowPlayingContract.View {
     public static final String TITLE = "now playing";
 
     @BindView(R.id.now_playing_fragment_layout)
@@ -68,18 +68,18 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     Scrobbler scrobbler;
 
     @Inject
-    NowPlayingFragmentContract.Presenter nowPlayingFragmentPresenter;
+    NowPlayingContract.Presenter nowPlayingFragmentPresenter;
 
     @Inject
     Context context;
 
     private MainActivity mainActivity;
 
-    public static NowPlayingFragment newInstance() {
+    public static NowPlaying newInstance() {
         Bundle args = new Bundle();
-        NowPlayingFragment nowPlayingFragment = new NowPlayingFragment();
-        nowPlayingFragment.setArguments(args);
-        return nowPlayingFragment;
+        NowPlaying nowPlaying = new NowPlaying();
+        nowPlaying.setArguments(args);
+        return nowPlaying;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
         }
 
         if(App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
-            nowPlayingFragmentPresenter.loadRecentScrobbles(recentTracks, this);
+            nowPlayingFragmentPresenter.loadRecentScrobbles(this);
         }
 
 
@@ -146,6 +146,11 @@ public class NowPlayingFragment extends DaggerFragment implements NowPlayingFrag
     @Override
     public Context getContext(){
         return context;
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return this.recentTracks;
     }
 
     @Override

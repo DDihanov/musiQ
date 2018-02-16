@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsAlbumFragment;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsBiographyFragment;
+import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsAlbum;
+import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsBiography;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
@@ -23,9 +23,9 @@ public class ArtistDetailsViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return ArtistDetailsBiographyFragment.newInstance();
+                return ArtistSpecificsBiography.newInstance();
             case 1:
-                return ArtistDetailsAlbumFragment.newInstance();
+                return ArtistSpecificsAlbum.newInstance();
 //            case 2:
 //               break;
         }
@@ -41,9 +41,9 @@ public class ArtistDetailsViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return ArtistDetailsBiographyFragment.TITLE;
+                return ArtistSpecificsBiography.TITLE;
             case 1:
-                return ArtistDetailsAlbumFragment.TITLE;
+                return ArtistSpecificsAlbum.TITLE;
 //            case 2:
         }
         return super.getPageTitle(position);

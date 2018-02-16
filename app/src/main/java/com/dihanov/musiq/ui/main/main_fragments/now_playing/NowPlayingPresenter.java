@@ -32,23 +32,23 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.Presenter {
+public class NowPlayingPresenter implements NowPlayingContract.Presenter {
     private static final int RECENT_SCROBBLES_LIMIT = 20;
-    private static final String TAG = NowPlayingFragmentPresenter.class.getSimpleName();
+    private static final String TAG = NowPlayingPresenter.class.getSimpleName();
 
     private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private NowPlayingFragmentContract.View nowPlayingFragment;
+    private NowPlayingContract.View nowPlayingFragment;
 
     @Inject
-    public NowPlayingFragmentPresenter(LastFmApiClient lastFmApiClient) {
+    public NowPlayingPresenter(LastFmApiClient lastFmApiClient) {
         this.lastFmApiClient = lastFmApiClient;
     }
 
 
     @Override
-    public void takeView(NowPlayingFragmentContract.View view) {
+    public void takeView(NowPlayingContract.View view) {
         this.nowPlayingFragment = view;
     }
 
@@ -86,7 +86,7 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(NowPlayingFragmentPresenter.class.getSimpleName(), e.getMessage());
+                        Log.d(NowPlayingPresenter.class.getSimpleName(), e.getMessage());
                     }
 
                     @Override
@@ -97,7 +97,8 @@ public class NowPlayingFragmentPresenter implements NowPlayingFragmentContract.P
     }
 
     @Override
-    public void loadRecentScrobbles(RecyclerView recyclerView, NowPlayingFragment nowPlayingFragment) {
+    public void loadRecentScrobbles(NowPlayingContract.View nowPlayingFragment) {
+        RecyclerView recyclerView = nowPlayingFragment.getRecyclerView();
         lastFmApiClient.getLastFmApiService()
                 .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT, 1)
                 .observeOn(AndroidSchedulers.mainThread())

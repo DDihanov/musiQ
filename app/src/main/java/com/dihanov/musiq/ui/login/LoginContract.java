@@ -9,7 +9,7 @@ import com.dihanov.musiq.ui.BaseView;
  * Created by dimitar.dihanov on 2/5/2018.
  */
 
-public interface LoginActivityContract{
+public interface LoginContract {
     interface View extends BaseView<Presenter> {
         void showProgressBar();
 

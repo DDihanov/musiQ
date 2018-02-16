@@ -11,16 +11,16 @@ import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.di.modules.MediaPlayerControlServiceModule;
 import com.dihanov.musiq.di.modules.NowPlayingFragmentModule;
 import com.dihanov.musiq.service.MediaControllerListenerService;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsAlbumFragment;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistDetailsBiographyFragment;
-import com.dihanov.musiq.ui.login.LoginActivity;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsAlbum;
+import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsBiography;
+import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsFragment;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistFragment;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingFragment;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
+import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
+import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -37,39 +37,39 @@ public abstract class ActivityBindingModule {
 
     @PerActivity
     @ContributesAndroidInjector(modules = ArtistDetailsActivityModule.class)
-    abstract ArtistDetailsActivity bindArtistDetailActivity();
+    abstract ArtistDetails bindArtistDetailActivity();
 
     @PerActivity
     @ContributesAndroidInjector(modules = ArtistResultFragmentModule.class)
-    abstract ArtistResultFragment bindArtistResultFragment();
+    abstract ArtistResult bindArtistResultFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = AlbumResultFragmentModule.class)
-    abstract AlbumResultFragment bindAlbumResultFragment();
+    abstract AlbumResult bindAlbumResultFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = ArtistDetailsFragmentModule.class)
-    abstract ArtistDetailsBiographyFragment bindArtistBiographyFragment();
+    abstract ArtistSpecificsBiography bindArtistBiographyFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = ArtistDetailsFragmentModule.class)
-    abstract ArtistDetailsAlbumFragment bindArtistDetailsAlbumsFragment();
+    abstract ArtistSpecificsAlbum bindArtistDetailsAlbumsFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = FavoriteFragmentModule.class)
-    abstract FavoriteAlbumsFragment bindFavoriteAlbumsFragment();
+    abstract FavoriteAlbums bindFavoriteAlbumsFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = FavoriteFragmentModule.class)
-    abstract FavoriteArtistFragment bindFavoriteArtistFragment();
+    abstract FavoriteArtist bindFavoriteArtistFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = LoginActivityModule.class)
-    abstract LoginActivity bindLoginActivity();
+    abstract Login bindLoginActivity();
 
     @PerActivity
     @ContributesAndroidInjector(modules = NowPlayingFragmentModule.class)
-    abstract NowPlayingFragment bindNowPlayingFragment();
+    abstract NowPlaying bindNowPlayingFragment();
 
     @PerActivity
     @ContributesAndroidInjector(modules = MediaPlayerControlServiceModule.class)

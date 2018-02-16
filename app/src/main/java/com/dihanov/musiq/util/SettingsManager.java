@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.MediaControllerListenerService;
-import com.dihanov.musiq.ui.login.LoginActivity;
+import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 
 /**
@@ -56,7 +56,7 @@ public class SettingsManager {
                 .remove(Constants.USER_SESSION_KEY)
                 .remove(Constants.REMEMBER_ME)
                 .apply();
-        Intent intent = new Intent(activity, LoginActivity.class);
+        Intent intent = new Intent(activity, Login.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.stopService(new Intent(activity, MediaControllerListenerService.class));
         activity.startActivity(intent);

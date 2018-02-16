@@ -9,7 +9,7 @@ import com.dihanov.musiq.ui.BaseView;
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
-public interface ArtistDetailsActivityContract {
+public interface ArtistDetailsContract {
     interface View extends BaseView<Presenter>, MainViewFunctionable {
         String getArtistBiography();
 

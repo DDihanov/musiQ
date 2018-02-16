@@ -49,7 +49,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
-public class ArtistDetailsActivity extends DaggerAppCompatActivity implements ArtistDetailsActivityContract.View, MainViewFunctionable {
+public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDetailsContract.View, MainViewFunctionable {
     private static final String TAG_RETAINED_ARTIST = "artist";
     private static final String TAG_RETAINED_ALBUMS = "albums";
 
@@ -58,7 +58,7 @@ public class ArtistDetailsActivity extends DaggerAppCompatActivity implements Ar
     private Artist artist;
 
     @Inject
-    ArtistDetailsActivityContract.Presenter presenter;
+    ArtistDetailsContract.Presenter presenter;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;

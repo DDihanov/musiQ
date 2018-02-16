@@ -2,9 +2,9 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragmentContract;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultFragmentPresenter;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultContract;
+import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -16,9 +16,9 @@ import dagger.Module;
 public abstract class ArtistResultFragmentModule {
     @Binds
     @PerFragment
-    abstract ArtistResultFragmentContract.View provideArtistResultFragmentView(ArtistResultFragment artistResultFragment);
+    abstract ArtistResultContract.View provideArtistResultFragmentView(ArtistResult artistResult);
 
     @Binds
     @PerActivity
-    abstract ArtistResultFragmentContract.Presenter provideArtistResultFragmentPresenter(ArtistResultFragmentPresenter presenter);
+    abstract ArtistResultContract.Presenter provideArtistResultFragmentPresenter(ArtistResultPresenter presenter);
 }

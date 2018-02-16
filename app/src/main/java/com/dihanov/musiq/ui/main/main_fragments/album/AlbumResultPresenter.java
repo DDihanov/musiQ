@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.album;
 
+
 import android.app.Activity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -12,7 +13,7 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
@@ -36,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract.Presenter, SpecificAlbumSearchable {
+public class AlbumResultPresenter implements AlbumResultContract.Presenter, SpecificAlbumSearchable {
     private static final long DELAY_IN_MILLIS = 500;
     private static final int limit = 20;
     private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;
@@ -44,16 +45,16 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
     private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private AlbumResultFragmentContract.View albumResultFragment;
-    private MainActivityContract.View mainActivity;
+    private AlbumResultContract.View albumResultFragment;
+    private MainContract.View mainActivity;
 
     @Inject
-    public AlbumResultFragmentPresenter(LastFmApiClient lastFmApiClient) {
+    public AlbumResultPresenter(LastFmApiClient lastFmApiClient) {
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
-    public void takeView(AlbumResultFragmentContract.View view) {
+    public void takeView(AlbumResultContract.View view) {
         this.albumResultFragment = view;
         this.mainActivity = albumResultFragment.getMainActivity();
     }
@@ -69,8 +70,9 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
 
 
     @Override
-    public void addOnSearchBarTextChangedListener(MainActivity fragmentActivity, SearchView searchEditText) {
-        AlbumResultFragmentPresenter albumResultFragmentPresenter = this;
+    public void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity) {
+        SearchView searchEditText = fragmentActivity.getSearchBar();
+        AlbumResultPresenter albumResultPresenter = this;
         if(searchEditText == null){
             return;
         }
@@ -114,7 +116,7 @@ public class AlbumResultFragmentPresenter implements AlbumResultFragmentContract
                             result = Collections.emptyList();
                         }
 
-                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter((Activity)mainActivity, result, albumResultFragmentPresenter);
+                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter((Activity)mainActivity, result, albumResultPresenter);
 
                         albumResultFragment.getRecyclerView().setAdapter(albumAdapter);
                         mainActivity.hideKeyboard();

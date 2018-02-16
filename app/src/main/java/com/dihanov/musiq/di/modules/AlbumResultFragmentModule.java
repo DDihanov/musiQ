@@ -2,9 +2,9 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragment;
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragmentContract;
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultFragmentPresenter;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultContract;
+import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResultPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -17,9 +17,9 @@ import dagger.Module;
 public abstract class AlbumResultFragmentModule {
     @Binds
     @PerFragment
-    abstract AlbumResultFragmentContract.View provideAlbumResultFragmentView(AlbumResultFragment albumResultFragment);
+    abstract AlbumResultContract.View provideAlbumResultFragmentView(AlbumResult albumResult);
 
     @Binds
     @PerActivity
-    abstract AlbumResultFragmentContract.Presenter provideAlbumResultFragmentPresenter(AlbumResultFragmentPresenter presenter);
+    abstract AlbumResultContract.Presenter provideAlbumResultFragmentPresenter(AlbumResultPresenter presenter);
 }

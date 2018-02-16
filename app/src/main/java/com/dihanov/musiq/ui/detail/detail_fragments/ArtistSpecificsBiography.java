@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 
 //this needs no presenter, because it is a simple fragment that only displays text
-public class ArtistDetailsBiographyFragment extends ArtistDetailsFragment{
+public class ArtistSpecificsBiography extends ArtistSpecifics {
     public static final String TITLE = "biography";
 
     @BindView(R.id.artist_details_biography)
@@ -42,9 +42,9 @@ public class ArtistDetailsBiographyFragment extends ArtistDetailsFragment{
         outState.putString(TITLE, this.biography);
     }
 
-    public static ArtistDetailsBiographyFragment newInstance(){
+    public static ArtistSpecificsBiography newInstance(){
         Bundle args = new Bundle();
-        ArtistDetailsBiographyFragment artistDetailsBiographyFragment = new ArtistDetailsBiographyFragment();
+        ArtistSpecificsBiography artistDetailsBiographyFragment = new ArtistSpecificsBiography();
         artistDetailsBiographyFragment.setArguments(args);
         return artistDetailsBiographyFragment;
     }

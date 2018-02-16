@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.login.LoginActivity;
-import com.dihanov.musiq.ui.login.LoginActivityContract;
-import com.dihanov.musiq.ui.login.LoginActivityPresenter;
+import com.dihanov.musiq.ui.login.Login;
+import com.dihanov.musiq.ui.login.LoginContract;
+import com.dihanov.musiq.ui.login.LoginPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -16,9 +16,9 @@ import dagger.Module;
 public abstract class LoginActivityModule {
     @Binds
     @PerActivity
-    abstract LoginActivityContract.View bindLoginActivityView(LoginActivity loginActivity);
+    abstract LoginContract.View bindLoginActivityView(Login login);
 
     @Binds
     @PerActivity
-    abstract LoginActivityContract.Presenter bindLoginActivityPresenter(LoginActivityPresenter loginActivityPresenter);
+    abstract LoginContract.Presenter bindLoginActivityPresenter(LoginPresenter loginPresenter);
 }

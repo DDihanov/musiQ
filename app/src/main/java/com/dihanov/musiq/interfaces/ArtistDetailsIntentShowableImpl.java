@@ -9,8 +9,8 @@ import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.ui.detail.ArtistDetailsActivity;
-import com.dihanov.musiq.ui.main.MainActivityContract;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.Gson;
@@ -40,8 +40,8 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
-    public void showArtistDetailsIntent(String artistName, MainActivityContract.View mainActivity) {
-        Intent showArtistDetailsIntent = new Intent((Context)mainActivity, ArtistDetailsActivity.class);
+    public void showArtistDetailsIntent(String artistName, MainContract.View mainActivity) {
+        Intent showArtistDetailsIntent = new Intent((Context)mainActivity, ArtistDetails.class);
         showArtistDetailsIntent.putExtra(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
         HelperMethods.showTooltip((Activity)mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
         mainActivity.showProgressBar();

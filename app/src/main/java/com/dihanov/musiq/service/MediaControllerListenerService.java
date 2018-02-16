@@ -167,6 +167,5 @@ public class MediaControllerListenerService extends NotificationListenerService
                 onActiveSessionsChanged(currentControllers);
             }
         }
-
     }
 }

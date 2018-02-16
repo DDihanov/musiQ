@@ -30,7 +30,7 @@ import dagger.android.support.DaggerAppCompatActivity;
  * Created by dimitar.dihanov on 2/5/2018.
  */
 
-public class LoginActivity extends DaggerAppCompatActivity implements LoginActivityContract.View, MainViewFunctionable {
+public class Login extends DaggerAppCompatActivity implements LoginContract.View, MainViewFunctionable {
     @BindView(R.id.sign_in)
     Button signInButton;
 
@@ -53,7 +53,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
     AppCompatCheckBox rememberMeCheckBox;
 
     @Inject
-    LoginActivityContract.Presenter loginActivityPresenter;
+    LoginContract.Presenter loginActivityPresenter;
 
     @Inject
     LastFmApiClient lastFmApiClient;
@@ -65,7 +65,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginActiv
         ButterKnife.bind(this);
 
         rememberMeCheckBox.setChecked(App.getSharedPreferences().getBoolean(Constants.REMEMBER_ME, false));
-        loginActivityPresenter.takeView(LoginActivity.this);
+        loginActivityPresenter.takeView(Login.this);
     }
 
     @Override

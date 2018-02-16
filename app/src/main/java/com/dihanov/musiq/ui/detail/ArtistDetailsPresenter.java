@@ -6,15 +6,15 @@ import javax.inject.Inject;
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
-public class ArtistDetailsActivityPresenter implements ArtistDetailsActivityContract.Presenter {
-    private ArtistDetailsActivityContract.View artistDetailsActivity;
+public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
+    private ArtistDetailsContract.View artistDetailsActivity;
 
     @Inject
-    public ArtistDetailsActivityPresenter(){
+    public ArtistDetailsPresenter(){
     }
 
     @Override
-    public void takeView(ArtistDetailsActivityContract.View view) {
+    public void takeView(ArtistDetailsContract.View view) {
         this.artistDetailsActivity = view;
     }
 

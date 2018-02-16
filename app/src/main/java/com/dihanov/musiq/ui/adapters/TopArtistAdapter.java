@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.main.MainActivityPresenter;
+import com.dihanov.musiq.ui.main.MainPresenter;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
@@ -23,14 +23,14 @@ import java.util.List;
  */
 
 public class TopArtistAdapter extends AbstractAdapter {
-    private MainActivityPresenter mainActivityPresenter;
+    private MainPresenter mainPresenter;
     private Context context;
     private List<Artist> topArtist;
 
-    public TopArtistAdapter(Context context, List<Artist> topArtist, MainActivityPresenter mainActivityPresenter) {
+    public TopArtistAdapter(Context context, List<Artist> topArtist, MainPresenter mainPresenter) {
         this.context = context;
         this.topArtist = topArtist;
-        this.mainActivityPresenter = mainActivityPresenter;
+        this.mainPresenter = mainPresenter;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TopArtistAdapter extends AbstractAdapter {
         holder.getThumbnail().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivityPresenter.addOnArtistResultClickedListener(holder, artist.getName());
+                mainPresenter.addOnArtistResultClickedListener(holder, artist.getName());
             }
         });
 
