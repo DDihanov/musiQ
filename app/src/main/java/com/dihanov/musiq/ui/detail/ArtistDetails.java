@@ -163,7 +163,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             return;
         }
 
-        //this is very ugly, however since there is no lambda what can you do
+        //this is very ugly, however since there is no streams what can you do
         List<String> firstFive = new ArrayList<String>(){
             {
                 for (int i = 0; i < tagText.size(); i++) {

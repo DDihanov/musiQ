@@ -81,7 +81,9 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
                     @Override
                     public void onNext(Response response) {
-                        Toast.makeText(nowPlayingFragment.getContext(), R.string.track_loved, Toast.LENGTH_SHORT).show();
+                        if(response != null){
+                            Toast.makeText(nowPlayingFragment.getContext(), R.string.track_loved, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
