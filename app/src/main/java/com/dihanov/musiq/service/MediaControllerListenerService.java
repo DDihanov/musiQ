@@ -35,7 +35,7 @@ import dagger.android.AndroidInjection;
 
 public class MediaControllerListenerService extends NotificationListenerService
         implements MediaSessionManager.OnActiveSessionsChangedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String CONTROLLER_PREFIX = "media_controller.";
 
     private static final String TAG = MediaControllerListenerService.class.getSimpleName();
@@ -97,8 +97,8 @@ public class MediaControllerListenerService extends NotificationListenerService
             }
 
             if (!contains) {
-                if(!enableAutoDetect){
-                    if(!App.getSharedPreferences().getBoolean(SettingsActivity.PLAYER_PREFIX + element.getPackageName(), true)){
+                if (!enableAutoDetect) {
+                    if (!App.getSharedPreferences().getBoolean(SettingsActivity.PLAYER_PREFIX + element.getPackageName(), true)) {
                         continue;
                     }
                 }
@@ -132,8 +132,8 @@ public class MediaControllerListenerService extends NotificationListenerService
 
         //manage currently active controller info
         for (MediaController currentController : currentControllers) {
-            if(currentController != null && currentController.getPlaybackState() != null){
-                if(currentController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING){
+            if (currentController != null && currentController.getPlaybackState() != null) {
+                if (currentController.getPlaybackState().getState() == PlaybackState.STATE_PLAYING) {
                     currentPlayingControllerPackageName = currentController.getPackageName();
                     break;
                 }
@@ -143,21 +143,21 @@ public class MediaControllerListenerService extends NotificationListenerService
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        if(sbn.getPackageName().equals(currentPlayingControllerPackageName)){
+        if (sbn.getPackageName().equals(currentPlayingControllerPackageName)) {
             Notificator.cancelNotification(this);
         }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.startsWith(SettingsActivity.PLAYER_PREFIX)){
+        if (key.startsWith(SettingsActivity.PLAYER_PREFIX)) {
             String packageName = key.substring(14, key.length());
 
-            if(!sharedPreferences.getBoolean(key, true)){
-                for(ListIterator<MediaController> iterator = currentControllers.listIterator(); iterator.hasNext(); ){
+            if (!sharedPreferences.getBoolean(key, true)) {
+                for (ListIterator<MediaController> iterator = currentControllers.listIterator(); iterator.hasNext(); ) {
                     MediaController mediaController = iterator.next();
-                    if(mediaController.getPackageName().equals(packageName)){
-                        if(callbacks.containsKey(packageName)){
+                    if (mediaController.getPackageName().equals(packageName)) {
+                        if (callbacks.containsKey(packageName)) {
                             mediaController.unregisterCallback(callbacks.get(packageName));
                         }
                         iterator.remove();
@@ -167,5 +167,6 @@ public class MediaControllerListenerService extends NotificationListenerService
                 onActiveSessionsChanged(currentControllers);
             }
         }
+
     }
 }

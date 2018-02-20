@@ -61,7 +61,7 @@ public class Scrobbler {
                 App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
                 Config.FORMAT)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .subscribe(new Observer<Response>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -70,10 +70,12 @@ public class Scrobbler {
 
                     @Override
                     public void onNext(Response response) {
-                        if (response.getError() == null) {
-                            Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
-                        } else {
-                            handleErrorResponse(response, scrobble);
+                        if(response != null){
+                            if (response.getError() == null) {
+                                Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
+                            } else {
+                                handleErrorResponse(response, scrobble);
+                            }
                         }
                     }
 
@@ -85,10 +87,17 @@ public class Scrobbler {
 
                     @Override
                     public void onComplete() {
+                        resetPenalty();
+                        nowPlaying.setTrackStartTime(System.currentTimeMillis());
                         compositeDisposable.clear();
                     }
                 });
 
+    }
+
+    private void resetPenalty() {
+        getStatus().setPenalty(0);
+        getStatus().setLastPauseTime(System.currentTimeMillis());
     }
 
     private void handleErrorResponse(Response response, Scrobble scrobble) {
@@ -113,14 +122,14 @@ public class Scrobbler {
 
     private void setNowPlaying(Scrobble nowPlaying) {
         //check to see if user is logged in before continuing
-        if(!App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) return;
+        if (!App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) return;
 
-        if(nowPlaying == null){
+        if (nowPlaying == null) {
             this.nowPlaying = null;
             return;
         }
 
-        if(App.getSharedPreferences().getBoolean("scrobble_notifications", true) && App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
+        if (App.getSharedPreferences().getBoolean("scrobble_notifications", true) && App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) {
             Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
         }
 
@@ -163,20 +172,16 @@ public class Scrobbler {
 
     public void setStatus(PlaybackState playbackState) {
         int state = playbackState.getState();
-        if(playbackState.getState() == PlaybackState.STATE_NONE){
+
+        manageScrobble(nowPlaying);
+
+        if (playbackState.getState() == PlaybackState.STATE_NONE) {
             this.setNowPlaying(null);
         } else {
             Scrobbler.state.handleStatusChanged(state);
         }
-    }
 
-    public void setStatus(int status){
-        if(status == PlaybackState.STATE_NONE){
-            this.manageScrobble(nowPlaying);
-            this.setNowPlaying(null);
-        }
     }
-
 
     public State getStatus() {
         return this.state;
@@ -189,7 +194,7 @@ public class Scrobbler {
     public void scrobbleFromCache() {
         List<Scrobble> cached = scrobbleDB.getCachedScrobbles();
 
-        if(cached.isEmpty()) return;
+        if (cached.isEmpty()) return;
 
         List<Observable<Response>> observables = new ArrayList<>();
         String apiSig = "";
@@ -232,11 +237,13 @@ public class Scrobbler {
 
                     @Override
                     public void onNext(List<Response> responses) {
-                        for (Response respons : responses) {
-                            Log.d(TAG, "Scrobbled " +
-                                    respons.getScrobbles().getScrobble().getArtist().getText() +
-                                    " - " +
-                                    respons.getScrobbles().getScrobble().getTrack().getText());
+                        if (responses != null) {
+                            for (Response respons : responses) {
+                                Log.d(TAG, "Scrobbled " +
+                                        respons.getScrobbles().getScrobble().getArtist().getText() +
+                                        " - " +
+                                        respons.getScrobbles().getScrobble().getTrack().getText());
+                            }
                         }
                     }
 
@@ -255,16 +262,14 @@ public class Scrobbler {
 
     public void updateTrackInfo(MediaMetadata metadata) {
         if (this.nowPlaying != null) {
-            this.getStatus().setState(State.PREP_SCROBBLE_STATE);
             manageScrobble(this.nowPlaying);
         }
 
-        if(metadata == null){
+        if (metadata == null) {
             return;
         }
 
-        this.getStatus().setPenalty(0);
-        this.getStatus().setLastPauseTime(0);
+        resetPenalty();
         String trackName = metadata.getString(MediaMetadata.METADATA_KEY_TITLE);
         String trackArtistName = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST);
         String trackAlbumName = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM);
@@ -286,6 +291,8 @@ public class Scrobbler {
         }
 
         Scrobble scrobble = new Scrobble(trackArtistName, trackName, trackAlbumName, trackDuration, timestamp, albumArt);
+        scrobble.setTrackStartTime(System.currentTimeMillis());
+        Log.d(TAG, "updateTrackInfo: " + scrobble);
 
         if (!scrobble.isScrobbleValid()) return;
 
@@ -297,9 +304,13 @@ public class Scrobbler {
     }
 
     private void manageScrobble(Scrobble scrobble) {
+        if (scrobble == null) {
+            return;
+        }
+
         long currentTime = System.currentTimeMillis() - state.getPenalty();
         //multiply by 1000 to time in milliseconds
-        long trackBeginTime = scrobble.getTimestamp() * 1000L;
+        long trackBeginTime = scrobble.getTrackStartTime();
         long minimumTrackTime = scrobble.getDuration() / 2;
         long requiredTime = trackBeginTime + minimumTrackTime;
 

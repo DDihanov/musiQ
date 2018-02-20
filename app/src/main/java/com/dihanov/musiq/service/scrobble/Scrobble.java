@@ -16,6 +16,7 @@ public class Scrobble {
     private long duration;
     private long timestamp;
     private Bitmap albumArt;
+    private long trackStartTime;
 
     public Scrobble() {
     }
@@ -112,5 +113,18 @@ public class Scrobble {
 
     public Bitmap getAlbumArt() {
         return albumArt;
+    }
+
+    public long getTrackStartTime() {
+        return trackStartTime;
+    }
+
+    public void setTrackStartTime(long trackStartTime) {
+        this.trackStartTime = trackStartTime;
+    }
+
+    @Override
+    public String toString() {
+        return this.artistName + " - " + this.trackName;
     }
 }

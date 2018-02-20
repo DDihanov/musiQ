@@ -8,9 +8,8 @@ import android.media.session.PlaybackState;
 
 public class State {
     public static final int NONE = 0;
-    public static final int PREP_SCROBBLE_STATE = 99;
 
-    private long lastPauseTime = 0L;
+    private long lastPauseTime = System.currentTimeMillis();
     private int state;
     private long penalty;
 
@@ -39,13 +38,12 @@ public class State {
 
     public void handleStatusChanged(int state) {
         long currentTime = System.currentTimeMillis();
+
         switch (state) {
             case PlaybackState.STATE_PLAYING:
                 this.setPenalty(currentTime - lastPauseTime);
                 break;
-            case State.PREP_SCROBBLE_STATE:
-                this.setPenalty(currentTime - lastPauseTime);
-                break;
+
             default:
                 lastPauseTime = currentTime;
                 break;
