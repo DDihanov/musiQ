@@ -57,4 +57,11 @@ Features to be implemented will be:
 
 If you have any recommendations feel free to email me.
 </br>
-NOTE: If you fork/clone this repo, be sure to add "API_KEY" and "API_SECRET" to your gradle.properties.
+NOTE: If you fork/clone this repo, be sure to add
+</br>
+API_KEY = "YOUR_LASTFM_API_KEY"
+</br>
+API_SECRET = "YOUR_LASTFM_API_SECRET"
+</br>
+
+to your gradle.properties.
