@@ -49,10 +49,11 @@ Some features this app. supports:
 - Scrobble history
 - 'Love track' button
 - Scrobbling from cache(e.g. offline scrobbles to be scrobbled at a later point)
+- Beautiful graph showing the top tracks and top artists in a time span, which the user can specify
 
 
 Features to be implemented will be:
-- User-specific statistics and playcharts from last.fm
+- Track statistics in the Artist detail menu
 - More user-specific information from last.fm
 
 If you have any recommendations feel free to email me.
