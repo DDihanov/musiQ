@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
+
 
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 
@@ -29,7 +29,7 @@ public class NetworkConnectionReceiver extends BroadcastReceiver {
 
             if (activeNetwork != null && activeNetwork.getState() == NetworkInfo.State.CONNECTED) {
                 scrobbler.scrobbleFromCache();
-                Log.d(TAG, "Scrobbling cached tracks.");
+                AppLog.log(TAG, "Scrobbling cached tracks.");
             }
         }
     }

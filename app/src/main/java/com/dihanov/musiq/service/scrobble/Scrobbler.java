@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
-import android.util.Log;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
@@ -12,6 +11,7 @@ import com.dihanov.musiq.db.ScrobbleDB;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.Notificator;
@@ -72,7 +72,7 @@ public class Scrobbler {
                     public void onNext(Response response) {
                         if(response != null){
                             if (response.getError() == null) {
-                                Log.d(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
+                                AppLog.log(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
                             } else {
                                 handleErrorResponse(response, scrobble);
                             }
@@ -82,7 +82,7 @@ public class Scrobbler {
                     @Override
                     public void onError(Throwable e) {
                         storeInDb(scrobble);
-                        Log.d(TAG, e.getMessage());
+                        AppLog.log(TAG, e.getMessage());
                     }
 
                     @Override
@@ -157,12 +157,12 @@ public class Scrobbler {
 
                     @Override
                     public void onNext(Response response) {
-                        Log.d(TAG, String.format("Updated now playing: %s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+                        AppLog.log(TAG, String.format("Updated now playing: %s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.getMessage());
+                        AppLog.log(TAG, e.getMessage());
                     }
 
                     @Override
@@ -241,7 +241,7 @@ public class Scrobbler {
                     public void onNext(List<Response> responses) {
                         if (responses != null) {
                             for (Response respons : responses) {
-                                Log.d(TAG, "Scrobbled " +
+                                AppLog.log(TAG, "Scrobbled " +
                                         respons.getScrobbles().getScrobble().getArtist().getText() +
                                         " - " +
                                         respons.getScrobbles().getScrobble().getTrack().getText());
@@ -251,7 +251,7 @@ public class Scrobbler {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.getMessage());
+                        AppLog.log(TAG, e.getMessage());
                     }
 
                     @Override
@@ -294,7 +294,7 @@ public class Scrobbler {
 
         Scrobble scrobble = new Scrobble(trackArtistName, trackName, trackAlbumName, trackDuration, timestamp, albumArt);
         scrobble.setTrackStartTime(System.currentTimeMillis());
-        Log.d(TAG, "updateTrackInfo: " + scrobble);
+        AppLog.log(TAG, "updateTrackInfo: " + scrobble);
 
         if (!scrobble.isScrobbleValid()) return;
 

@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.user_top_tracks;
 
 import android.graphics.Typeface;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.dihanov.musiq.di.app.App;
@@ -9,6 +8,7 @@ import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.models.UserTopTracks;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.MainContract;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -112,7 +112,7 @@ public class UserTopTracksPresenter implements UserTopTracksContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(UserTopTracksPresenter.class.getSimpleName(), e.getMessage());
+                        AppLog.log(UserTopTracksPresenter.class.getSimpleName(), e.getMessage());
                         compositeDisposable.clear();
                         mainActivity.hideProgressBar();
                     }

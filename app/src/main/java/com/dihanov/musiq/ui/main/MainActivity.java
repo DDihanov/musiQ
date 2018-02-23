@@ -130,8 +130,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putString(Constants.LAST_SEARCH, searchBar.getQuery().toString());
+        String s = "";
+        if(searchBar != null){
+            s = searchBar.getQuery().toString();
+        }
+        outState.putString(Constants.LAST_SEARCH, s);
     }
 
     private void initViewPager() {

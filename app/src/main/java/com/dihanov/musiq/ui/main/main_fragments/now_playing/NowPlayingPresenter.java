@@ -3,7 +3,6 @@ package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
@@ -15,6 +14,7 @@ import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
@@ -88,7 +88,7 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(NowPlayingPresenter.class.getSimpleName(), e.getMessage());
+                        AppLog.log(NowPlayingPresenter.class.getSimpleName(), e.getMessage());
                     }
 
                     @Override
@@ -127,7 +127,7 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.getMessage());
+                        AppLog.log(TAG, e.getMessage());
                     }
 
                     @Override
