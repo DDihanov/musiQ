@@ -10,6 +10,8 @@ import com.dihanov.musiq.di.modules.LoginActivityModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
 import com.dihanov.musiq.di.modules.MediaPlayerControlServiceModule;
 import com.dihanov.musiq.di.modules.NowPlayingFragmentModule;
+import com.dihanov.musiq.di.modules.UserTopArtistsFragmentModule;
+import com.dihanov.musiq.di.modules.UserTopTracksFragmentModule;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsAlbum;
@@ -21,6 +23,8 @@ import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
+import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
+import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -74,4 +78,12 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = MediaPlayerControlServiceModule.class)
     abstract MediaControllerListenerService bindMediaPlayerControlService();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = UserTopTracksFragmentModule.class)
+    abstract UserTopTracks bindUserTopTracksFragment();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = UserTopArtistsFragmentModule.class)
+    abstract UserTopArtists bindUserTopArtistsFragment();
 }

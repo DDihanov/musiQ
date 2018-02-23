@@ -19,6 +19,9 @@ public class Artist {
     @SerializedName("mbid")
     @Expose
     private String mbid;
+    @SerializedName("playcount")
+    @Expose
+    private String playcount;
     @SerializedName("listeners")
     @Expose
     private String listeners;
@@ -46,6 +49,15 @@ public class Artist {
     @SerializedName("bio")
     @Expose
     private Bio bio;
+
+
+    public String getPlaycount() {
+        return playcount;
+    }
+
+    public void setPlaycount(String playcount) {
+        this.playcount = playcount;
+    }
 
     public String getListeners() {
         return listeners;

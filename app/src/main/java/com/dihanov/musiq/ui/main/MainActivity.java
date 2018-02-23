@@ -109,6 +109,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         mainActivityPresenter.setBackdropImageChangeListener(this);
     }
 
+
     private void initNavigationDrawer() {
         String[] options = getResources().getStringArray(R.array.navigation_options);
 
@@ -228,6 +229,16 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Override
     public void hideKeyboard() {
         KeyboardHelper.hideKeyboard(this);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public MainActivity getMainActivity() {
+        return this;
     }
 
     private void initGridView() {

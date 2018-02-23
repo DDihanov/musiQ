@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -48,6 +49,13 @@ public class HelperMethods {
         return formatter.format(number);
     }
 
+    public static float getScreenWidth(Activity activity){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float density  = activity.getResources().getDisplayMetrics().density;
+
+        return displayMetrics.widthPixels / density;
+    }
     public static String formatNumberWithSeperator(double number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();

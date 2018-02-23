@@ -13,6 +13,9 @@ import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.models.TopArtistsResult;
 import com.dihanov.musiq.models.User;
+import com.dihanov.musiq.models.UserArtistTracks;
+import com.dihanov.musiq.models.UserTopArtists;
+import com.dihanov.musiq.models.UserTopTracks;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -54,6 +57,15 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"user.getrecenttracks")
     Observable<RecentTracksWrapper> getUserRecentTracks(@Query("user") String username, @Query("limit") int limit, @Query("extended") int extended);
+
+    @GET(METHOD_CALL+"user.getartisttracks")
+    Observable<UserArtistTracks> getUserArtistTracks(@Query("user") String user, @Query("limit") int limit, @Query("artist") String artist);
+
+    @GET(METHOD_CALL+"user.gettoptracks")
+    Observable<UserTopTracks> getUserTopTracks(@Query("user") String user, @Query("limit") int limit, @Query("period") String period);
+
+    @GET(METHOD_CALL+"user.gettopartists")
+    Observable<UserTopArtists> getUserTopArtists(@Query("user") String user, @Query("limit") int limit, @Query("period") String period);
 
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)

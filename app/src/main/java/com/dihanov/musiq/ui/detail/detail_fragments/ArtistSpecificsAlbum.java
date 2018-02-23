@@ -118,7 +118,6 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
         return (Context)this.artistDetailsActivity;
     }
 
-
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;

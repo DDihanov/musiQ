@@ -23,6 +23,9 @@ public class Track {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("playcount")
+    @Expose
+    private String playcount;
     @SerializedName("loved")
     @Expose
     private String loved;
@@ -138,6 +141,14 @@ public class Track {
     @Override
     public String toString(){
         return this.artist.getText() + " - " + this.name;
+    }
+
+    public String getPlaycount() {
+        return playcount;
+    }
+
+    public void setPlaycount(String playcount) {
+        this.playcount = playcount;
     }
 
     //this is necessary as API returns different types

@@ -88,7 +88,9 @@ public class Scrobbler {
                     @Override
                     public void onComplete() {
                         resetPenalty();
-                        nowPlaying.setTrackStartTime(System.currentTimeMillis());
+                        if(nowPlaying != null){
+                            nowPlaying.setTrackStartTime(System.currentTimeMillis());
+                        }
                         compositeDisposable.clear();
                     }
                 });

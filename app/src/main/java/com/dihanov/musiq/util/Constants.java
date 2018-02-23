@@ -31,6 +31,6 @@ public class Constants {
     public static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     public static final long NETWORK_CHECK_DELAY = 10000;
     public static final String REMEMBER_ME = "remember me";
-    public static final int ALBUM_POSITION = 1;
+    public static final int ALBUM_POSITION = 3;
     public static String MESSAGE_OK = "ok";
 }

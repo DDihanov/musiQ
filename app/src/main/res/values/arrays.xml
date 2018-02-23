@@ -6,4 +6,12 @@
         <item>Log out</item>
         <item>About</item>
     </string-array>
+
+    <string-array name="timeframe_options">
+        <item>Overall</item>
+        <item>7 days</item>
+        <item>1 month</item>
+        <item>3 months</item>
+        <item>12 months</item>
+    </string-array>
 </resources>

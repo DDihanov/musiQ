@@ -3,14 +3,27 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 import android.app.Activity;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.models.Track;
+import com.dihanov.musiq.models.UserArtistTracks;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
+import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
+import com.dihanov.musiq.util.Constants;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarEntry;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 10/6/2017.

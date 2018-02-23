@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
+import android.content.Context;
 import android.support.v7.widget.SearchView;
 
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
@@ -17,6 +18,10 @@ public interface MainContract {
         SearchView getSearchBar();
 
         void hideKeyboard();
+
+        Context getContext();
+
+        MainActivity getMainActivity();
     }
 
     interface Presenter extends BasePresenter<View>{

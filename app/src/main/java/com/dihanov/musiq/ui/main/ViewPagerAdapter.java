@@ -9,13 +9,15 @@ import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
+import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
+import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 5;
+    private static int TAB_COUNT = 6;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,18 +30,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return NowPlaying.newInstance();
             case 1:
-                return ArtistResult.newInstance();
-
+                return UserTopTracks.newInstance();
             case 2:
-                return AlbumResult.newInstance();
-
+                return UserTopArtists.newInstance();
             case 3:
-                return FavoriteArtist.newInstance();
-
+                return ArtistResult.newInstance();
             case 4:
+                return AlbumResult.newInstance();
+            case 5:
+                return FavoriteArtist.newInstance();
+            case 6:
                 return FavoriteAlbums.newInstance();
         }
-
         return null;
     }
 
@@ -54,12 +56,16 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return NowPlaying.TITLE;
             case 1:
-                return ArtistResult.TITLE;
+                return UserTopTracks.TITLE;
             case 2:
-                return AlbumResult.TITLE;
+                return UserTopArtists.TITLE;
             case 3:
-                return FavoriteArtist.TITLE;
+                return ArtistResult.TITLE;
             case 4:
+                return AlbumResult.TITLE;
+            case 5:
+                return FavoriteArtist.TITLE;
+            case 6:
                 return FavoriteAlbums.TITLE;
         }
         return super.getPageTitle(position);
