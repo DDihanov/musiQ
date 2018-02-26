@@ -116,6 +116,11 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
         return this.recyclerView;
     }
 
+    @Override
+    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+
+    }
+
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 

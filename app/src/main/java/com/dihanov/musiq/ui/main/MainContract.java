@@ -22,6 +22,8 @@ public interface MainContract {
         Context getContext();
 
         MainActivity getMainActivity();
+
+        void runOnUiThread(Runnable r);
     }
 
     interface Presenter extends BasePresenter<View>{

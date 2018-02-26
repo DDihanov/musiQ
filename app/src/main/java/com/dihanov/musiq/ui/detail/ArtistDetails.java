@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
@@ -282,6 +283,11 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

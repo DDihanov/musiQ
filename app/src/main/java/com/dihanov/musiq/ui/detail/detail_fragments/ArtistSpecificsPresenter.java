@@ -1,7 +1,5 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
-import android.app.Activity;
-
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.service.LastFmApiClient;
@@ -43,7 +41,7 @@ public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Present
 
     @Override
     public void setClickListenerFetchEntireAlbumInfo(AlbumViewHolder viewHolder, String artistName, String albumName) {
-        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, (Activity)artistDetailsActivity);
+        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, artistDetailsActivity);
         albumDetailsPopupWindow.showPopupWindow(artistDetailsActivity, viewHolder, artistName, albumName, R.id.detail_content);
     }
 }

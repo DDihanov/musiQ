@@ -1,9 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
-import android.content.Context;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
-
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.models.Artist;
@@ -11,6 +7,7 @@ import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainContract;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -65,13 +62,12 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
 
     @Override
     public void addOnSearchBarTextChangedListener(MainContract.View mainActivity) {
-        SearchView searchEditText = mainActivity.getSearchBar();
         ArtistResultPresenter artistResultPresenter = this;
-        if(searchEditText == null){
+        if(mainActivity.getSearchBar() == null){
             return;
         }
         Observable<ArtistSearchResults> autocompleteResponseObservable =
-                RxSearchView.queryTextChanges(searchEditText)
+                RxSearchView.queryTextChanges(mainActivity.getSearchBar())
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -102,7 +98,7 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
 
                     @Override
                     public void onNext(ArtistSearchResults artistSearchResults) {
-                        Log.i(TAG, artistSearchResults.toString());
+                        AppLog.log(TAG, artistSearchResults.toString());
 
                         List<Artist> result = new ArrayList<>();
                         result.addAll(artistSearchResults.getResults().getArtistmatches().getArtistMatches());
@@ -110,7 +106,7 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
                             result = Collections.emptyList();
                         }
 
-                        ArtistAdapter artistAdapter = new ArtistAdapter((Context)mainActivity, result, artistResultPresenter);
+                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, artistResultPresenter);
 
                         artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
                         mainActivity.hideKeyboard();
@@ -121,13 +117,13 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
                     public void onComplete() {
                         mainActivity.hideProgressBar();
                         compositeDisposable.clear();
-                        Log.i(TAG, "onCompleted");
+                        AppLog.log(TAG, "onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mainActivity.hideProgressBar();
-                        Log.e(TAG, "onError", e);
+                        AppLog.log(TAG, e.getMessage());
                         compositeDisposable.clear();
                     }
                 });

@@ -1,10 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.album;
 
-
-import android.app.Activity;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
-
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
@@ -15,6 +10,7 @@ import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 
@@ -71,13 +67,12 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
 
     @Override
     public void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity) {
-        SearchView searchEditText = fragmentActivity.getSearchBar();
         AlbumResultPresenter albumResultPresenter = this;
-        if(searchEditText == null){
+        if(fragmentActivity.getSearchBar() == null){
             return;
         }
         Observable<GeneralAlbumSearch> autocompleteResponseObservable =
-                RxSearchView.queryTextChanges(searchEditText)
+                RxSearchView.queryTextChanges(fragmentActivity.getSearchBar())
                         .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -108,7 +103,7 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
 
                     @Override
                     public void onNext(GeneralAlbumSearch albumSearchResults) {
-                        Log.i(TAG, albumSearchResults.toString());
+                        AppLog.log(TAG, albumSearchResults.toString());
 
                         List<Album> result = new ArrayList<>();
                         result.addAll(albumSearchResults.getResults().getAlbummatches().getAlbum());
@@ -116,7 +111,7 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
                             result = Collections.emptyList();
                         }
 
-                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter((Activity)mainActivity, result, albumResultPresenter);
+                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter(mainActivity, result, albumResultPresenter);
 
                         albumResultFragment.getRecyclerView().setAdapter(albumAdapter);
                         mainActivity.hideKeyboard();
@@ -127,13 +122,13 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
                     public void onComplete() {
                         mainActivity.hideProgressBar();
                         compositeDisposable.clear();
-                        Log.i(TAG, "onCompleted");
+                        AppLog.log(TAG, "onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mainActivity.hideProgressBar();
-                        Log.e(TAG, "onError", e);
+                        AppLog.log(TAG, e.getMessage());
                         compositeDisposable.clear();
                     }
                 });
@@ -141,7 +136,7 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
 
     @Override
     public void setClickListenerFetchEntireAlbumInfo(AlbumViewHolder viewHolder, String artistName, String albumName) {
-        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, (Activity)mainActivity);
+        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, mainActivity);
         albumDetailsPopupWindow.showPopupWindow(mainActivity, viewHolder, artistName, albumName, R.id.main_content);
     }
 }

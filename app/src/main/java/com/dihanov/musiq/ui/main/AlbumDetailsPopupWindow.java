@@ -23,6 +23,7 @@ import com.dihanov.musiq.models.SpecificAlbum;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
@@ -49,11 +50,11 @@ public class AlbumDetailsPopupWindow {
     private static final String LOADING_ALBUM = "just a sec, let me find this album for you";
 
     private LastFmApiClient lastFmApiClient;
-    private Activity activity;
+    private BaseView view;
 
-    public AlbumDetailsPopupWindow(LastFmApiClient lastFmApiClient, Activity activity) {
+    public AlbumDetailsPopupWindow(LastFmApiClient lastFmApiClient, BaseView<?> view) {
         this.lastFmApiClient = lastFmApiClient;
-        this.activity = activity;
+        this.view = view;
     }
 
     public void showPopupWindow(MainViewFunctionable activity, AlbumViewHolder viewHolder, String artistName, String albumName, int mainWindowId) {
@@ -72,7 +73,7 @@ public class AlbumDetailsPopupWindow {
                                 @Override
                                 public void onSubscribe(Disposable d) {
                                     activity.showProgressBar();
-                                    HelperMethods.showTooltip((Activity) activity, activity.getBirdIcon(), LOADING_ALBUM);
+                                    HelperMethods.showTooltip(activity, activity.getBirdIcon(), LOADING_ALBUM);
                                 }
 
                                 @Override
@@ -193,7 +194,7 @@ public class AlbumDetailsPopupWindow {
         for (int i = 0; i < tagText.size(); i++) {
             TagView currTag = tags[i];
             currTag.setText(firstFive.get(i));
-            currTag.setTagColor(Color.parseColor(activity.getString(R.color.colorAccent)));
+            currTag.setTagColor(Color.parseColor(((Activity)view).getString(R.color.colorAccent)));
         }
     }
 

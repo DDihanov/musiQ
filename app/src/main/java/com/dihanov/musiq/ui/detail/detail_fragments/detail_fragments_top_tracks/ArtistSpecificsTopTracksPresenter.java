@@ -1,8 +1,5 @@
 package com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks;
 
-import android.graphics.Typeface;
-import android.widget.Toast;
-
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistTopTracks;
 import com.dihanov.musiq.models.Track;
@@ -135,7 +132,7 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
         barChart.getXAxis().setTextSize(HelperMethods.getScreenWidth(detailView.getDetailActivity()) / TEXT_SIZE_CONST);
         barChart.getAxisLeft().setAxisMinimum(0);
         barChart.getXAxis().setCenterAxisLabels(false);
-        barChart.getXAxis().setTypeface(Typeface.createFromAsset(detailView.getDetailActivity().getAssets(), "fonts/cabin_regular.ttf"));
+        barChart.getXAxis().setTypeface(HelperMethods.createTypefaceFromFont(detailView.getDetailActivity(), "fonts/cabin_regular.ttf"));
         barChart.getXAxis().setValueFormatter((value, axis) -> {
             if((int) value > labels.size()){
                 return "";
@@ -145,7 +142,7 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Toast.makeText(detailView.getDetailActivity(), String.valueOf((int)e.getY()) + " listens", Toast.LENGTH_SHORT).show();
+                detailView.showToast(detailView.getDetailActivity(), String.valueOf((int)e.getY()) + " listens");
             }
 
             @Override

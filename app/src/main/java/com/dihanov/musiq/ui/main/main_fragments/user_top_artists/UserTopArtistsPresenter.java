@@ -1,8 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.user_top_artists;
 
-import android.graphics.Typeface;
-import android.widget.Toast;
-
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.UserTopArtists;
@@ -134,7 +131,7 @@ public class UserTopArtistsPresenter implements UserTopArtistsContract.Presenter
         barChart.getXAxis().setTextSize(HelperMethods.getScreenWidth(mainActivity.getMainActivity()) / TEXT_SIZE_CONST);
         barChart.getAxisLeft().setAxisMinimum(0);
         barChart.getXAxis().setCenterAxisLabels(false);
-        barChart.getXAxis().setTypeface(Typeface.createFromAsset(mainActivity.getContext().getAssets(), "fonts/cabin_regular.ttf"));
+        barChart.getXAxis().setTypeface(HelperMethods.createTypefaceFromFont(userTopTracks.getContext(), "fonts/cabin_regular.ttf"));
         barChart.getXAxis().setValueFormatter((value, axis) -> {
             if((int) value > labels.size() - 1){
                 return "";
@@ -144,7 +141,7 @@ public class UserTopArtistsPresenter implements UserTopArtistsContract.Presenter
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Toast.makeText(mainActivity.getContext(), String.valueOf((int)e.getY()) + " listens", Toast.LENGTH_SHORT).show();
+                userTopTracks.showToast(userTopTracks.getContext(), String.valueOf((int)e.getY()) + " listens");
             }
 
             @Override

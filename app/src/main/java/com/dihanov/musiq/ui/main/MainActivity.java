@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -227,6 +228,15 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     }
 
     @Override
+    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
     }
@@ -234,6 +244,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showToast(Context context, String message) {
+
     }
 
     @Override

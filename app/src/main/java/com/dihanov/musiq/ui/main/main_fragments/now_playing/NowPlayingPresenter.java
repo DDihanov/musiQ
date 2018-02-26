@@ -1,10 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
-
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
@@ -82,7 +77,7 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
                     @Override
                     public void onNext(Response response) {
                         if(response != null){
-                            Toast.makeText(nowPlayingFragment.getContext(), R.string.track_loved, Toast.LENGTH_SHORT).show();
+                            nowPlayingFragment.showToast(nowPlayingFragment.getContext(), nowPlayingFragment.getContext().getString(R.string.track_loved));
                         }
                     }
 
@@ -100,7 +95,6 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
     @Override
     public void loadRecentScrobbles(NowPlayingContract.View nowPlayingFragment) {
-        RecyclerView recyclerView = nowPlayingFragment.getRecyclerView();
         lastFmApiClient.getLastFmApiService()
                 .getUserRecentTracks(App.getSharedPreferences().getString(Constants.USERNAME, ""), RECENT_SCROBBLES_LIMIT, 1)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -118,11 +112,7 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
                         RecentlyScrobbledAdapter adapter =
                                 new RecentlyScrobbledAdapter(result);
 
-                        recyclerView.setAdapter(adapter);
-                        RecyclerView.LayoutManager layoutManager =
-                                new LinearLayoutManager(nowPlayingFragment.getContext(), GridLayoutManager.VERTICAL, false);
-                        recyclerView.setLayoutManager(layoutManager);
-                        recyclerView.getAdapter().notifyDataSetChanged();
+                        nowPlayingFragment.setRecyclerViewAdapter(adapter);
                     }
 
                     @Override

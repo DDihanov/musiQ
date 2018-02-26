@@ -1,9 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 
-import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
@@ -15,6 +11,7 @@ import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
+import com.dihanov.musiq.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +67,8 @@ public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter
 
     @Override
     public void loadFavoriteAlbums(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
-        RecyclerView recyclerView = recyclerViewExposable.getRecyclerView();
         //resetting the adapter
-        recyclerView.setAdapter(new AlbumDetailsAdapter((Activity)this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this));
+        recyclerViewExposable.getRecyclerView().setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this));
 
 
         List<Observable<GeneralAlbumSearch>> observables = new ArrayList<>();
@@ -100,14 +96,14 @@ public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter
                     @Override
                     public void onNext(List<Album> generalAlbumSearch) {
                         for (Album albumSearch : generalAlbumSearch) {
-                            ((AlbumDetailsAdapter) recyclerView.getAdapter()).addAlbum(albumSearch);
+                            ((AlbumDetailsAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).addAlbum(albumSearch);
                         }
-                        recyclerView.getAdapter().notifyDataSetChanged();
+                        recyclerViewExposable.getRecyclerView().getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(this.getClass().getSimpleName(), e.getMessage());
+                        AppLog.log(this.getClass().getSimpleName(), e.getMessage());
                     }
 
                     @Override

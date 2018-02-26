@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
@@ -25,8 +27,8 @@ public class ArtistAdapter extends AbstractAdapter {
     private List<Artist> artistList;
     private SpecificArtistSearchable specificArtistSearchable;
 
-    public ArtistAdapter(Context context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable) {
-        this.mainActivity = context;
+    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable) {
+        this.mainActivity = (Activity)context;
         this.artistList = albumList;
         this.specificArtistSearchable = specificArtistSearchable;
     }

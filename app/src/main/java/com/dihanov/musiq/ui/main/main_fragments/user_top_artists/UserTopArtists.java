@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -53,6 +54,11 @@ public class UserTopArtists extends ViewPagerCustomizedFragment implements UserT
     @Override
     public HorizontalBarChart getTopArtistsBarChart() {
         return this.topArtistsChart;
+    }
+
+    @Override
+    public void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

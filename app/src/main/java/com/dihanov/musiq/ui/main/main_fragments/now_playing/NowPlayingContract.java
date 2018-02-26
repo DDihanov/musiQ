@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 import android.content.Context;
 
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
+import com.dihanov.musiq.interfaces.ToastShowable;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -12,8 +13,10 @@ import com.dihanov.musiq.ui.BaseView;
  */
 
 public interface NowPlayingContract {
-    interface View extends BaseView<Presenter>, RecyclerViewExposable{
+    interface View extends BaseView<Presenter>, RecyclerViewExposable, ToastShowable{
         Context getContext();
+
+        void showToast(Context context, String message);
     }
 
     interface Presenter extends BasePresenter<View> {

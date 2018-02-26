@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
@@ -25,8 +26,8 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
     private List<Album> artistAlbumsList;
     private SpecificAlbumSearchable presenter;
 
-    public AlbumDetailsAdapter(Activity context, List<Album> artistAlbumsList, SpecificAlbumSearchable presenter) {
-        this.context = context;
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumSearchable presenter) {
+        this.context = (Activity)context;
         this.artistAlbumsList = artistAlbumsList;
         this.presenter = presenter;
     }

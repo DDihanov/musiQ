@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
@@ -144,8 +147,21 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     }
 
     @Override
+    public void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public RecyclerView getRecyclerView() {
         return this.recentTracks;
     }
 
+    @Override
+    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+        recentTracks.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
+        recentTracks.setLayoutManager(layoutManager);
+        recentTracks.getAdapter().notifyDataSetChanged();
+    }
 }

@@ -1,18 +1,12 @@
 package com.dihanov.musiq.ui.login;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.MediaControllerListenerService;
-import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
@@ -51,7 +45,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void authenticateUser(String username, String password, Context context, boolean rememberMe) {
+    public void authenticateUser(String username, String password, LoginContract.View context, boolean rememberMe) {
         Login login = ((Login)this.loginActivity);
         if (checkConnection()){
             HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
@@ -68,50 +62,43 @@ public class LoginPresenter implements LoginContract.Presenter {
                         HelperMethods.setLayoutChildrenEnabled(false, login.findViewById(R.id.login_layout));
                         compositeDisposable.add(d);
                         login.showProgressBar();
-                        HelperMethods.showTooltip(login, login.getBirdIcon(), login.getString((R.string.logging_in_text)));
+                        HelperMethods.showTooltip((MainViewFunctionable)login, login.getBirdIcon(), login.getString((R.string.logging_in_text)));
                     }
 
                     @Override
                     public void onNext(User user) {
-                        SharedPreferences sharedPreferences = App.getSharedPreferences();
-                        sharedPreferences.edit().putString(Constants.USER_SESSION_KEY, user.getSession().getKey()).apply();
+                        App.getSharedPreferences().edit().putString(Constants.USER_SESSION_KEY, user.getSession().getKey()).apply();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        HelperMethods.showTooltip(login, login.getBirdIcon(), login.getString((R.string.error_username_password)));
+                        HelperMethods.showTooltip((MainViewFunctionable)login, login.getBirdIcon(), login.getString((R.string.error_username_password)));
                         HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
                         login.hideProgressBar();
-                        Log.e(this.getClass().toString(), e.getMessage());
+                        AppLog.log(this.getClass().toString(), e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
                         persistUserInfo(username, password, rememberMe);
-                        //if login is successful we can start the service
-                        login.startService(new Intent(context.getApplicationContext(), MediaControllerListenerService.class));
-                        compositeDisposable.clear();
-                        login.hideProgressBar();
-                        Intent intent = new Intent(login, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        login.startActivity(intent);
-                        login.finish();
+                        login.redirectToMain(compositeDisposable);
+
                     }
                 });
 
     }
 
+
     private void persistUserInfo(String username, String password, boolean rememberMe) {
-        SharedPreferences sharedPreferences = App.getSharedPreferences();
-        sharedPreferences.edit().putString(Constants.USERNAME, username)
+        App.getSharedPreferences().edit().putString(Constants.USERNAME, username)
                 .putString(Constants.PASSWORD, password)
                 .putBoolean(Constants.REMEMBER_ME, rememberMe)
                 .apply();
     }
 
     private boolean checkConnection() {
-        if(!Connectivity.isConnected((Context)loginActivity)){
-            HelperMethods.showNetworkErrorTooltip((Activity)loginActivity, loginActivity.getBirdIcon());
+        if(!Connectivity.isConnected(loginActivity)){
+            HelperMethods.showNetworkErrorTooltip(loginActivity, loginActivity.getBirdIcon());
             return true;
         }
         return false;

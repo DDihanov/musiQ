@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainPresenter;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
@@ -27,8 +29,8 @@ public class TopArtistAdapter extends AbstractAdapter {
     private Context context;
     private List<Artist> topArtist;
 
-    public TopArtistAdapter(Context context, List<Artist> topArtist, MainPresenter mainPresenter) {
-        this.context = context;
+    public TopArtistAdapter(BaseView<?> context, List<Artist> topArtist, MainPresenter mainPresenter) {
+        this.context = (Activity)context;
         this.topArtist = topArtist;
         this.mainPresenter = mainPresenter;
     }

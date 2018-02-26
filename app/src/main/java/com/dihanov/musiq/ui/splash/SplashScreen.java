@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;

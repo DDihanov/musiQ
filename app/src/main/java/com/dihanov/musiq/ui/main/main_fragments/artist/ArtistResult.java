@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -119,6 +120,15 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
     @Override
     public RecyclerView getRecyclerView() {
         return this.recyclerView;
+    }
+
+    @Override
+    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
 

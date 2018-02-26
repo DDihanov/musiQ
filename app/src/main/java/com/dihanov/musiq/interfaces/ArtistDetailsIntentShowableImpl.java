@@ -43,7 +43,7 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
     public void showArtistDetailsIntent(String artistName, MainContract.View mainActivity) {
         Intent showArtistDetailsIntent = new Intent((Context)mainActivity, ArtistDetails.class);
         showArtistDetailsIntent.putExtra(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
-        HelperMethods.showTooltip((Activity)mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
+        HelperMethods.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTIST);
         mainActivity.showProgressBar();
 
         Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()

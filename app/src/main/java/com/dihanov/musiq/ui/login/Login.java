@@ -1,5 +1,6 @@
 package com.dihanov.musiq.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,11 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
@@ -25,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by dimitar.dihanov on 2/5/2018.
@@ -109,6 +113,18 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     }
 
     @Override
+    public void redirectToMain(CompositeDisposable compositeDisposable) {
+        //if login is successful we can start the service
+        this.startService(new Intent(this.getApplicationContext(), MediaControllerListenerService.class));
+        compositeDisposable.clear();
+        this.hideProgressBar();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        this.finish();
+    }
+
+    @Override
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
     }
@@ -116,6 +132,11 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

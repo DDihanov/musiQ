@@ -1,11 +1,5 @@
 package com.dihanov.musiq.ui.main;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.support.v7.widget.RecyclerView;
-
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.models.Artist;
@@ -64,9 +58,8 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
     }
 
     private void loadBackdrop(MainContract.View mainActivity) {
-        if (HelperMethods.isTablet((Context)mainActivity) || HelperMethods.getOrientation((Context)mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
-            TOP_ARTIST_LIMIT = 10;
-        }
+        TOP_ARTIST_LIMIT = HelperMethods.determineArtistLimit(mainActivity);
+
 
         lastFmApiClient.getLastFmApiService().chartTopArtists(TOP_ARTIST_LIMIT)
                 .map(topArtistsResult -> topArtistsResult.getArtists().getArtistMatches())
@@ -75,20 +68,19 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        HelperMethods.showTooltip((Activity) mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
+                        HelperMethods.showTooltip(mainActivity, mainActivity.getBirdIcon(), LOADING_ARTISTS);
                         mainActivity.showProgressBar();
                         compositeDisposable.add(d);
                     }
 
                     @Override
                     public void onNext(List<Artist> artists) {
-                        RecyclerView recyclerView = mainActivity.getRecyclerView();
-                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter((Context)mainActivity, (ArrayList<Artist>) artists, MainPresenter.this);
-                        recyclerView.setAdapter(topArtistAdapter);
-                        recyclerView.postDelayed(new Runnable() {
+                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists, MainPresenter.this);
+                        mainActivity.getRecyclerView().setAdapter(topArtistAdapter);
+                        mainActivity.getRecyclerView().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                recyclerView.smoothScrollToPosition(artists.size() - 1);
+                                mainActivity.getRecyclerView().smoothScrollToPosition(artists.size() - 1);
                             }
                         }, 1000);
                     }
@@ -110,7 +102,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
         Thread newConnThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!Connectivity.isConnected((Context)mainActivity)) {
+                while (!Connectivity.isConnected(mainActivity)) {
                     try {
                         HelperMethods.showNetworkErrorTooltip(mainActivity);
                         Thread.sleep(NETWORK_CHECK_THREAD_TIMEOUT);
@@ -119,7 +111,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                     }
                 }
 
-                ((Activity)mainActivity).runOnUiThread(new Runnable() {
+                mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         loadBackdrop(mainActivity);

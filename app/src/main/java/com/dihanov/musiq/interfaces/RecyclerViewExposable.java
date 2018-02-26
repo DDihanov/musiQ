@@ -8,4 +8,6 @@ import android.support.v7.widget.RecyclerView;
 
 public interface RecyclerViewExposable{
     RecyclerView getRecyclerView();
+
+    void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter);
 }

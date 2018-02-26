@@ -2,6 +2,7 @@ package com.dihanov.musiq.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
+import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
@@ -49,6 +51,9 @@ public class HelperMethods {
         return formatter.format(number);
     }
 
+    public static Typeface createTypefaceFromFont(Context context, String font){
+        return Typeface.createFromAsset(context.getAssets(), font);
+    }
     public static float getScreenWidth(Activity activity){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -86,18 +91,32 @@ public class HelperMethods {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    public static boolean isTablet(Context context){
-        return context.getResources().getBoolean(R.bool.isTablet);
+    public static boolean isTablet(BaseView<?> context){
+        return ((Activity)context).getResources().getBoolean(R.bool.isTablet);
     }
 
-    public static int getOrientation(Context context){
-        return context.getResources().getConfiguration().orientation;
+    public static int getOrientation(BaseView<?> context){
+        return ((Activity)context).getResources().getConfiguration().orientation;
     }
 
     public static void setToolbarFont(CollapsingToolbarLayout toolbarLayout, Context context){
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/cabin_regular.ttf");
         toolbarLayout.setExpandedTitleTypeface(typeface);
         toolbarLayout.setCollapsedTitleTypeface(typeface);
+    }
+
+    public static void showTooltip(MainViewFunctionable activity, View view, String text){
+        ViewTooltip.on(view)
+                .corner(60)
+                .color(R.color.colorSecondary)
+                .textSize(TypedValue.COMPLEX_UNIT_DIP, 20)
+                .align(ViewTooltip.ALIGN.CENTER)
+                .textTypeFace(Typeface.createFromAsset(((Activity)activity).getAssets(), "fonts/cabin_regular.ttf"))
+                .position(ViewTooltip.Position.BOTTOM)
+                .text(text)
+                .textColor(Color.WHITE)
+                .animation(new ViewTooltip.FadeTooltipAnimation())
+                .show();
     }
 
     public static void showTooltip(Activity activity, View view, String text){
@@ -113,6 +132,7 @@ public class HelperMethods {
                 .animation(new ViewTooltip.FadeTooltipAnimation())
                 .show();
     }
+
 
     public static void showTooltip(Activity activity, View view, String text, float textSize){
         ViewTooltip.on(view)
@@ -145,14 +165,14 @@ public class HelperMethods {
         }
     }
 
-    public static void checkConnection(MainViewFunctionable mainActivity) {
+    public static void checkConnection(BaseView<?> mainActivity) {
         Handler handler = new Handler();
 
         Thread networkCheckThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                     boolean isConnected = Connectivity.isConnected((Context)mainActivity);
+                     boolean isConnected = Connectivity.isConnected(mainActivity);
                     if (!isConnected) {
                         handler.post(() -> showNetworkErrorTooltip(mainActivity));
                     }
@@ -168,12 +188,12 @@ public class HelperMethods {
         }
     }
 
-    public static void showNetworkErrorTooltip(MainViewFunctionable activity) {
+    public static void showNetworkErrorTooltip(BaseView<?> activity) {
         showTooltip((Activity)activity, ((MainActivity)activity).getBirdIcon(), Constants.NO_NETWORK_CONN_FOUND, 15f);
     }
 
-    public static void showNetworkErrorTooltip(Activity activity, View view) {
-        showTooltip(activity, view, Constants.NO_NETWORK_CONN_FOUND, 15f);
+    public static void showNetworkErrorTooltip(BaseView<?> activity, View view) {
+        showTooltip((Activity)activity, view, Constants.NO_NETWORK_CONN_FOUND, 15f);
     }
 
     public static String generateSig(String username, String password){
@@ -247,5 +267,13 @@ public class HelperMethods {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    public static int determineArtistLimit(BaseView mainActivity) {
+        if (HelperMethods.isTablet(mainActivity) || HelperMethods.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
+            return 10;
+        }
+
+        return 6;
     }
 }

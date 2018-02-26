@@ -1,9 +1,5 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
@@ -12,6 +8,7 @@ import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainContract;
+import com.dihanov.musiq.util.AppLog;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
@@ -73,9 +70,8 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
 
     @Override
     public void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
-        RecyclerView recyclerView = recyclerViewExposable.getRecyclerView();
         //resetting the adapter
-        recyclerView.setAdapter(new ArtistAdapter((Context) this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this));
+        recyclerViewExposable.getRecyclerView().setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this));
 
 
         List<Observable<SpecificArtist>> observables = new ArrayList<>();
@@ -103,14 +99,14 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
                     @Override
                     public void onNext(List<Artist> generalArtistSearch) {
                         for (Artist artistSearch : generalArtistSearch) {
-                            ((ArtistAdapter) recyclerView.getAdapter()).addArtist(artistSearch);
+                            ((ArtistAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).addArtist(artistSearch);
                         }
-                        recyclerView.getAdapter().notifyDataSetChanged();
+                        recyclerViewExposable.getRecyclerView().getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(this.getClass().getSimpleName(), e.getMessage());
+                        AppLog.log(this.getClass().getSimpleName(), e.getMessage());
                     }
 
                     @Override
