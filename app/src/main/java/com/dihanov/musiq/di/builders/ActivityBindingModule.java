@@ -5,6 +5,7 @@ import com.dihanov.musiq.di.modules.AlbumResultFragmentModule;
 import com.dihanov.musiq.di.modules.ArtistDetailsActivityModule;
 import com.dihanov.musiq.di.modules.ArtistDetailsFragmentModule;
 import com.dihanov.musiq.di.modules.ArtistResultFragmentModule;
+import com.dihanov.musiq.di.modules.ArtistSpecificsTopTracksModule;
 import com.dihanov.musiq.di.modules.FavoriteFragmentModule;
 import com.dihanov.musiq.di.modules.LoginActivityModule;
 import com.dihanov.musiq.di.modules.MainActivityModule;
@@ -16,6 +17,7 @@ import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsAlbum;
 import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsBiography;
+import com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks.ArtistSpecificsTopTracks;
 import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
@@ -86,4 +88,8 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = UserTopArtistsFragmentModule.class)
     abstract UserTopArtists bindUserTopArtistsFragment();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = ArtistSpecificsTopTracksModule.class)
+    abstract ArtistSpecificsTopTracks bindsArtistTopTracksFragment();
 }

@@ -18,6 +18,8 @@ public interface ArtistDetailsContract {
         void setArtist(Artist artist);
 
         Artist getArtist();
+
+        ArtistDetails getDetailActivity();
     }
 
     interface Presenter extends BasePresenter<View> {

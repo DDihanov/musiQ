@@ -4,6 +4,7 @@ package com.dihanov.musiq.service;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.models.ArtistTopTags;
+import com.dihanov.musiq.models.ArtistTopTracks;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.models.LovedTracks;
 import com.dihanov.musiq.models.RecentTracksWrapper;
@@ -54,6 +55,9 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"user.getlovedtracks")
     Observable<LovedTracks> getUserLovedTracks(@Query("user") String username, @Query("limit") String limit);
+
+    @GET(METHOD_CALL+"artist.gettoptracks")
+    Observable<ArtistTopTracks> getArtistTopTracks(@Query("artist") String artist, @Query("limit") int limit);
 
     @GET(METHOD_CALL+"user.getrecenttracks")
     Observable<RecentTracksWrapper> getUserRecentTracks(@Query("user") String username, @Query("limit") int limit, @Query("extended") int extended);

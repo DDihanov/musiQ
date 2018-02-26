@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
@@ -138,7 +139,18 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     }
 
     private void initViewPager() {
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        boolean isLoggedIn = !username.isEmpty() || !username.equals("");
+
+
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        if(!isLoggedIn){
+            viewPagerAdapter.setTabCount(viewPagerAdapter.getLoggedOutTabCount());
+        } else {
+            viewPagerAdapter.setTabCount(viewPagerAdapter.getLoggedInTabCount() + viewPagerAdapter.getLoggedOutTabCount());
+        }
+
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 

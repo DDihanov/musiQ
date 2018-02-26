@@ -270,6 +270,11 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     @Override
+    public ArtistDetails getDetailActivity() {
+        return this;
+    }
+
+    @Override
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
     }

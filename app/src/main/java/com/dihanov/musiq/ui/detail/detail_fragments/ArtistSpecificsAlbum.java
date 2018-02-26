@@ -31,11 +31,10 @@ import butterknife.ButterKnife;
  */
 
 public class ArtistSpecificsAlbum extends ArtistSpecifics {
-    public static final String TITLE = "albums";
+    public static final String TITLE = "artist top albums";
 
     private List<Album> artistAlbums;
     private String serializedAlbums;
-
 
     @Inject ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
     @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;

@@ -10,8 +10,9 @@ import com.dihanov.musiq.ui.detail.ArtistDetails;
  */
 
 public interface ArtistSpecificsContract {
-    interface View extends BaseView<ArtistSpecificsContract.Presenter> {
+    interface View extends BaseView<ArtistSpecificsContract.Presenter>{
         ArtistDetails getArtistDetailsActivity();
+
     }
 
     interface Presenter extends BasePresenter<ArtistSpecificsContract.View>, SpecificAlbumSearchable {

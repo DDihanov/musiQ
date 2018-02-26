@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
 import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
 import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
@@ -11,63 +12,116 @@ import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
 import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
 import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
+import com.dihanov.musiq.util.Constants;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 6;
+    private static int artistResultCase;
+    private static int albumResultCase;
+    private static int favoriteArtistCase;
+    private static int favoriteAlbumCase;
+
+    private static int nowPlayingCase;
+    private static int userTopTracksCase;
+    private static int userTopArtistsCase;
+
+    private static int loggedInTabCount = 3;
+    private static int loggedOutTabCount = 4;
+    //default init
+    private static int tabCount = loggedOutTabCount + loggedInTabCount;
+
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        boolean isLoggedIn = !username.isEmpty() || !username.equals("");
+        artistResultCase = isLoggedIn ? 3 : 3 - loggedInTabCount;
+        albumResultCase = isLoggedIn ? 4 : 4 - loggedInTabCount;
+        favoriteArtistCase = isLoggedIn ? 5 : 5 - loggedInTabCount;
+        favoriteAlbumCase = isLoggedIn ? 6 : 6 - loggedInTabCount;
+
+        nowPlayingCase = isLoggedIn ? 0 : 99;
+        userTopTracksCase = isLoggedIn ? 1 : 98;
+        userTopArtistsCase = isLoggedIn ? 2 : 9;
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case 0:
-                return NowPlaying.newInstance();
-            case 1:
-                return UserTopTracks.newInstance();
-            case 2:
-                return UserTopArtists.newInstance();
-            case 3:
-                return ArtistResult.newInstance();
-            case 4:
-                return AlbumResult.newInstance();
-            case 5:
-                return FavoriteArtist.newInstance();
-            case 6:
-                return FavoriteAlbums.newInstance();
+        if (position == nowPlayingCase) {
+            return NowPlaying.newInstance();
+        } else if (position == userTopTracksCase) {
+            return UserTopTracks.newInstance();
+        } else if (position == userTopArtistsCase) {
+            return UserTopArtists.newInstance();
+        } else if (position == artistResultCase) {
+            return ArtistResult.newInstance();
+        } else if (position == albumResultCase) {
+            return AlbumResult.newInstance();
+        } else if (position == favoriteArtistCase) {
+            return FavoriteArtist.newInstance();
+        } else if (position == favoriteAlbumCase) {
+            return FavoriteAlbums.newInstance();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return TAB_COUNT;
+        return tabCount;
+    }
+
+    public static void setTabCount(int tabCount) {
+        ViewPagerAdapter.tabCount = tabCount;
+    }
+
+    public static int getLoggedInTabCount() {
+        return loggedInTabCount;
+    }
+
+    public static int getLoggedOutTabCount() {
+        return loggedOutTabCount;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return NowPlaying.TITLE;
-            case 1:
-                return UserTopTracks.TITLE;
-            case 2:
-                return UserTopArtists.TITLE;
-            case 3:
-                return ArtistResult.TITLE;
-            case 4:
-                return AlbumResult.TITLE;
-            case 5:
-                return FavoriteArtist.TITLE;
-            case 6:
-                return FavoriteAlbums.TITLE;
+        if (position == nowPlayingCase) {
+            return NowPlaying.TITLE;
+        } else if (position == userTopTracksCase) {
+            return UserTopTracks.TITLE;
+        } else if (position == userTopArtistsCase) {
+            return UserTopArtists.TITLE;
+        } else if (position == artistResultCase) {
+            return ArtistResult.TITLE;
+        } else if (position == albumResultCase) {
+            return AlbumResult.TITLE;
+        } else if (position == favoriteArtistCase) {
+            return FavoriteArtist.TITLE;
+        } else if (position == favoriteAlbumCase) {
+            return FavoriteAlbums.TITLE;
         }
         return super.getPageTitle(position);
+    }
+
+    public static int getArtistResultCase() {
+        return artistResultCase;
+    }
+
+    public static int getAlbumResultCase() {
+        return albumResultCase;
+    }
+
+    public static int getFavoriteArtistCase() {
+        return favoriteArtistCase;
+    }
+
+    public static int getFavoriteAlbumCase() {
+        return favoriteAlbumCase;
+    }
+
+    public static int getNowPlayingCase() {
+        return nowPlayingCase;
     }
 }

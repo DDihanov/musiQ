@@ -29,7 +29,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class App extends Application implements HasActivityInjector, HasServiceInjector{
     private static SharedPreferences sharedPreferences;
-
     @Inject
     Scrobbler scrobbler;
 

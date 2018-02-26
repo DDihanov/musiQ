@@ -32,4 +32,8 @@ import dagger.android.support.DaggerFragment;
     public com.dihanov.musiq.ui.detail.ArtistDetails getArtistDetailsActivity() {
         return (com.dihanov.musiq.ui.detail.ArtistDetails)artistDetailsActivity;
     }
+
+    protected ArtistSpecificsContract.Presenter getPresenter(){
+        return this.artistDetailsFragmentPresenter;
+    }
 }

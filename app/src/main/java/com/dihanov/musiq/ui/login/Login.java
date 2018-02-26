@@ -97,6 +97,7 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
 
     @OnClick(R.id.continue_without_sign_in)
     public void onClick(TextView editText){
+        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).commit();
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

@@ -3,19 +3,14 @@ package com.dihanov.musiq.ui.main.main_fragments.user_top_artists;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.KeyboardHelper;
+import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
 import com.dihanov.musiq.util.Period;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 
@@ -24,13 +19,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
-import dagger.android.support.DaggerFragment;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class UserTopArtists extends DaggerFragment implements UserTopArtistsContract.View{
+public class UserTopArtists extends ViewPagerCustomizedFragment implements UserTopArtistsContract.View{
     public static final String TITLE = "your top artists";
 
     @BindView(R.id.user_top_artists_chart)
@@ -122,20 +116,5 @@ public class UserTopArtists extends DaggerFragment implements UserTopArtistsCont
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        super.onPrepareOptionsMenu(menu);
-        MenuItem item = menu.getItem(0);
-        SearchView search = (SearchView)item.getActionView();
-        search.setIconified(true);
-        KeyboardHelper.hideKeyboard(getActivity());
-        search.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.setViewPagerSelection(Constants.ALBUM_POSITION);
-                KeyboardHelper.hideKeyboard(mainActivity);
-            }
-        });
-    }
+
 }

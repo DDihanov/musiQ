@@ -1,24 +1,23 @@
 package com.dihanov.musiq.util;
 
-import android.graphics.Color;
+import com.dihanov.musiq.BuildConfig;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.
  */
 
 public class Constants {
+    public static final String APP_VESRION = BuildConfig.VERSION_NAME;
+
     public static final String ARTIST = "artist";
     public static final String ALBUM = "album";
-    public static final String TAGS = "tags";
     public static final String TRACK = "track";
     public static final String TIMESTAMP = "timestamp";
     public static final String METHOD = "method";
     public static final String LAST_SEARCH = "lastSearch";
-    public static final int ARTIST_LIMIT = 6;
     public static final int ALBUM_LIMIT = 20;
     public static final int IMAGE_XLARGE = 4;
     public static final int IMAGE_LARGE = 3;
-    public static final int BIRD_COLOR = Color.parseColor("#37B4E2");
     public static final String USER_SESSION_KEY = "user_session";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
@@ -31,6 +30,4 @@ public class Constants {
     public static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     public static final long NETWORK_CHECK_DELAY = 10000;
     public static final String REMEMBER_ME = "remember me";
-    public static final int ALBUM_POSITION = 3;
-    public static String MESSAGE_OK = "ok";
 }

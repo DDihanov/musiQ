@@ -7,11 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,9 +15,9 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
-import com.dihanov.musiq.util.KeyboardHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,13 +26,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerFragment;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtist extends DaggerFragment implements FavoriteArtistsContract.View {
+public class FavoriteArtist extends ViewPagerCustomizedFragment implements FavoriteArtistsContract.View {
     public static final String TITLE = "favorite artists";
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
@@ -81,23 +76,6 @@ public class FavoriteArtist extends DaggerFragment implements FavoriteArtistsCon
                 this);
 
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        super.onPrepareOptionsMenu(menu);
-        MenuItem item = menu.getItem(0);
-        SearchView search = (SearchView)item.getActionView();
-        search.setIconified(true);
-        KeyboardHelper.hideKeyboard(getActivity());
-        search.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.setViewPagerSelection(Constants.ALBUM_POSITION);
-                KeyboardHelper.hideKeyboard(mainActivity);
-            }
-        });
     }
 
     private void initRecyclerView() {

@@ -117,7 +117,7 @@
     <string name="remember_me">Remember me:</string>
     <string name="recentrly_scrobbled_text">History:</string>
     <string name="about">About</string>
-    <string name="about_message">musiQ 1.00\n\nA musical encyclopedia that supports scrobbling.\n\nOpen sourced with ❤ at:\n https://github.com/DDihanov/musiQ\n\nDedicated to ponzi4</string>
+    <string name="about_message">musiQ %s\n\nA musical encyclopedia that supports scrobbling.\nAll information fetched from www.last.fm\n\nOpen sourced with ❤ at:\nhttps://github.com/DDihanov/musiQ\n\nDedicated to ponzi4</string>
     <string name="dialog_action_dismiss">DISMISS</string>
     <string name="scrobble_notifications">Enable scrobble notifications</string>
     <string name="NO_DATA_MESSAGE">Please log in to use this feature.</string>

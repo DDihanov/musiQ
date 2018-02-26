@@ -30,7 +30,7 @@ public class SettingsManager {
         View layout  = activity.getLayoutInflater().inflate(R.layout.about_layout, null);
         TextView aboutMessage = layout.findViewById(R.id.about_message);
         SpannableString s =
-                new SpannableString(activity.getString(R.string.about_message));
+                new SpannableString(String.format(activity.getString(R.string.about_message), Constants.APP_VESRION));
         Linkify.addLinks(s, Linkify.WEB_URLS);
         aboutMessage.setMovementMethod(LinkMovementMethod.getInstance());
         aboutMessage.setText(s);
