@@ -16,6 +16,7 @@ import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ import java.util.List;
  */
 
 public class ArtistAdapter extends AbstractAdapter {
+    private boolean isFavoriteType;
     private Context mainActivity;
     private List<Artist> artistList;
     private SpecificArtistSearchable specificArtistSearchable;
@@ -33,6 +35,12 @@ public class ArtistAdapter extends AbstractAdapter {
         this.specificArtistSearchable = specificArtistSearchable;
     }
 
+    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable, boolean isFavoriteType) {
+        this.mainActivity = (Activity)context;
+        this.artistList = albumList;
+        this.specificArtistSearchable = specificArtistSearchable;
+        this.isFavoriteType = isFavoriteType;
+    }
     @Override
     public ArtistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -63,7 +71,8 @@ public class ArtistAdapter extends AbstractAdapter {
         ((ArtistViewHolder) holder).getOverflow().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.showPopupMenu(mainActivity, ((ArtistViewHolder) holder).getOverflow());
+                holder.showPopupMenu(mainActivity, ((ArtistViewHolder) holder).getOverflow(),
+                        ArtistAdapter.this);
             }
         });
 
@@ -80,4 +89,19 @@ public class ArtistAdapter extends AbstractAdapter {
         return this.artistList.size();
     }
 
+    @Override
+    public void remove(String key) {
+        if(!isFavoriteType){
+            return;
+        }
+
+        for (Iterator<Artist> i = artistList.listIterator(); i.hasNext(); ) {
+            Artist artist = i.next();
+            if(artist.getName().toLowerCase().equals(key.toLowerCase())){
+                i.remove();
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

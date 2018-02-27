@@ -74,6 +74,7 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
                 .subscribe(new Observer<ArtistTopTracks>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        detailView.showProgressBar();
                         compositeDisposable.add(d);
                     }
 
@@ -109,11 +110,13 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
                     public void onError(Throwable e) {
                         AppLog.log(TAG, e.getMessage());
                         compositeDisposable.clear();
+                        detailView.hideProgressBar();
                     }
 
                     @Override
                     public void onComplete() {
                         compositeDisposable.clear();
+                        detailView.hideProgressBar();
                     }
                 });
     }

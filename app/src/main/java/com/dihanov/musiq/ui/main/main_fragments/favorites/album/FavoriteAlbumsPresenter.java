@@ -68,7 +68,7 @@ public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter
     @Override
     public void loadFavoriteAlbums(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
         //resetting the adapter
-        recyclerViewExposable.getRecyclerView().setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this));
+        recyclerViewExposable.getRecyclerView().setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this, true));
 
 
         List<Observable<GeneralAlbumSearch>> observables = new ArrayList<>();

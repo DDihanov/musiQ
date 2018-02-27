@@ -121,4 +121,8 @@
     <string name="dialog_action_dismiss">DISMISS</string>
     <string name="scrobble_notifications">Enable scrobble notifications</string>
     <string name="NO_DATA_MESSAGE">Please log in to use this feature.</string>
+    <string name="without_login_warning">Some features such as scrobbling, now playing, scrobble history and user top artists/ablums won\'t be available without logging in.</string>
+    <string name="cont">CONTINUE</string>
+    <string name="canc">CANCEL</string>
+    <string name="note">NOTE</string>
 </resources>

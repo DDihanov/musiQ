@@ -95,7 +95,10 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new ArtistAdapter(mainActivity, new ArrayList<>(), favoriteFragmentPresenter));
+        recyclerView.setAdapter(new ArtistAdapter(mainActivity,
+                new ArrayList<>(),
+                favoriteFragmentPresenter,
+                true));
     }
 
     @Override

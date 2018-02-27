@@ -71,7 +71,7 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
     @Override
     public void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
         //resetting the adapter
-        recyclerViewExposable.getRecyclerView().setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this));
+        recyclerViewExposable.getRecyclerView().setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this, true));
 
 
         List<Observable<SpecificArtist>> observables = new ArrayList<>();

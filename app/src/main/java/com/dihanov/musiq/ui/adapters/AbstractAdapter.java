@@ -23,4 +23,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewH
             }
         }
     }
+
+    public abstract void remove(String key);
 }

@@ -15,6 +15,7 @@ import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
  */
 
 public class AlbumDetailsAdapter extends AbstractAdapter {
+    private boolean isFavoriteType;
     private Activity context;
     private List<Album> artistAlbumsList;
     private SpecificAlbumSearchable presenter;
@@ -32,6 +34,12 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         this.presenter = presenter;
     }
 
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumSearchable presenter, boolean isFavoriteType) {
+        this.context = (Activity)context;
+        this.artistAlbumsList = artistAlbumsList;
+        this.presenter = presenter;
+        this.isFavoriteType = isFavoriteType;
+    }
 
     @Override
     public AlbumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,7 +69,8 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         ((AlbumViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.showPopupMenu(context, ((AlbumViewHolder)holder).getOverflow());
+                holder.showPopupMenu(context, ((AlbumViewHolder)holder).getOverflow(),
+                        AlbumDetailsAdapter.this);
             }
         });
 
@@ -78,4 +87,19 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         return this.artistAlbumsList.size();
     }
 
+    @Override
+    public void remove(String key) {
+        if(!isFavoriteType){
+            return;
+        }
+
+        for (Iterator<Album> i = artistAlbumsList.listIterator(); i.hasNext(); ) {
+            Album album = i.next();
+            if(album.getName().toLowerCase().equals(key.toLowerCase())){
+                i.remove();
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

@@ -2,6 +2,7 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -50,17 +51,6 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
         return artistDetailsAlbumFragment;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(this.artistAlbums.size() == 0){
-            this.serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
-            //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
-            //because this wont deserialize correctly, we need to use the model we created for this cause
-            GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
-            this.artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
-        }
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +71,32 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
         View view = inflater.inflate(R.layout.detail_artist_albums_recycler_view, container, false);
         ButterKnife.bind(this, view);
 
-        initRecyclerView();
+        initAlbums();
         this.artistDetailsFragmentPresenter.takeView(this);
         return view;
+    }
+
+    private void initAlbums() {
+        new AsyncTask<Void, Void, List<Album>>(){
+
+            @Override
+            protected List<Album> doInBackground(Void... voids) {
+                if(artistAlbums.size() == 0){
+                    serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
+                    //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
+                    //because this wont deserialize correctly, we need to use the model we created for this cause
+                    GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
+                    return artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
+                } else {
+                    return new ArrayList<>();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<Album> albums) {
+                initRecyclerView();
+            }
+        }.execute();
     }
 
     @Override

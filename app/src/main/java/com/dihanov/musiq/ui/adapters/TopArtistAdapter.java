@@ -18,6 +18,7 @@ import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.veinhorn.tagview.TagView;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ import java.util.List;
  */
 
 public class TopArtistAdapter extends AbstractAdapter {
+    private boolean isFavoriteType = false;
     private MainPresenter mainPresenter;
     private Context context;
     private List<Artist> topArtist;
@@ -33,6 +35,14 @@ public class TopArtistAdapter extends AbstractAdapter {
         this.context = (Activity)context;
         this.topArtist = topArtist;
         this.mainPresenter = mainPresenter;
+    }
+
+
+    public TopArtistAdapter(BaseView<?> context, List<Artist> topArtist, MainPresenter mainPresenter, boolean isFavoriteType) {
+        this.context = (Activity)context;
+        this.topArtist = topArtist;
+        this.mainPresenter = mainPresenter;
+        this.isFavoriteType = isFavoriteType;
     }
 
     @Override
@@ -68,5 +78,19 @@ public class TopArtistAdapter extends AbstractAdapter {
     }
 
 
+    @Override
+    public void remove(String key) {
+        if(!isFavoriteType){
+            return;
+        }
 
+        for (Iterator<Artist> i = topArtist.listIterator(); i.hasNext(); ) {
+            Artist artist = i.next();
+            if(artist.getName().toLowerCase().equals(key.toLowerCase())){
+                i.remove();
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

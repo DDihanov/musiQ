@@ -111,7 +111,9 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
                             result = Collections.emptyList();
                         }
 
-                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter(mainActivity, result, albumResultPresenter);
+                        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter(mainActivity,
+                                result,
+                                albumResultPresenter);
 
                         albumResultFragment.getRecyclerView().setAdapter(albumAdapter);
                         mainActivity.hideKeyboard();

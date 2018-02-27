@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -28,6 +29,7 @@ import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.SettingsManager;
 import com.google.gson.Gson;
@@ -42,6 +44,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -61,8 +64,12 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @Inject
     ArtistDetailsContract.Presenter presenter;
 
+
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+
+    @BindView(R.id.artist_favorite)
+    ImageView favoriteArtistStar;
 
     @BindView(R.id.nav_list)
     ListView optionList;
@@ -118,23 +125,57 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             this.serializedAlbumList = albumSerialized;
         }
 
-        deserializeArtistInfo();
-        initTags();
+
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
         this.presenter.takeView(this);
 
-        initViewPager();
-        initArtistImage();
-        setArtistTitle(artist.getName());
-
         initNavigationDrawer();
+
+        initArtistSpecifics();
+    }
+
+    private void initArtistSpecifics() {
+        new AsyncTask<Void, Void, Artist>(){
+            @Override
+            protected void onPreExecute() {
+                showProgressBar();
+            }
+
+            @Override
+            protected Artist doInBackground(Void... voids) {
+                return new Gson().fromJson(serializedArtist, SpecificArtist.class).getArtist();
+            }
+
+            @Override
+            protected void onPostExecute(Artist deserializedArtist) {
+                artist = deserializedArtist;
+                favoriteArtistStar.setClickable(true);
+                setArtistTitle(artist.getName());
+                initArtistImage();
+                hideProgressBar();
+                initViewPager();
+                initTags();
+                configureIcon();
+            }
+        }.execute();
+    }
+
+    private void configureIcon() {
+        if(!FavoritesManager.isFavorited(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase())){
+            this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
+            this.favoriteArtistStar.setTag(false);
+        } else {
+            this.favoriteArtistStar.setImageResource(android.R.drawable.star_big_on);
+            this.favoriteArtistStar.setTag(true);
+        }
+
     }
 
     private void initNavigationDrawer() {
         String[] options = getResources().getStringArray(R.array.navigation_options);
 
-        optionList.setAdapter(new ArrayAdapter<String>(this,
+        optionList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, options));
 
         optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -189,9 +230,6 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         }
     }
 
-    private void deserializeArtistInfo() {
-        this.artist = new Gson().fromJson(serializedArtist, SpecificArtist.class).getArtist();
-    }
 
     private void initArtistImage() {
         Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText()).crossFade(2000).into(this.artistImage);
@@ -219,6 +257,21 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         //need to call this as calligraphy doesnt change the fonts of the tablayout, since there is no exposed property,
         //in the xml, and the fonts are set programatically
         HelperMethods.changeTabsFont(this, tabLayout);
+    }
+
+    @OnClick(R.id.artist_favorite)
+    public void onFavoriteClick(){
+        if(((boolean)favoriteArtistStar.getTag()) == false){
+            this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_on);
+            this.favoriteArtistStar.setTag(true);
+            FavoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase());
+            Toast.makeText(this, "Artist added to favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
+            this.favoriteArtistStar.setTag(false);
+            FavoritesManager.removeFromFavorites(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase());
+            Toast.makeText(this, "Artist removed from favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initCollapsingToolbar() {

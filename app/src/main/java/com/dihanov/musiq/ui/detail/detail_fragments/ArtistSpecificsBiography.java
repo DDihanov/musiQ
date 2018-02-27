@@ -2,12 +2,14 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
@@ -23,6 +25,9 @@ import butterknife.ButterKnife;
 //this needs no presenter, because it is a simple fragment that only displays text
 public class ArtistSpecificsBiography extends ArtistSpecifics {
     public static final String TITLE = "biography";
+
+    @BindView(R.id.biography_progress_bar)
+    ProgressBar progressBar;
 
     @BindView(R.id.artist_details_biography)
     TextView biographyTextView;
@@ -64,9 +69,17 @@ public class ArtistSpecificsBiography extends ArtistSpecifics {
         View view = inflater.inflate(R.layout.artist_details_biography_fragment, container, false);
         ButterKnife.bind(this, view);
 
-        String modifiedBio = formatText(this.biography);
-        this.biographyTextView.setText(Html.fromHtml(modifiedBio));
-        this.biographyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        progressBar.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String modifiedBio = formatText(biography);
+            handler.post(() -> {
+                progressBar.setVisibility(View.GONE);
+                biographyTextView.setText(Html.fromHtml(modifiedBio));
+                biographyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            });
+        }).run();
+
         this.artistDetailsFragmentPresenter.takeView(this);
         return view;
     }

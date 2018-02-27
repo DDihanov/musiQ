@@ -252,6 +252,7 @@ public class Scrobbler {
                     @Override
                     public void onError(Throwable e) {
                         AppLog.log(TAG, e.getMessage());
+                        compositeDisposable.clear();
                     }
 
                     @Override

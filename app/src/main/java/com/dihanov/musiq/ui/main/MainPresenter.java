@@ -75,7 +75,10 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
                     @Override
                     public void onNext(List<Artist> artists) {
-                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity, (ArrayList<Artist>) artists, MainPresenter.this);
+                        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity,
+                                (ArrayList<Artist>) artists,
+                                MainPresenter.this,
+                                true);
                         mainActivity.getRecyclerView().setAdapter(topArtistAdapter);
                         mainActivity.getRecyclerView().postDelayed(new Runnable() {
                             @Override

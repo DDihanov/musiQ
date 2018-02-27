@@ -7,18 +7,32 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/artist_details_biography"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginVertical="15dp"
-            android:autoLink="web"
-            android:linksClickable="true"
-            android:textAlignment="center"
-            tools:ignore="MissingPrefix"
-            fontPath="fonts/cabin_regular.ttf"
-            android:textColor="@android:color/black" />
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/biography_progress_bar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/artist_details_biography"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="15dp"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:textAlignment="center"
+                tools:ignore="MissingPrefix"
+                fontPath="fonts/cabin_regular.ttf"
+                android:textColor="@android:color/black" />
+        </RelativeLayout>
+
+
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

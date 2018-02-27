@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.listeners.MyMenuItemClickListener;
 import com.dihanov.musiq.util.Constants;
 import com.veinhorn.tagview.TagView;
@@ -32,7 +33,7 @@ public class TopArtistsViewHolder extends AbstractViewHolder{
     }
 
     @Override
-    public void showPopupMenu(Context context, View view)  {
+    public void showPopupMenu(Context context, View view, AbstractAdapter adapter)  {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -48,7 +49,8 @@ public class TopArtistsViewHolder extends AbstractViewHolder{
         }
 
 
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.getTitle().getText().toString(), this, Constants.FAVORITE_ARTISTS_KEY));
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.getTitle().getText().toString(),
+                this, Constants.FAVORITE_ARTISTS_KEY, adapter));
         popup.show();
     }
 

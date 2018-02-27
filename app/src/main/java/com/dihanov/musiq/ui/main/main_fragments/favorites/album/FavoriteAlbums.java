@@ -97,7 +97,10 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AlbumDetailsAdapter(mainActivity, new ArrayList<>(), favoriteFragmentsPresenter));
+        recyclerView.setAdapter(new AlbumDetailsAdapter(mainActivity,
+                new ArrayList<>(),
+                favoriteFragmentsPresenter,
+                true));
     }
 
     @Override

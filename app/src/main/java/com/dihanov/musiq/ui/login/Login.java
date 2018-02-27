@@ -1,10 +1,13 @@
 package com.dihanov.musiq.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.widget.Button;
@@ -100,11 +103,27 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     }
 
     @OnClick(R.id.continue_without_sign_in)
-    public void onClick(TextView editText){
-        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).commit();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    public void onClick(TextView textView){
+        Activity loginActivity = this;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        alertDialogBuilder.setTitle(R.string.note).setMessage(R.string.without_login_warning);
+        alertDialogBuilder
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setCancelable(true)
+                .setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).commit();
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        loginActivity.finish();
+                    }
+                })
+                .setNegativeButton(R.string.canc, null)
+                .create()
+                .show();
     }
 
     @Override
