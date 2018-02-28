@@ -125,4 +125,5 @@
     <string name="cont">CONTINUE</string>
     <string name="canc">CANCEL</string>
     <string name="note">NOTE</string>
+    <string name="spired_session">Your session key has expired, please log in again.</string>
 </resources>

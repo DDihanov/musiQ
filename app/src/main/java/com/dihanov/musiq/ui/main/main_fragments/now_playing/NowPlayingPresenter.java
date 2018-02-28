@@ -107,10 +107,19 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
                     @Override
                     public void onNext(RecentTracksWrapper recentTracksWrapper) {
+                        if(recentTracksWrapper == null){
+                            return;
+                        }
+
+                        if(nowPlayingFragment == null){
+                            return;
+                        }
+
                         List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
 
                         RecentlyScrobbledAdapter adapter =
                                 new RecentlyScrobbledAdapter(result);
+
 
                         nowPlayingFragment.setRecyclerViewAdapter(adapter);
                     }

@@ -305,6 +305,9 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
     @Override
     public String getArtistBiography() {
+        if(this.artist == null){
+            return " ";
+        }
         return this.artist.getBio().getContent();
     }
 

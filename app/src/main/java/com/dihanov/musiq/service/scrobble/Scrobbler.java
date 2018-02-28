@@ -1,9 +1,11 @@
 package com.dihanov.musiq.service.scrobble;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
+import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
@@ -98,6 +100,9 @@ public class Scrobbler {
     }
 
     private void resetPenalty() {
+        if(state == null){
+            return;
+        }
         getStatus().setPenalty(0);
         getStatus().setLastPauseTime(System.currentTimeMillis());
     }
@@ -111,11 +116,18 @@ public class Scrobbler {
                 storeInDb(scrobble);
                 break;
             case Error.IVALID_SESSION_KEY:
-                //TODO
+                redirectToLogin();
                 break;
             default:
                 break;
         }
+    }
+
+    private void redirectToLogin() {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Toast.makeText(context, R.string.spired_session, Toast.LENGTH_SHORT).show();
+        App.getAppContext().startActivity(intent);
     }
 
     public Scrobble getNowPlaying() {

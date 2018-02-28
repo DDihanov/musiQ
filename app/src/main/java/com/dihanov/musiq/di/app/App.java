@@ -29,6 +29,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class App extends Application implements HasActivityInjector, HasServiceInjector{
     private static SharedPreferences sharedPreferences;
+    private static Application app;
+
     @Inject
     Scrobbler scrobbler;
 
@@ -63,6 +65,7 @@ public class App extends Application implements HasActivityInjector, HasServiceI
         }
 
         scrobbler.scrobbleFromCache();
+        app = this;
     }
 
     @Override
@@ -73,6 +76,10 @@ public class App extends Application implements HasActivityInjector, HasServiceI
     @Override
     public AndroidInjector<Service> serviceInjector() {
         return serviceDispatchingAndroidInjector;
+    }
+
+    public static Application getAppContext(){
+        return app;
     }
 
     //method for getting SP outside of Android classes:
