@@ -16,5 +16,4 @@ public class LastFmApiClient{
     public LastFmApiService getLastFmApiService() {
         return lastFmApiService;
     }
-
 }

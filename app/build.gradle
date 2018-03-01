@@ -29,6 +29,12 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -43,10 +49,18 @@ dependencies {
     implementation "com.android.support:preference-v7:${support_library_version}"
 
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    // Mockito framework
+    testCompile "org.powermock:powermock-module-junit4:1.6.6"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.6"
+    testCompile "org.powermock:powermock-api-mockito:1.6.6"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.6"
+
+    //robolectric
+    testImplementation "org.robolectric:robolectric:3.7.1"
 
     //TagView
     implementation 'com.veinhorn.tagview:library:1.0.4'

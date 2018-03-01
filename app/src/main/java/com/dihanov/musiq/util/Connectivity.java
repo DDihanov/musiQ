@@ -9,8 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-import com.dihanov.musiq.ui.BaseView;
-
 /**
  * Check device's network connectivity and speed
  * @author emil http://stackoverflow.com/users/220710/emil
@@ -31,8 +29,8 @@ public class Connectivity {
     /**
      * Check if there is any connectivity
      */
-    public static boolean isConnected(BaseView<?> context){
-        NetworkInfo info = Connectivity.getNetworkInfo((Context)context);
+    public static boolean isConnected(Context context){
+        NetworkInfo info = Connectivity.getNetworkInfo(context);
         return (info != null && info != null && info.isConnectedOrConnecting());
     }
 

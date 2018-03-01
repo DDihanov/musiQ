@@ -24,36 +24,35 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class LoginPresenter implements LoginContract.Presenter {
-    private final LastFmApiClient lastFmApiClient;
+    private LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private LoginContract.View loginActivity;
+    private LoginContract.View login;
 
     @Inject
-    LoginPresenter(LastFmApiClient lastFmApiClient){
+    public LoginPresenter(LastFmApiClient lastFmApiClient){
         this.lastFmApiClient = lastFmApiClient;
     }
 
     @Override
     public void takeView(LoginContract.View view) {
-        loginActivity = view;
+        login = view;
     }
 
     @Override
     public void leaveView() {
-        loginActivity = null;
+        login = null;
     }
 
     @Override
     public void authenticateUser(String username, String password, LoginContract.View context, boolean rememberMe) {
-        Login login = ((Login)this.loginActivity);
         if (checkConnection()){
             HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
             return;
         }
 
         lastFmApiClient.getLastFmApiService()
-                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, HelperMethods.generateSig(username, password), Config.FORMAT)
+                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, HelperMethods.generateAuthSig(username, password), Config.FORMAT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
@@ -81,7 +80,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     public void onComplete() {
                         persistUserInfo(username, password, rememberMe);
-                        login.redirectToMain(compositeDisposable);
+                        compositeDisposable.clear();
+                        login.redirectToMain();
 
                     }
                 });
@@ -97,10 +97,14 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private boolean checkConnection() {
-        if(!Connectivity.isConnected(loginActivity)){
-            HelperMethods.showNetworkErrorTooltip(loginActivity, loginActivity.getBirdIcon());
+        if(!Connectivity.isConnected(App.getAppContext())){
+            HelperMethods.showNetworkErrorTooltip(login, login.getBirdIcon());
             return true;
         }
         return false;
+    }
+
+    public void setLastFmApiClient(LastFmApiClient lastFmApiClient) {
+        this.lastFmApiClient = lastFmApiClient;
     }
 }

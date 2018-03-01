@@ -165,16 +165,16 @@ public class HelperMethods {
         }
     }
 
-    public static void checkConnection(BaseView<?> mainActivity) {
+    public static void checkConnection(Context context) {
         Handler handler = new Handler();
 
         Thread networkCheckThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                     boolean isConnected = Connectivity.isConnected(mainActivity);
+                     boolean isConnected = Connectivity.isConnected(context);
                     if (!isConnected) {
-                        handler.post(() -> showNetworkErrorTooltip(mainActivity));
+                        handler.post(() -> showNetworkErrorTooltip(context));
                     }
                     Thread.sleep(Constants.NETWORK_CHECK_DELAY);
                 } catch (InterruptedException e) {
@@ -188,7 +188,7 @@ public class HelperMethods {
         }
     }
 
-    public static void showNetworkErrorTooltip(BaseView<?> activity) {
+    public static void showNetworkErrorTooltip(Context activity) {
         showTooltip((Activity)activity, ((MainActivity)activity).getBirdIcon(), Constants.NO_NETWORK_CONN_FOUND, 15f);
     }
 
@@ -196,7 +196,7 @@ public class HelperMethods {
         showTooltip((Activity)activity, view, Constants.NO_NETWORK_CONN_FOUND, 15f);
     }
 
-    public static String generateSig(String username, String password){
+    public static String generateAuthSig(String username, String password){
         String toCypher = "api_key" + Config.API_KEY + "methodauth.getMobileSessionpassword" + password + "username" + username + Config.API_SECRET;
         String md5 = "";
         try {

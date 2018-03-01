@@ -105,9 +105,9 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
         Thread newConnThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!Connectivity.isConnected(mainActivity)) {
+                while (!Connectivity.isConnected(mainActivity.getContext())) {
                     try {
-                        HelperMethods.showNetworkErrorTooltip(mainActivity);
+                        HelperMethods.showNetworkErrorTooltip(mainActivity.getContext());
                         Thread.sleep(NETWORK_CHECK_THREAD_TIMEOUT);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

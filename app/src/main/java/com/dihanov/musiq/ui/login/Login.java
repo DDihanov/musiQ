@@ -31,7 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by dimitar.dihanov on 2/5/2018.
@@ -132,10 +131,9 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     }
 
     @Override
-    public void redirectToMain(CompositeDisposable compositeDisposable) {
+    public void redirectToMain() {
         //if login is successful we can start the service
         this.startService(new Intent(this.getApplicationContext(), MediaControllerListenerService.class));
-        compositeDisposable.clear();
         this.hideProgressBar();
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -7,7 +7,6 @@ import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
-import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.AppLog;
@@ -77,7 +76,7 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter, Spec
                         .filter(s -> s.length() >= 2)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext(s -> {
-                            HelperMethods.checkConnection((MainActivity)mainActivity);
+                            HelperMethods.checkConnection(mainActivity.getContext());
                             mainActivity.showProgressBar();
                         })
                         .observeOn(Schedulers.io())
