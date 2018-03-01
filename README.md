@@ -15,6 +15,9 @@ The application features a beautiful material design, and makes use of cutting-e
     <li>Gson</li>
     <li>Glide</li>
     <li>DBFlow</li>
+    <li>Robolectric</li>
+    <li>PowerMock</>
+    <li>Mockito</>
 </ul>
 
 The API for all the information is the LastFM API.
