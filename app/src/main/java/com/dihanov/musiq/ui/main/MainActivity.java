@@ -1,6 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -120,7 +122,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
 
         if(App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)){
-            setUpTutorial();
+            int orientation = this.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+                setUpTutorial();
+            }
         }
     }
 
@@ -142,6 +148,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
                 mTourGuideHandler.cleanUp();
                 dummyButton.setVisibility(View.INVISIBLE);
                 App.getSharedPreferences().edit().putBoolean(Constants.FIRST_TIME, false).apply();
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
                 return true;
             }
         });

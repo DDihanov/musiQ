@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -79,9 +80,12 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
     //gets initialized.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        int orientation = this.getResources().getConfiguration().orientation;
         super.onCreateOptionsMenu(menu, inflater);
         artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity);
         if(!App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)){
+            mainActivity.getSearchBar().setIconified(false);
+        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE){
             mainActivity.getSearchBar().setIconified(false);
         }
     }
