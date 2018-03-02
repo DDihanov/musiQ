@@ -45,7 +45,10 @@ import static org.powermock.api.mockito.PowerMockito.when;
         HelperMethods.class
 })
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
-public class LoginPresenterTest extends RxJavaTestRule{
+public class LoginPresenterTest{
+    @Rule
+    public RxJavaTestRule rxJavaTestRule = new RxJavaTestRule();
+
     @Mock
     LoginContract.View view;
 
@@ -86,8 +89,9 @@ public class LoginPresenterTest extends RxJavaTestRule{
                 anyString()
         )).thenReturn(Observable.just(user));
         presenter.authenticateUser("dasd", "131", view, true);
-
-
+        
         verify(view).showProgressBar();
+        verify(view).hideProgressBar();
+        verify(view).redirectToMain();
     }
 }

@@ -10,10 +10,6 @@ import com.dihanov.musiq.ui.BaseView;
 
 public interface LoginContract {
     interface View extends BaseView<Presenter>, MainViewFunctionable {
-        void showProgressBar();
-
-        android.view.View getBirdIcon();
-
         void redirectToMain();
 
         <T extends android.view.View> T findViewById(int id);

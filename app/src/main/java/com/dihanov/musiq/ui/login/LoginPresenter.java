@@ -45,7 +45,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void authenticateUser(String username, String password, LoginContract.View context, boolean rememberMe) {
+    public void authenticateUser(String username, String password, LoginContract.View login, boolean rememberMe) {
         if (checkConnection()){
             HelperMethods.setLayoutChildrenEnabled(true, login.findViewById(R.id.login_layout));
             return;
@@ -85,7 +85,6 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     }
                 });
-
     }
 
 

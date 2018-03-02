@@ -17,6 +17,7 @@
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:textSize="18sp"
+        android:breakStrategy="simple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
