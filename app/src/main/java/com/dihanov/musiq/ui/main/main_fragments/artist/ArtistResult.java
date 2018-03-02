@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
@@ -79,7 +81,9 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         artistResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity);
-        mainActivity.getSearchBar().setIconified(false);
+        if(!App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)){
+            mainActivity.getSearchBar().setIconified(false);
+        }
     }
 
     @Override

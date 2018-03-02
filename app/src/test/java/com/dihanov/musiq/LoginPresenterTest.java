@@ -89,7 +89,7 @@ public class LoginPresenterTest{
                 anyString()
         )).thenReturn(Observable.just(user));
         presenter.authenticateUser("dasd", "131", view, true);
-        
+
         verify(view).showProgressBar();
         verify(view).hideProgressBar();
         verify(view).redirectToMain();

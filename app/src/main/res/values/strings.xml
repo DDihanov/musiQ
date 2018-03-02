@@ -126,4 +126,6 @@
     <string name="canc">CANCEL</string>
     <string name="note">NOTE</string>
     <string name="spired_session">Your session key has expired, please log in again.</string>
+    <string name="welcome">Welcome!</string>
+    <string name="tutorial_text_guide">Pull on the edge of the screen to open the settings panel</string>
 </resources>

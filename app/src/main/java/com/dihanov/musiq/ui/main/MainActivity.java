@@ -16,9 +16,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +38,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -48,6 +53,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
     @Inject
     MainContract.Presenter mainActivityPresenter;
+
+    @BindView(R.id.dummy_button)
+    Button dummyButton;
 
     @BindView(R.id.bird)
     TextView bird;
@@ -109,13 +117,41 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         appBarLayout.setExpanded(true);
         mainActivityPresenter.takeView(this);
         mainActivityPresenter.setBackdropImageChangeListener(this);
+
+
+        if(App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)){
+            setUpTutorial();
+        }
+    }
+
+    private void setUpTutorial() {
+        dummyButton.setVisibility(View.VISIBLE);
+        Overlay overlay = new Overlay()
+                .setBackgroundColor(R.color.overlay)
+                .disableClick(true)
+                .setStyle(Overlay.Style.CIRCLE);
+
+        TourGuide mTourGuideHandler = TourGuide.init(this)
+                .setToolTip(new ToolTip().setTitle(getString(R.string.welcome)).setDescription(getString(R.string.tutorial_text_guide)))
+                .setOverlay(overlay)
+                .playOn(dummyButton);
+
+        dummyButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mTourGuideHandler.cleanUp();
+                dummyButton.setVisibility(View.INVISIBLE);
+                App.getSharedPreferences().edit().putBoolean(Constants.FIRST_TIME, false).apply();
+                return true;
+            }
+        });
     }
 
 
     private void initNavigationDrawer() {
         String[] options = getResources().getStringArray(R.array.navigation_options);
 
-        optionList.setAdapter(new ArrayAdapter<String>(this,
+        optionList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, options));
 
         optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
