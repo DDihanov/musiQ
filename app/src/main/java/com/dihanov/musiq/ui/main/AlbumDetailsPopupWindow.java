@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.CoordinatorLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -107,6 +108,7 @@ public class AlbumDetailsPopupWindow {
         TextView title = albumDetails.findViewById(R.id.album_popup_title);
         TextView wiki = albumDetails.findViewById(R.id.album_popup_wiki);
         ImageView cover = albumDetails.findViewById(R.id.album_popup_thumbnail);
+
         StringBuilder sb = new StringBuilder();
         for (Track track : album.getTracks().getTrack()) {
             long millis = Long.parseLong(track.getDuration());
@@ -122,13 +124,13 @@ public class AlbumDetailsPopupWindow {
         title.setText(album.getName());
 
 
-        if(album.getWiki() != null){
+        if (album.getWiki() != null) {
             String toModify = album.getWiki().getSummary();
             String fullWiki = album.getWiki().getContent();
             String modifiedBio = "";
-            if(toModify == null){
+            if (toModify == null) {
                 toModify = fullWiki;
-                if(toModify != null){
+                if (toModify != null) {
                     modifiedBio = formatText(toModify);
                 }
             } else {
@@ -148,8 +150,12 @@ public class AlbumDetailsPopupWindow {
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true;
         final PopupWindow popupWindow = new PopupWindow(albumDetails, width, height, focusable);
-        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+        //this fixes a weird bug where the popupwindow can't be closed on some screens
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
+        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
         popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
     }
 
@@ -169,11 +175,10 @@ public class AlbumDetailsPopupWindow {
 
         List<Tag> tagText = album.getTags().getTag();
 
-        if(tagText.isEmpty()){
+        if (tagText.isEmpty()) {
             return;
         }
 
-        //this is very ugly, however since there is no sort lambda what can you do
         List<String> firstFive = new ArrayList<String>() {
             {
                 for (int i = 0; i < tagText.size(); i++) {
@@ -194,7 +199,7 @@ public class AlbumDetailsPopupWindow {
         for (int i = 0; i < tagText.size(); i++) {
             TagView currTag = tags[i];
             currTag.setText(firstFive.get(i));
-            currTag.setTagColor(Color.parseColor(((Activity)view).getString(R.color.colorAccent)));
+            currTag.setTagColor(Color.parseColor(((Activity) view).getString(R.color.colorAccent)));
         }
     }
 

@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.detail;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -309,6 +310,12 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             return " ";
         }
         return this.artist.getBio().getContent();
+    }
+
+    //this prevents the popupwindow from closing
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

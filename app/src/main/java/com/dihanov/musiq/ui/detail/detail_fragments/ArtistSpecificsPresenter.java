@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
@@ -14,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by dimitar.dihanov on 10/6/2017.
  */
 
-public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Presenter, SpecificAlbumSearchable {
+public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Presenter{
     private final LastFmApiClient lastFmApiClient;
 
     private ArtistSpecificsContract.View artistDetailsFragment;

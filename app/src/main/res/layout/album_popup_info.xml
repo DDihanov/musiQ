@@ -48,11 +48,11 @@
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/nestedScrollView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/album_popup_thumbnail"
-                android:layout_marginTop="13dp">
+                android:layout_margin="13dp">
 
 
                 <RelativeLayout

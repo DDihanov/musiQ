@@ -2,7 +2,6 @@ package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.service.LastFmApiClient;
@@ -30,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter, SpecificAlbumSearchable {
+public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter{
     private static final int LIMIT = 1;
 
     private final LastFmApiClient lastFmApiClient;

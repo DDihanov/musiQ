@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.main.main_fragments.album;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.service.LastFmApiClient;
@@ -32,7 +31,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumResultPresenter implements AlbumResultContract.Presenter, SpecificAlbumSearchable {
+public class AlbumResultPresenter implements AlbumResultContract.Presenter {
     private static final long DELAY_IN_MILLIS = 500;
     private static final int limit = 20;
     private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;

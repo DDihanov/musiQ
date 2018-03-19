@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.modules.NetworkModule;
@@ -80,6 +81,18 @@ public class App extends Application implements HasActivityInjector, HasServiceI
 
     public static Application getAppContext(){
         return app;
+    }
+
+    @Override
+    public void onLowMemory() {
+        Glide.get(this).clearMemory();
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        Glide.get(this).clearMemory();
+        super.onTrimMemory(level);
     }
 
     //method for getting SP outside of Android classes:

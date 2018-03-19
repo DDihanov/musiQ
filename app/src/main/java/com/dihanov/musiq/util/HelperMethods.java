@@ -54,6 +54,7 @@ public class HelperMethods {
     public static Typeface createTypefaceFromFont(Context context, String font){
         return Typeface.createFromAsset(context.getAssets(), font);
     }
+
     public static float getScreenWidth(Activity activity){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -61,6 +62,15 @@ public class HelperMethods {
 
         return displayMetrics.widthPixels / density;
     }
+
+    public static float getScreenHeight(Activity activity){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float density  = activity.getResources().getDisplayMetrics().density;
+
+        return displayMetrics.heightPixels / density;
+    }
+
     public static String formatNumberWithSeperator(double number){
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
@@ -97,6 +107,10 @@ public class HelperMethods {
 
     public static int getOrientation(BaseView<?> context){
         return ((Activity)context).getResources().getConfiguration().orientation;
+    }
+
+    public static int getOrientation(Activity context){
+        return context.getResources().getConfiguration().orientation;
     }
 
     public static void setToolbarFont(CollapsingToolbarLayout toolbarLayout, Context context){

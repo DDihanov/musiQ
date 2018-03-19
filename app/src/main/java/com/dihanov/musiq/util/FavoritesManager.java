@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class FavoritesManager {
 
-    //cannot be instantialized
+    //cannot be instantiated
     private FavoritesManager() {
     }
 

@@ -24,8 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity" />
-        <activity android:name=".ui.detail.ArtistDetails" />
+        <activity android:name=".ui.main.MainActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".ui.detail.ArtistDetails"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.login.Login"
             android:label="@string/title_activity_login" />

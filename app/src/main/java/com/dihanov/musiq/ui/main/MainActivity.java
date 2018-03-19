@@ -264,6 +264,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         return this.searchBar;
     }
 
+    //prevent popupwindow close on rotation
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
     @Override
     public RecyclerView getRecyclerView() {
