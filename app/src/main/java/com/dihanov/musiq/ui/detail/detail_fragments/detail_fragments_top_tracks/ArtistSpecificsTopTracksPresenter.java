@@ -67,6 +67,11 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
 
     @Override
     public void loadArtistTopTracks(ArtistSpecificsTopTracksContract.View view) {
+
+        if(artist == null && artist.getName() == null){
+            return;
+        }
+
         lastFmApiClient.getLastFmApiService()
                 .getArtistTopTracks(artist.getName(), LIMIT)
                 .subscribeOn(Schedulers.io())

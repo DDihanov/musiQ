@@ -63,7 +63,7 @@ public class Scrobbler {
                 App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
                 Config.FORMAT)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Response>() {
                     @Override
                     public void onSubscribe(Disposable d) {
