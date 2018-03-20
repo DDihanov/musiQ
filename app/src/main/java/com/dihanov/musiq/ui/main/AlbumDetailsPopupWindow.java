@@ -163,10 +163,10 @@ public class AlbumDetailsPopupWindow {
     @SuppressLint("ResourceType")
     private void initTags(Album album, View rootLayout) {
         TagView firstTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
-        TagView secondTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
-        TagView thirdTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
-        TagView fourthTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
-        TagView fifthTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
+        TagView secondTag = (TagView) rootLayout.findViewById(R.id.popup_second_tag);
+        TagView thirdTag = (TagView) rootLayout.findViewById(R.id.popup_third_tag);
+        TagView fourthTag = (TagView) rootLayout.findViewById(R.id.popup_fourth_tag);
+        TagView fifthTag = (TagView) rootLayout.findViewById(R.id.popup_fifth_tag);
 
         TagView[] tags = new TagView[]{
                 firstTag, secondTag, thirdTag, fourthTag, fifthTag

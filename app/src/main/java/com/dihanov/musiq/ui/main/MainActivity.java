@@ -50,7 +50,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 
 public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
-    private static final String search = "search for artists";
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
     @Inject

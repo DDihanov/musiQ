@@ -132,7 +132,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
     @Override
     public void addOnArtistResultClickedListener(ClickableArtistViewHolder viewHolder, String artistName) {
         RxView.clicks(viewHolder.getThumbnail())
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(click -> {
                     this.showArtistDetailsIntent(artistName, mainActivityView);

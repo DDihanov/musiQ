@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class AlbumResultPresenter implements AlbumResultContract.Presenter {
-    private static final long DELAY_IN_MILLIS = 500;
+    private static final long DELAY_IN_MILLIS = 2000;
     private static final int limit = 20;
     private static final long ALBUM_LOADED_THREAD_TIMEOUT = 2000L;
 

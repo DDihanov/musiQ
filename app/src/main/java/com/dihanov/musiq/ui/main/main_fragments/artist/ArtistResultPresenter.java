@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl implements ArtistResultContract.Presenter{
-    private static final long DELAY_IN_MILLIS = 500;
+    private static final long DELAY_IN_MILLIS = 2000;
     private static final int limit = 20;
 
     private final LastFmApiClient lastFmApiClient;
