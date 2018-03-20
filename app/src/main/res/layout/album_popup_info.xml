@@ -27,7 +27,8 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/scrollview_child">
 
                     <TextView
                         android:id="@+id/album_popup_title"
@@ -83,9 +84,8 @@
                         android:id="@+id/popup_first_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/album_popup_thumbnail"
+                        android:layout_alignStart="@id/album_popup_thumbnail"
                         android:layout_below="@+id/album_popup_title"
-                        android:layout_marginStart="13dp"
                         android:textSize="10sp"
                         app:tagType="trapezium"
                         app:tagUpperCase="true" />
