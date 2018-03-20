@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,8 @@ import android.widget.TextView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Track;
 
+import java.text.DateFormat;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,18 +46,11 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
             return;
         }
         holder.scrobble.setText(track.getArtist().getName() + " - " + track.getName());
-        long difference = System.currentTimeMillis() - Long.parseLong(track.getDate().getUts()) * 1000;
-        long time = TimeUnit.MILLISECONDS.toHours(difference);
-        if (time <= 0) {
-            holder.time.setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(difference) + " minutes ago"));
-        } else if(time == 24){
-            holder.time.setText(String.valueOf(TimeUnit.MILLISECONDS.toDays(difference) + " day ago"));
-        } else if(time > 24){
-            holder.time.setText(String.valueOf(TimeUnit.MILLISECONDS.toDays(difference) + " days ago"));
-        } else {
-            holder.time.setText(String.valueOf(TimeUnit.MILLISECONDS.toHours(difference) + " hours ago"));
-        }
-
+        holder.time.setText(DateUtils.formatSameDayTime(
+                Long.parseLong(track.getDate().getUts()) * 1000L,
+                System.currentTimeMillis(),
+                DateFormat.SHORT,
+                DateFormat.SHORT));
         if (!track.getLoved().equals("0")) {
             holder.loved.setVisibility(View.VISIBLE);
         } else {

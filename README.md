@@ -18,6 +18,7 @@ The application features a beautiful material design, and makes use of cutting-e
     <li>Robolectric</li>
     <li>PowerMock</>
     <li>Mockito</>
+    <li>LeakCanary</>
 </ul>
 
 The API for all the information is the LastFM API.

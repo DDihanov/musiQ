@@ -7,8 +7,8 @@ android {
         applicationId "com.dihanov.musiq"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 15
-        versionName "1.635"
+        versionCode 16
+        versionName "1.636"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
         buildConfigField("String", "API_SECRET", API_SECRET)
@@ -124,8 +124,10 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     //TourGuide
-    compile ('com.github.worker8:tourguide:1.0.18-SNAPSHOT@aar') {
-        transitive=true
+    compile('com.github.worker8:tourguide:1.0.18-SNAPSHOT@aar') {
+        transitive = true
     }
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
