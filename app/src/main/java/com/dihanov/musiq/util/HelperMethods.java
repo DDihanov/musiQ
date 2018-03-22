@@ -55,6 +55,40 @@ public class HelperMethods {
         return Typeface.createFromAsset(context.getAssets(), font);
     }
 
+    public static int determineSelectedTimeframeFromString() {
+        switch (App.getSharedPreferences().getString(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, Period.OVERALL)) {
+            case Period.OVERALL:
+                return 0;
+            case Period.SEVEN_DAY:
+                return  1;
+            case Period.ONE_MONTH:
+                return 2;
+            case Period.THREE_MONTH:
+                return 3;
+            case Period.TWELVE_MONTH:
+                return 4;
+            default:
+                return 0;
+        }
+    }
+
+    public static String determineSelectedTimeframeFromInt() {
+        switch (App.getSharedPreferences().getInt(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, 0)) {
+            case 0:
+                return Period.OVERALL;
+            case 1:
+                return  Period.SEVEN_DAY;
+            case 2:
+                return Period.ONE_MONTH;
+            case 3:
+                return Period.THREE_MONTH;
+            case 4:
+                return Period.TWELVE_MONTH;
+            default:
+                return Period.OVERALL;
+        }
+    }
+
     public static float getScreenWidth(Activity activity){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

@@ -24,10 +24,9 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             app:contentScrim="@android:color/transparent"
-            app:expandedTitleGravity="top|left"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="30dp"
-            app:expandedTitleMarginTop="15dp"
+            app:expandedTitleGravity="top"
+            app:expandedTitleMarginStart="50dp"
+            app:expandedTitleMarginTop="10dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -213,11 +212,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:paddingStart="40dp"
+            android:paddingTop="10dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="11dp"
             android:background="@color/transparent"
             android:elegantTextHeight="false"
-            android:textAlignment="viewStart"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             tools:ignore="MissingPrefix" />

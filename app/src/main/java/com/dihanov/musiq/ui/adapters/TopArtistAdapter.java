@@ -21,6 +21,8 @@ import com.veinhorn.tagview.TagView;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by dimitar.dihanov on 9/27/2017.
  */
@@ -57,7 +59,7 @@ public class TopArtistAdapter extends AbstractAdapter {
         Artist artist = topArtist.get(position);
         Glide.with(context.getApplicationContext())
                 .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
-                .crossFade(2000)
+                .transition(withCrossFade(2000))
                 .into(holder.getThumbnail());
         holder.getTitle().setText(artist.getName().toLowerCase());
         ((TagView)holder.getTitle()).setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));

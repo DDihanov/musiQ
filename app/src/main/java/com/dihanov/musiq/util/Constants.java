@@ -31,4 +31,6 @@ public class Constants {
     public static final long NETWORK_CHECK_DELAY = 10000;
     public static final String REMEMBER_ME = "remember me";
     public static final String FIRST_TIME = "first time";
+    public static final String TOP_ARTIST_SOURCE = "top artist source";
+    public static final String USER_TOP_ARTIST_CHART_TIMEFRAME = "user top artist chart timeframe";
 }

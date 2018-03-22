@@ -10,21 +10,23 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
@@ -50,6 +52,8 @@ import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by dimitar.dihanov on 9/29/2017.
  */
@@ -65,15 +69,14 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @Inject
     ArtistDetailsContract.Presenter presenter;
 
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     @BindView(R.id.artist_favorite)
     ImageView favoriteArtistStar;
-
-    @BindView(R.id.nav_list)
-    ListView optionList;
 
     @BindView(R.id.artist_details_collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -132,6 +135,9 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         this.presenter.takeView(this);
 
         initNavigationDrawer();
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
         initArtistSpecifics();
     }
@@ -174,17 +180,30 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     private void initNavigationDrawer() {
-        String[] options = getResources().getStringArray(R.array.navigation_options);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // set item as selected to persist highlight
+            item.setChecked(true);
+            // close drawer when item is tapped
+            drawerLayout.closeDrawers();
 
-        optionList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, options));
-
-        optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                settingsManager.manageSettings(id);
-            }
+            settingsManager.manageSettings(item);
+            return true;
         });
+
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        if (!username.isEmpty() && username != ""){
+            presenter.setOnDrawerOpenedListener(this);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -233,7 +252,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
 
     private void initArtistImage() {
-        Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText()).crossFade(2000).into(this.artistImage);
+        Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText()).transition(withCrossFade(2000)).into(this.artistImage);
     }
 
     @Override
@@ -312,6 +331,16 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         return this.artist.getBio().getContent();
     }
 
+    @Override
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    @Override
+    public NavigationView getNavigationView() {
+        return navigationView;
+    }
+
     //this prevents the popupwindow from closing
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -335,6 +364,11 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
     @Override
     public ArtistDetails getDetailActivity() {
+        return this;
+    }
+
+    @Override
+    public Context getContext() {
         return this;
     }
 

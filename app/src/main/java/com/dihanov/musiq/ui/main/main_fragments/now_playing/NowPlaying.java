@@ -110,7 +110,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
         } else {
             HelperMethods.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
             if(nowPlaying.getAlbumArt() != null){
-                Glide.with(nowPlayingArtistImage.getContext()).load(HelperMethods.bitmapToByte(nowPlaying.getAlbumArt())).asBitmap().into(nowPlayingArtistImage);
+                Glide.with(nowPlayingArtistImage.getContext()).load(HelperMethods.bitmapToByte(nowPlaying.getAlbumArt())).into(nowPlayingArtistImage);
             } else {
                 Glide.with(nowPlayingArtistImage.getContext())
                         .load(getResources()

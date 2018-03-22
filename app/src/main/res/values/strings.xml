@@ -2,7 +2,7 @@
     <string name="app_name">musiQ</string>
     <string name="app_name_bird">musiQ🐧</string>
     <string name="app_bird">🐧</string>
-    <string name="top_artists_text">loading this week\'s top artists...</string>
+    <string name="top_artists_text">loading the top artists...</string>
     <string name="searchTitle">Search for artists</string>
     <string name="action_add_favourite">Add to favorites</string>
     <string name="action_remove_favorite">Remove from favorites</string>
@@ -127,5 +127,12 @@
     <string name="note">NOTE</string>
     <string name="spired_session">Your session key has expired, please log in again.</string>
     <string name="welcome">Welcome!</string>
-    <string name="tutorial_text_guide">Pull on the edge of the screen to open the settings panel</string>
+    <string name="tutorial_text_guide">Pull on the edge of the screen to open the settings panel or click on the drawer icon in the top left corner</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Log out</string>
+    <string name="top_artist_chart_source">Configure top artist chart source</string>
+    <string name="log_in_to_use_feature">Please log in to use this feature.</string>
+    <string name="select_timeframe">Select timeframe</string>
+    <string name="logged_in_as">Logged in as:</string>
+    <string name="scrobbles">Total scrobbles:</string>
 </resources>

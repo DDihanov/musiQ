@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,8 +64,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
-    @BindView(R.id.nav_list)
-    ListView optionList;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
 
     @BindView(R.id.main_gridview)
     RecyclerView recyclerView;
@@ -87,6 +87,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
+
+
 
     private SearchView searchBar;
     private String lastSearch;
@@ -114,19 +116,30 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         setSupportActionBar(toolbar);
 
         initNavigationDrawer();
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
         appBarLayout.setExpanded(true);
         mainActivityPresenter.takeView(this);
-        mainActivityPresenter.setBackdropImageChangeListener(this);
 
-
-        if(App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)){
+        if (App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)) {
             int orientation = this.getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
                 setUpTutorial();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpTutorial() {
@@ -155,19 +168,19 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
 
     private void initNavigationDrawer() {
-        String[] options = getResources().getStringArray(R.array.navigation_options);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // set item as selected to persist highlight
+            item.setChecked(true);
+            // close drawer when item is tapped
+            drawerLayout.closeDrawers();
 
-        optionList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, options));
-
-        optionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                settingsManager.manageSettings(id);
-            }
+            settingsManager.manageSettings(item);
+            return true;
         });
-
-
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        if (!username.isEmpty() && username != ""){
+            mainActivityPresenter.setOnDrawerOpenedListener(this);
+        }
     }
 
 
@@ -175,7 +188,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         String s = "";
-        if(searchBar != null){
+        if (searchBar != null) {
             s = searchBar.getQuery().toString();
         }
         outState.putString(Constants.LAST_SEARCH, s);
@@ -188,7 +201,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        if(!isLoggedIn){
+        if (!isLoggedIn) {
             viewPagerAdapter.setTabCount(viewPagerAdapter.getLoggedOutTabCount());
         } else {
             viewPagerAdapter.setTabCount(viewPagerAdapter.getLoggedInTabCount() + viewPagerAdapter.getLoggedOutTabCount());
@@ -241,6 +254,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     protected void onResume() {
         super.onResume();
         initViewPager();
+        mainActivityPresenter.setBackdropImageChangeListener(this);
         this.invalidateOptionsMenu();
     }
 
@@ -261,6 +275,16 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Override
     public SearchView getSearchBar() {
         return this.searchBar;
+    }
+
+    @Override
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    @Override
+    public NavigationView getNavigationView() {
+        return navigationView;
     }
 
     //prevent popupwindow close on rotation
@@ -325,7 +349,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         recyclerView.setHasFixedSize(true);
     }
 
-    public void setViewPagerSelection(int position){
+    public void setViewPagerSelection(int position) {
         this.viewPager.setCurrentItem(position, true);
     }
 }

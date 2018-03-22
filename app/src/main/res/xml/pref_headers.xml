@@ -11,4 +11,10 @@
         android:fragment="com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity$NotificationPreferenceFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_header_notifications" />
+
+    <header
+        android:id="@+id/top_artist_source_header"
+        android:title="@string/top_artist_chart_source"
+        android:icon="@drawable/ic_music_note_black_24dp">
+    </header>
 </preference-headers>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/nav_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nav_header_image"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:breakStrategy="balanced"
+        android:visibility="gone"
+        android:text="Logged in as: KINDALONGUSERNAAAMEEEE"
+        style="@style/TextAppearance.AppCompat.Title"/>
+    <TextView
+        android:id="@+id/nav_playcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scrobbles: 24332"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:layout_below="@id/nav_username"
+        style="@style/TextAppearance.AppCompat.Body2"/>
+    <ImageView
+        android:id="@+id/nav_header_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="20dp"/>
+
+</RelativeLayout>

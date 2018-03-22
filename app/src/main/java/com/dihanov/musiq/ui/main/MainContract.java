@@ -1,6 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
 import android.content.Context;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
@@ -17,6 +19,10 @@ public interface MainContract {
     interface View extends BaseView<Presenter>, MainViewFunctionable, RecyclerViewExposable{
         SearchView getSearchBar();
 
+        DrawerLayout getDrawerLayout();
+
+        NavigationView getNavigationView();
+
         void hideKeyboard();
 
         Context getContext();
@@ -28,5 +34,7 @@ public interface MainContract {
 
     interface Presenter extends BasePresenter<View>{
         void setBackdropImageChangeListener(MainContract.View mainActivity);
+
+        void setOnDrawerOpenedListener(MainContract.View mainActivity);
     }
 }

@@ -26,8 +26,8 @@
             android:focusableInTouchMode="true"
             app:contentScrim="@android:color/transparent"
             app:expandedTitleGravity="top"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginTop="15dp"
+            app:expandedTitleMarginStart="50dp"
+            app:expandedTitleMarginTop="10dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
             <!--app:contentScrim="?attr/colorPrimary"-->

@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,15 +64,16 @@ public class SettingsManager {
         activity.finish();
     }
 
-    public void manageSettings(long id){
-        switch ((int) id) {
-            case (1):
+    public void manageSettings(MenuItem item){
+        int id = item.getItemId();
+        switch (id) {
+            case (R.id.nav_settings):
                 openSettings();
                 break;
-            case (2):
+            case (R.id.nav_logout):
                 logOut();
                 break;
-            case (3):
+            case (R.id.nav_about):
                 openAbout();
                 break;
             default:
