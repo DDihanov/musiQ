@@ -24,6 +24,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by dimitar.dihanov on 9/29/2017.
  */
@@ -38,7 +40,7 @@ public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
     private ArtistDetailsContract.View artistDetailsActivity;
 
     @Inject
-    public ArtistDetailsPresenter(){
+    public ArtistDetailsPresenter() {
     }
 
     @Override
@@ -81,20 +83,7 @@ public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
                                 String profilePicUrl = userInfo.getUser().getImage().get(Constants.IMAGE_LARGE).getText();
                                 String playcount = userInfo.getUser().getPlaycount();
 
-                                RelativeLayout drawerLayout = (RelativeLayout)navigationView.getHeaderView(0);
-
-                                TextView usernameTextView = (TextView)drawerLayout.getChildAt(0);
-                                TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
-                                ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
-
-                                usernameTextView.setVisibility(View.VISIBLE);
-                                scrobbleCount.setVisibility(View.VISIBLE);
-
-                                Glide.with(detailsActivity.getContext())
-                                        .load(profilePicUrl)
-                                        .apply(RequestOptions.circleCropTransform()).into(userAvatar);
-                                usernameTextView.setText(detailsActivity.getContext().getString(R.string.logged_in_as) + " " + username);
-                                scrobbleCount.setText(detailsActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
+                                setUserInfo(profilePicUrl, playcount, navigationView, detailsActivity, username);
                             }
 
                             @Override
@@ -122,5 +111,41 @@ public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
 
             }
         });
+    }
+
+    private void setUserInfo(String profilePicUrl, String playcount, NavigationView navigationView, ArtistDetailsContract.View detailsActivity, String username) {
+        RelativeLayout drawerLayout = (RelativeLayout) navigationView.getHeaderView(0);
+
+        TextView usernameTextView = (TextView) drawerLayout.getChildAt(0);
+        TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
+        ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
+
+        usernameTextView.setVisibility(View.VISIBLE);
+        scrobbleCount.setVisibility(View.VISIBLE);
+
+        Glide.with(detailsActivity.getContext())
+                .load(profilePicUrl)
+                .apply(RequestOptions.circleCropTransform()).into(userAvatar);
+        usernameTextView.setText(detailsActivity.getContext().getString(R.string.logged_in_as) + " " + username);
+        scrobbleCount.setText(detailsActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
+
+        App.getSharedPreferences().edit().putString(Constants.PROFILE_PIC, profilePicUrl).apply();
+    }
+
+    private void setProfileInfo(String profilePicUrl, String playcount, NavigationView navigationView, ArtistDetailsContract.View detailsActivity, String username) {
+        RelativeLayout drawerLayout = (RelativeLayout) navigationView.getHeaderView(0);
+
+        TextView usernameTextView = (TextView) drawerLayout.getChildAt(0);
+        TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
+        ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
+
+        usernameTextView.setVisibility(View.VISIBLE);
+        scrobbleCount.setVisibility(View.VISIBLE);
+
+        Glide.with(detailsActivity.getContext())
+                .load(profilePicUrl)
+                .apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000)).into(userAvatar);
+        usernameTextView.setText(detailsActivity.getContext().getString(R.string.logged_in_as) + " " + username);
+        scrobbleCount.setText(detailsActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
     }
 }

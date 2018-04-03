@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/profile_friends_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/profile_friends_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:imeOptions="actionSearch"
+        android:hint="@string/search_for_friends"
+        android:textAlignment="center" />
+
+    <Spinner
+        android:id="@+id/friends_limit_spinner"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="62dp"
+        android:layout_marginTop="60dp"
+        android:entries="@array/friends_limit" />
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/friends_limit_spinner"
+        android:layout_alignStart="@+id/profile_friends_search"
+        android:text="@string/limit" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_below="@id/friends_limit_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profile_friends_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled="true"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

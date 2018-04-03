@@ -5,24 +5,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by dimitar.dihanov on 2/12/2018.
- */
-
-public class Recenttracks {
-    @SerializedName("track")
+public class Friends {
+    @SerializedName("user")
     @Expose
-    private List<Track> track = null;
+    private List<User> user = null;
     @SerializedName("@attr")
     @Expose
     private Attr attr;
 
-    public List<Track> getTrack() {
-        return track;
+    public List<User> getUser() {
+        return user;
     }
 
-    public void setTrack(List<Track> track) {
-        this.track = track;
+    public void setUser(List<User> user) {
+        this.user = user;
     }
 
     public Attr getAttr() {
@@ -32,4 +28,5 @@ public class Recenttracks {
     public void setAttr(Attr attr) {
         this.attr = attr;
     }
+
 }

@@ -14,7 +14,8 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.login.Login;
-import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
+import com.dihanov.musiq.ui.settings.Settings;
+import com.dihanov.musiq.ui.settings.profile.Profile;
 
 /**
  * Created by dimitar.dihanov on 2/15/2018.
@@ -22,21 +23,21 @@ import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
 
 public class SettingsManager {
     private Activity activity;
+    private AlertDialog.Builder alertDialogBuilder;
 
     public SettingsManager(Activity activity) {
         this.activity = activity;
+        this.alertDialogBuilder = new AlertDialog.Builder(activity);
     }
 
     private void openAbout() {
-        View layout  = activity.getLayoutInflater().inflate(R.layout.about_layout, null);
+        View layout = activity.getLayoutInflater().inflate(R.layout.about_layout, null);
         TextView aboutMessage = layout.findViewById(R.id.about_message);
         SpannableString s =
                 new SpannableString(String.format(activity.getString(R.string.about_message), Constants.APP_VESRION));
         Linkify.addLinks(s, Linkify.WEB_URLS);
         aboutMessage.setMovementMethod(LinkMovementMethod.getInstance());
         aboutMessage.setText(s);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                activity);
         alertDialogBuilder.setTitle(R.string.about);
         alertDialogBuilder
                 .setView(layout)
@@ -48,7 +49,7 @@ public class SettingsManager {
     }
 
     private void openSettings() {
-        activity.startActivity(new Intent(activity, SettingsActivity.class));
+        activity.startActivity(new Intent(activity, Settings.class));
     }
 
     private void logOut() {
@@ -64,9 +65,12 @@ public class SettingsManager {
         activity.finish();
     }
 
-    public void manageSettings(MenuItem item){
+    public void manageSettings(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case (R.id.nav_profile):
+                openProfile();
+                break;
             case (R.id.nav_settings):
                 openSettings();
                 break;
@@ -79,5 +83,22 @@ public class SettingsManager {
             default:
                 break;
         }
+    }
+
+    private void openProfile() {
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+
+        if (username.isEmpty() || username == "") {
+            alertDialogBuilder.setCancelable(true);
+            alertDialogBuilder.setTitle(activity.getString(R.string.note))
+                    .setMessage(activity.getString(R.string.log_in_to_use_feature))
+                    .setNeutralButton(activity.getString(R.string.dialog_action_dismiss), (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+            alertDialogBuilder.create().show();
+            return;
+        }
+
+        activity.startActivity(new Intent(activity, Profile.class));
     }
 }

@@ -8,19 +8,18 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Registered {
-
     @SerializedName("#text")
     @Expose
-    private Integer text;
+    private String text;
     @SerializedName("unixtime")
     @Expose
     private String unixtime;
 
-    public Integer getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(Integer text) {
+    public void setText(String text) {
         this.text = text;
     }
 

@@ -11,7 +11,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:breakStrategy="balanced"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:text="Logged in as: KINDALONGUSERNAAAMEEEE"
         style="@style/TextAppearance.AppCompat.Title"/>
     <TextView

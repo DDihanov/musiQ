@@ -37,11 +37,13 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainPresenter extends ArtistDetailsIntentShowableImpl implements MainContract.Presenter{
+public class MainPresenter extends ArtistDetailsIntentShowableImpl implements MainContract.Presenter {
     private static final long NETWORK_CHECK_THREAD_TIMEOUT = 5000;
     private static int TOP_ARTIST_LIMIT = 6;
     private final String TAG = this.getClass().getSimpleName();
@@ -87,6 +89,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
             @Override
             public void onDrawerOpened(View drawerView) {
                 String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+
                 lastFmApiClient.getLastFmApiService()
                         .getUserInfo(username)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -103,20 +106,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                                 String profilePicUrl = userInfo.getUser().getImage().get(Constants.IMAGE_LARGE).getText();
                                 String playcount = userInfo.getUser().getPlaycount();
 
-                                RelativeLayout drawerLayout = (RelativeLayout)navigationView.getHeaderView(0);
-
-                                TextView usernameTextView = (TextView)drawerLayout.getChildAt(0);
-                                TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
-                                ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
-
-                                usernameTextView.setVisibility(View.VISIBLE);
-                                scrobbleCount.setVisibility(View.VISIBLE);
-
-                                Glide.with(mainActivity.getContext())
-                                        .load(profilePicUrl)
-                                        .apply(RequestOptions.circleCropTransform()).into(userAvatar);
-                                usernameTextView.setText(mainActivity.getContext().getString(R.string.logged_in_as) + " " + username);
-                                scrobbleCount.setText(mainActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
+                                setProfileInfo(profilePicUrl, playcount, navigationView, mainActivity, username);
                             }
 
                             @Override
@@ -132,6 +122,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                                 mainActivity.hideProgressBar();
                             }
                         });
+
             }
 
             @Override
@@ -144,6 +135,25 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
             }
         });
+    }
+
+    private void setProfileInfo(String profilePicUrl, String playcount, NavigationView navigationView, MainContract.View mainActivity, String username) {
+        RelativeLayout drawerLayout = (RelativeLayout) navigationView.getHeaderView(0);
+
+        TextView usernameTextView = (TextView) drawerLayout.getChildAt(0);
+        TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
+        ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
+
+        usernameTextView.setVisibility(View.VISIBLE);
+        scrobbleCount.setVisibility(View.VISIBLE);
+
+        Glide.with(mainActivity.getContext())
+                .load(profilePicUrl)
+                .apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000)).into(userAvatar);
+        usernameTextView.setText(mainActivity.getContext().getString(R.string.logged_in_as) + " " + username);
+        scrobbleCount.setText(mainActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
+
+        App.getSharedPreferences().edit().putString(Constants.PROFILE_PIC, profilePicUrl).apply();
     }
 
 
@@ -159,7 +169,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
             return;
         }
 
-        if(which == TopArtistSource.LAST_FM_CHARTS){
+        if (which == TopArtistSource.LAST_FM_CHARTS) {
             loadChartTopArtists(mainActivity);
         } else {
             String period = HelperMethods.determineSelectedTimeframeFromInt();
@@ -219,7 +229,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                 .subscribe(new Observer<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        HelperMethods.showTooltip(mainActivity, mainActivity.getBirdIcon(),  mainActivity.getContext().getString(R.string.top_artists_text));
+                        HelperMethods.showTooltip(mainActivity, mainActivity.getBirdIcon(), mainActivity.getContext().getString(R.string.top_artists_text));
                         mainActivity.showProgressBar();
                         compositeDisposable.add(d);
                     }

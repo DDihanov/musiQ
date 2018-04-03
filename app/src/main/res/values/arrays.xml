@@ -12,4 +12,11 @@
         <item>World most famous artists</item>
         <item>Your top artists</item>
     </string-array>
+    
+    <string-array name="friends_limit">
+        <item>20</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+    </string-array>
 </resources>

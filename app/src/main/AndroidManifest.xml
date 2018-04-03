@@ -31,6 +31,7 @@
         <activity
             android:name=".ui.login.Login"
             android:label="@string/title_activity_login" />
+        <activity android:name=".ui.settings.profile.Profile"/>
 
         <service
             android:name=".service.MediaControllerListenerService"
@@ -41,7 +42,7 @@
         </service>
 
         <activity
-            android:name=".ui.main.main_fragments.settings.SettingsActivity"
+            android:name=".ui.settings.Settings"
             android:label="@string/title_activity_settings"></activity>
     </application>
 

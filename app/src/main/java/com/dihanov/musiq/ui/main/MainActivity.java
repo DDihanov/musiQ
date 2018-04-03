@@ -88,11 +88,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-
-
     private SearchView searchBar;
     private String lastSearch;
-    private SettingsManager settingsManager = new SettingsManager(this);
+    private SettingsManager settingsManager;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -109,6 +107,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         if (savedInstanceState != null) {
             this.lastSearch = savedInstanceState.getString(TAG_LAST_SEARCH);
         }
+
+        settingsManager = new SettingsManager(this);
 
         initGridView();
         initViewPager();

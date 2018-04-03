@@ -135,4 +135,14 @@
     <string name="select_timeframe">Select timeframe</string>
     <string name="logged_in_as">Logged in as:</string>
     <string name="scrobbles">Total scrobbles:</string>
+    <string name="profile">Profile</string>
+    <string name="name">Name:</string>
+    <string name="country">Country:</string>
+    <string name="age">Age:</string>
+    <string name="playcount">Playcount:</string>
+    <string name="date_registered">Date registered:</string>
+    <string name="profile_url">Profile url:</string>
+    <string name="last_track">Last scrobble:</string>
+    <string name="search_for_friends">search for friends</string>
+    <string name="limit">limit:</string>
 </resources>

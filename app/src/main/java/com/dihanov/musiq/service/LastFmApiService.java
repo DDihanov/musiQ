@@ -15,6 +15,7 @@ import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.models.TopArtistsResult;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.models.UserArtistTracks;
+import com.dihanov.musiq.models.UserFriends;
 import com.dihanov.musiq.models.UserInfo;
 import com.dihanov.musiq.models.UserTopArtists;
 import com.dihanov.musiq.models.UserTopTracks;
@@ -74,6 +75,9 @@ public interface LastFmApiService{
 
     @GET(METHOD_CALL+"user.getinfo")
     Observable<UserInfo> getUserInfo(@Query("user") String user);
+
+    @GET(METHOD_CALL+"user.getfriends")
+    Observable<UserFriends> getUserFriends(@Query("user") String user, @Query("recenttracks") int recentTracks, @Query("limit") int limit);
 
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)

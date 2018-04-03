@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/profile_info_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:visibility="invisible"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/profile_name_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/name" />
+
+            <TextView
+                android:id="@+id/profile_real_name"
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_name_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_name_label"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profile_country_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_name_label"
+                android:layout_margin="8dp"
+                android:text="@string/country" />
+
+            <TextView
+                android:id="@+id/profile_country"
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_country_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_country_label"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profile_age_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_country_label"
+                android:layout_margin="8dp"
+                android:text="@string/age" />
+
+            <TextView
+                android:id="@+id/profile_age"
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_age_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_age_label"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profile_playcount_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_age_label"
+                android:layout_margin="8dp"
+                android:text="@string/playcount" />
+
+            <TextView
+                android:id="@+id/profile_playcount"
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_playcount_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_playcount_label"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profile_date_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_playcount_label"
+                android:layout_margin="8dp"
+                android:text="@string/date_registered" />
+
+            <TextView
+                android:id="@+id/profile_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_date_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_date_label"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profile_url_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_date_label"
+                android:layout_margin="8dp"
+                android:text="@string/profile_url" />
+
+            <TextView
+                android:id="@+id/profile_url"
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/profile_url_label"
+                android:layout_marginStart="0dp"
+                android:layout_toEndOf="@+id/profile_playcount_label"
+                android:autoLink="web"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

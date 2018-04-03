@@ -1,4 +1,4 @@
-package com.dihanov.musiq.ui.main.main_fragments.settings;
+package com.dihanov.musiq.ui.settings;
 
 import android.app.Dialog;
 import android.content.res.Configuration;

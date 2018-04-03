@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
-import com.dihanov.musiq.ui.main.main_fragments.settings.SettingsActivity;
+import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.util.NetworkConnectionReceiver;
 import com.dihanov.musiq.util.Notificator;
 
@@ -98,7 +98,7 @@ public class MediaControllerListenerService extends NotificationListenerService
 
             if (!contains) {
                 if (!enableAutoDetect) {
-                    if (!App.getSharedPreferences().getBoolean(SettingsActivity.PLAYER_PREFIX + element.getPackageName(), true)) {
+                    if (!App.getSharedPreferences().getBoolean(Settings.PLAYER_PREFIX + element.getPackageName(), true)) {
                         continue;
                     }
                 }
@@ -150,7 +150,7 @@ public class MediaControllerListenerService extends NotificationListenerService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.startsWith(SettingsActivity.PLAYER_PREFIX)) {
+        if (key.startsWith(Settings.PLAYER_PREFIX)) {
             String packageName = key.substring(14, key.length());
 
             if (!sharedPreferences.getBoolean(key, true)) {

@@ -102,9 +102,9 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @BindView(R.id.artist_details_bird)
     TextView bird;
 
-    TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
+    private TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 
-    private SettingsManager settingsManager = new SettingsManager(this);
+    private SettingsManager settingsManager;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -129,6 +129,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             this.serializedAlbumList = albumSerialized;
         }
 
+        settingsManager = new SettingsManager(this);
 
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
@@ -143,7 +144,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     private void initArtistSpecifics() {
-        new AsyncTask<Void, Void, Artist>(){
+        new AsyncTask<Void, Void, Artist>() {
             @Override
             protected void onPreExecute() {
                 showProgressBar();
@@ -169,7 +170,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     private void configureIcon() {
-        if(!FavoritesManager.isFavorited(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase())){
+        if (!FavoritesManager.isFavorited(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase())) {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
             this.favoriteArtistStar.setTag(false);
         } else {
@@ -191,7 +192,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         });
 
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
-        if (!username.isEmpty() && username != ""){
+        if (!username.isEmpty() && username != "") {
             presenter.setOnDrawerOpenedListener(this);
         }
     }
@@ -221,12 +222,12 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
         List<Tag> tagText = this.artist.getTags().getTag();
 
-        if(tagText.isEmpty()){
+        if (tagText.isEmpty()) {
             return;
         }
 
         //this is very ugly, however since there is no streams what can you do
-        List<String> firstFive = new ArrayList<String>(){
+        List<String> firstFive = new ArrayList<String>() {
             {
                 for (int i = 0; i < tagText.size(); i++) {
                     this.add(tagText.get(i).getName());
@@ -280,8 +281,8 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     @OnClick(R.id.artist_favorite)
-    public void onFavoriteClick(){
-        if(((boolean)favoriteArtistStar.getTag()) == false){
+    public void onFavoriteClick() {
+        if (((boolean) favoriteArtistStar.getTag()) == false) {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_on);
             this.favoriteArtistStar.setTag(true);
             FavoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase());
@@ -325,7 +326,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
     @Override
     public String getArtistBiography() {
-        if(this.artist == null){
+        if (this.artist == null) {
             return " ";
         }
         return this.artist.getBio().getContent();

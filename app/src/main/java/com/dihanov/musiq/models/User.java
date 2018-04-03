@@ -7,11 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class User {
-
     @SerializedName("session")
     @Expose
     private Session session;
-
     @SerializedName("name")
     @Expose
     private String name;
@@ -51,6 +49,28 @@ public class User {
     @SerializedName("type")
     @Expose
     private String type;
+    @SerializedName("scrobblesource")
+    @Expose
+    private String scrobblesource;
+    @SerializedName("recenttrack")
+    @Expose
+    private Recenttrack recenttrack;
+
+    public String getScrobblesource() {
+        return scrobblesource;
+    }
+
+    public void setScrobblesource(String scrobblesource) {
+        this.scrobblesource = scrobblesource;
+    }
+
+    public void setRecenttrack(Recenttrack recenttrack) {
+        this.recenttrack = recenttrack;
+    }
+
+    public Recenttrack getRecenttrack() {
+        return recenttrack;
+    }
 
     public Session getSession() {
         return session;
