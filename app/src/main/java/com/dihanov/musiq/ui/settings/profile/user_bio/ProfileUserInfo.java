@@ -1,24 +1,28 @@
-package com.dihanov.musiq.ui.settings.profile;
+package com.dihanov.musiq.ui.settings.profile.user_bio;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.models.User;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerFragment;
 
-public class ProfileUserInfo extends Fragment {
+public class ProfileUserInfo extends DaggerFragment implements ProfileUserInfoContract.View {
     public static final String TITLE = "bio";
+
+    @Inject
+    ProfileUserInfoContract.Presenter presenter;
 
     @BindView(R.id.profile_real_name)
     TextView realNameTextView;
@@ -38,31 +42,17 @@ public class ProfileUserInfo extends Fragment {
     @BindView(R.id.profile_date)
     TextView dateTextView;
 
-    private static User userInfo;
-    private String realName;
-    private String profileUrl;
-    private String country;
-    private String age;
-    private String playcount;
-    private String unixRegistrationDate;
+    @BindView(R.id.profile_age_label)
+    TextView ageLabel;
 
-    public static ProfileUserInfo newInstance(User user) {
+    @BindView(R.id.profile_info_progressbar)
+    ProgressBar progressBar;
+
+    public static ProfileUserInfo newInstance() {
         Bundle args = new Bundle();
         ProfileUserInfo fragment = new ProfileUserInfo();
         fragment.setArguments(args);
-        userInfo = user;
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.realName = userInfo.getRealname();
-        this.profileUrl = userInfo.getUrl();
-        this.country = userInfo.getCountry();
-        this.age = userInfo.getAge();
-        this.playcount = userInfo.getPlaycount();
-        this.unixRegistrationDate = userInfo.getRegistered().getUnixtime();
     }
 
     @Nullable
@@ -71,13 +61,40 @@ public class ProfileUserInfo extends Fragment {
         View view = inflater.inflate(R.layout.profile_info_layout, container, false);
         ButterKnife.bind(this, view);
 
+        presenter.takeView(this);
+        presenter.fetchUserInfo();
+
+        return view;
+    }
+
+    @Override
+    public void loadUserBio(String realName, String profileUrl, String country, String age, String playcount, String unixRegistrationDate) {
         this.realNameTextView.setText(realName);
         this.profileUrlTextView.setText(profileUrl);
         this.countryTextView.setText(country);
-        this.ageTextView.setText(age);
+        if(Integer.parseInt(age) <= 0){
+            this.ageTextView.setVisibility(View.GONE);
+            this.ageLabel.setVisibility(View.GONE);
+        } else {
+            this.ageTextView.setText(age);
+        }
         this.playcountTextView.setText(playcount);
         this.dateTextView.setText(DateUtils.formatDateTime(getContext(), Long.parseLong(unixRegistrationDate), 0));
+    }
 
-        return view;
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.leaveView();
     }
 }

@@ -1,4 +1,16 @@
 package com.dihanov.musiq.ui.settings.profile;
 
-public class ProfileContract {
+import com.dihanov.musiq.interfaces.MainViewFunctionable;
+import com.dihanov.musiq.ui.BasePresenter;
+import com.dihanov.musiq.ui.BaseView;
+
+public interface ProfileContract {
+    interface View extends BaseView<Presenter>, MainViewFunctionable {
+        void initViewPager();
+
+        void setUserImage(String url);
+    }
+
+    interface Presenter extends BasePresenter<View> {
+    }
 }
