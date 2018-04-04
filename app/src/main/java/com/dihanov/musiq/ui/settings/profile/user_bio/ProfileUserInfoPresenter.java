@@ -45,7 +45,7 @@ public class ProfileUserInfoPresenter implements ProfileUserInfoContract.Present
 
                     @Override
                     public void onNext(UserInfo userInfo) {
-                        view.loadUserBio(userInfo.getUser().getName(),
+                        view.loadUserBio(userInfo.getUser().getRealname(),
                                 userInfo.getUser().getUrl(),
                                 userInfo.getUser().getCountry(),
                                 userInfo.getUser().getAge(),

@@ -79,7 +79,7 @@ public class ProfileUserInfo extends DaggerFragment implements ProfileUserInfoCo
             this.ageTextView.setText(age);
         }
         this.playcountTextView.setText(playcount);
-        this.dateTextView.setText(DateUtils.formatDateTime(getContext(), Long.parseLong(unixRegistrationDate), 0));
+        this.dateTextView.setText(DateUtils.formatDateTime(getContext(), Long.parseLong(unixRegistrationDate) * 1000L, 0));
     }
 
     @Override

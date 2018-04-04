@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/friends_playcount"
         android:layout_margin="5dp"
+        android:breakStrategy="balanced"
         style="@style/TextAppearance.AppCompat.Title"/>
 
 </RelativeLayout>
