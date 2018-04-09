@@ -111,7 +111,10 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
                             return;
                         }
 
-                        if(nowPlayingFragment == null){
+                        if(nowPlayingFragment == null ||
+                                recentTracksWrapper == null ||
+                                recentTracksWrapper.getRecenttracks() == null ||
+                                recentTracksWrapper.getRecenttracks().getTrack() == null){
                             return;
                         }
 

@@ -23,7 +23,7 @@ import com.dihanov.musiq.ui.settings.profile.Profile;
 
 public class SettingsManager {
     private Activity activity;
-    private AlertDialog.Builder alertDialogBuilder;
+    private static AlertDialog.Builder alertDialogBuilder;
 
     public SettingsManager(Activity activity) {
         this.activity = activity;

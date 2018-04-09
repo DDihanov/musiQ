@@ -198,12 +198,14 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                                 MainPresenter.this,
                                 true);
                         mainActivity.getRecyclerView().setAdapter(topArtistAdapter);
-                        mainActivity.getRecyclerView().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainActivity.getRecyclerView().smoothScrollToPosition(artists.size() - 1);
-                            }
-                        }, 1000);
+                        if(!artists.isEmpty()){
+                            mainActivity.getRecyclerView().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mainActivity.getRecyclerView().smoothScrollToPosition(artists.size() - 1);
+                                }
+                            }, 1000);
+                        }
                     }
 
                     @Override
