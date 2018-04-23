@@ -143,6 +143,10 @@ public class MediaControllerListenerService extends NotificationListenerService
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        if (currentPlayingControllerPackageName == null) {
+            return;
+        }
+
         if (sbn.getPackageName().equals(currentPlayingControllerPackageName)) {
             Notificator.cancelNotification(this);
         }

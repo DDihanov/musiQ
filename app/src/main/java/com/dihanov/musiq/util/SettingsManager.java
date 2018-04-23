@@ -23,7 +23,7 @@ import com.dihanov.musiq.ui.settings.profile.Profile;
 
 public class SettingsManager {
     private Activity activity;
-    private static AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog.Builder alertDialogBuilder;
 
     public SettingsManager(Activity activity) {
         this.activity = activity;
@@ -39,13 +39,15 @@ public class SettingsManager {
         aboutMessage.setMovementMethod(LinkMovementMethod.getInstance());
         aboutMessage.setText(s);
         alertDialogBuilder.setTitle(R.string.about);
-        alertDialogBuilder
-                .setView(layout)
-                .setCancelable(true)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setPositiveButton(R.string.dialog_action_dismiss, null)
-                .create()
-                .show();
+        if (!activity.isFinishing()) {
+            alertDialogBuilder
+                    .setView(layout)
+                    .setCancelable(true)
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton(R.string.dialog_action_dismiss, null)
+                    .create()
+                    .show();
+        }
     }
 
     private void openSettings() {
@@ -95,7 +97,9 @@ public class SettingsManager {
                     .setNeutralButton(activity.getString(R.string.dialog_action_dismiss), (dialog, which) -> {
                         dialog.dismiss();
                     });
-            alertDialogBuilder.create().show();
+            if (!activity.isFinishing()) {
+                alertDialogBuilder.create().show();
+            }
             return;
         }
 
