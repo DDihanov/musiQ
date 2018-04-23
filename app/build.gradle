@@ -6,7 +6,7 @@ android {
         applicationId "com.dihanov.musiq"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 21
+        versionCode 22
         versionName "1.761"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
