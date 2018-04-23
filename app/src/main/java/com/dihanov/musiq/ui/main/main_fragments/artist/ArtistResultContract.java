@@ -3,6 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.artist;
 import android.content.Context;
 
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
+import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -19,7 +20,7 @@ public interface ArtistResultContract {
         Context getContext();
     }
 
-    interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View>, SpecificArtistViewHolderSearchable {
         void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity);
     }
 }

@@ -145,4 +145,5 @@
     <string name="last_track">Last scrobble:</string>
     <string name="search_for_friends">search for friends</string>
     <string name="limit">limit:</string>
+    <string name="register"><a href="https://www.last.fm/join">Or sign up</a></string>
 </resources>

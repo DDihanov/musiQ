@@ -3,7 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.album;
 import android.content.Context;
 
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -20,7 +20,7 @@ public interface AlbumResultContract {
         MainActivity getMainActivity();
     }
 
-    interface Presenter extends BasePresenter<AlbumResultContract.View>, SpecificAlbumSearchable {
+    interface Presenter extends BasePresenter<AlbumResultContract.View>, SpecificAlbumViewHolderClickable {
         void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity);
     }
 }

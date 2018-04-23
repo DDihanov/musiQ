@@ -83,7 +83,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mainActivity = ((MainActivity)context);
+        this.mainActivity = ((MainActivity) context);
     }
 
     @Nullable
@@ -100,7 +100,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
         nowPlayingFragmentPresenter.takeView(this);
 
         Scrobble nowPlaying = scrobbler.getNowPlaying();
-        if(nowPlaying == null){
+        if (nowPlaying == null) {
             nowPlayingArtistImage.setVisibility(View.GONE);
             nowPlayingArtist.setVisibility(View.GONE);
             nowPlayingAlbum.setVisibility(View.GONE);
@@ -109,7 +109,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
             cardView.setVisibility(View.GONE);
         } else {
             HelperMethods.setLayoutChildrenVisibility(View.VISIBLE, nowPlayingLayout);
-            if(nowPlaying.getAlbumArt() != null){
+            if (nowPlaying.getAlbumArt() != null) {
                 Glide.with(nowPlayingArtistImage.getContext()).load(HelperMethods.bitmapToByte(nowPlaying.getAlbumArt())).into(nowPlayingArtistImage);
             } else {
                 Glide.with(nowPlayingArtistImage.getContext())
@@ -120,18 +120,19 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
             nowPlayingArtist.setText(nowPlaying.getArtistName());
             nowPlayingTitle.setText(nowPlaying.getTrackName());
             nowPlayingAlbum.setText(nowPlaying.getAlbumName());
+            nowPlayingFragmentPresenter.setClickListenerFetchEntireAlbumInfo(nowPlayingArtistImage, nowPlaying.getArtistName(), nowPlaying.getAlbumName());
+            nowPlayingFragmentPresenter.addOnArtistResultClickedListener(nowPlayingArtist, nowPlaying.getArtistName());
         }
 
-        if(App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)){
+        if (App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) {
             nowPlayingFragmentPresenter.loadRecentScrobbles(this);
         }
-
 
         return view;
     }
 
     @OnClick(R.id.love_track_full)
-    void loveTrack(View view){
+    void loveTrack(View view) {
         nowPlayingFragmentPresenter.loveTrack(scrobbler.getNowPlaying());
     }
 
@@ -142,8 +143,23 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return context;
+    }
+
+    @Override
+    public View getBirdIcon() {
+        return mainActivity.getBirdIcon();
+    }
+
+    @Override
+    public void showProgressBar() {
+        mainActivity.showProgressBar();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mainActivity.hideProgressBar();
     }
 
     @Override
@@ -163,5 +179,10 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
                 new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
         recentTracks.setLayoutManager(layoutManager);
         recentTracks.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public MainActivity getMainActivity() {
+        return this.mainActivity;
     }
 }

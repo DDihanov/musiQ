@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 11/10/2017.
  */
 
-public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIntentShowable, SpecificArtistSearchable{
+public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIntentShowable {
     private static final String LOADING_ARTIST = "hold on... i'm fetching this artist for you";
 
     @Inject LastFmApiClient lastFmApiClient;
@@ -93,6 +93,63 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
                         compositeDisposable.clear();
                         mainActivity.hideProgressBar();
                         ((Activity)mainActivity).startActivity(showArtistDetailsIntent);
+                    }
+                });
+    }
+
+    @Override
+    public void showArtistDetailsIntent(String artistName, MainViewFunctionable mainViewFunctionable) {
+        Intent showArtistDetailsIntent = new Intent((Context)mainViewFunctionable, ArtistDetails.class);
+        HelperMethods.showTooltip(mainViewFunctionable, mainViewFunctionable.getBirdIcon(), LOADING_ARTIST);
+        mainViewFunctionable.showProgressBar();
+
+        Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
+                .getSpecificArtistInfo(artistName)
+                .subscribeOn(Schedulers.io());
+        Observable<TopArtistAlbums> topAlbumRequest = lastFmApiClient.getLastFmApiService()
+                .searchForArtistTopAlbums(artistName, Constants.ALBUM_LIMIT)
+                .subscribeOn(Schedulers.newThread());
+
+        Observable.zip(
+                specificArtistRequest,
+                topAlbumRequest,
+                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
+                    @Override
+                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
+                        HashMap<String, String> result = new HashMap<>();
+
+                        result.put(Constants.ARTIST, new Gson().toJson(specificArtist, SpecificArtist.class));
+                        result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums, TopArtistAlbums.class));
+
+                        return result;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HashMap<String, String>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(HashMap<String, String> stringStringHashMap) {
+                        for (Map.Entry<String, String> kvp : stringStringHashMap.entrySet()) {
+                            showArtistDetailsIntent.putExtra(kvp.getKey(), kvp.getValue());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(ArtistAdapter.class.toString(), e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //important we use .clear and not .dispose, since .dispose will not allow any further subscribing
+                        compositeDisposable.clear();
+                        mainViewFunctionable.hideProgressBar();
+                        ((Activity)mainViewFunctionable).startActivity(showArtistDetailsIntent);
                     }
                 });
     }

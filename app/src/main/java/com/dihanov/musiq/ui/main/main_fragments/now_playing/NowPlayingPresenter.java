@@ -1,19 +1,25 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
+import android.view.View;
+
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
+import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -27,7 +33,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class NowPlayingPresenter implements NowPlayingContract.Presenter {
+public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl implements NowPlayingContract.Presenter {
+    private static final long DELAY_IN_MILLIS = 500;
     private static final int RECENT_SCROBBLES_LIMIT = 20;
     private static final String TAG = NowPlayingPresenter.class.getSimpleName();
 
@@ -134,5 +141,19 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
                         compositeDisposable.clear();
                     }
                 });
+    }
+
+    @Override
+    public void setClickListenerFetchEntireAlbumInfo(View view, String artistName, String albumName) {
+        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, nowPlayingFragment.getMainActivity());
+        albumDetailsPopupWindow.showPopupWindow(nowPlayingFragment.getMainActivity(), view, artistName, albumName, R.id.main_content);
+    }
+
+    @Override
+    public void addOnArtistResultClickedListener(View view, String artistName) {
+        RxView.clicks(view)
+                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(click -> this.showArtistDetailsIntent(artistName, nowPlayingFragment.getMainActivity()));
     }
 }

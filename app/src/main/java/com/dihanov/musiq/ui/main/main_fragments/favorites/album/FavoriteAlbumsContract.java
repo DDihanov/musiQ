@@ -3,7 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 import android.content.Context;
 
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -21,7 +21,7 @@ public interface FavoriteAlbumsContract {
         MainActivity getMainActivity();
     }
 
-    interface Presenter extends BasePresenter<FavoriteAlbumsContract.View>, SpecificAlbumSearchable {
+    interface Presenter extends BasePresenter<FavoriteAlbumsContract.View>, SpecificAlbumViewHolderClickable {
         void loadFavoriteAlbums(Set<String> favorites, RecyclerViewExposable recyclerViewExposable);
     }
 }

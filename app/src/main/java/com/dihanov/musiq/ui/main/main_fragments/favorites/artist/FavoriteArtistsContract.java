@@ -3,7 +3,7 @@ package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 import android.content.Context;
 
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
+import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -17,7 +17,7 @@ public interface FavoriteArtistsContract {
         MainActivity getMainActivity();
     }
 
-    interface Presenter extends BasePresenter<View>, SpecificArtistSearchable {
+    interface Presenter extends BasePresenter<View>, SpecificArtistViewHolderSearchable {
         void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable);
     }
 }

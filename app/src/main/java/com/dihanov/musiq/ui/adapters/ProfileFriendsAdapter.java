@@ -52,7 +52,7 @@ public class ProfileFriendsAdapter extends RecyclerView.Adapter<ProfileFriendsAd
         User friend = friends.get(position);
 
         holder.friendName.setText(friend.getName());
-        if (friend.getCountry().trim().isEmpty() || friend.getCountry().trim() == "") {
+        if (friend.getCountry().trim().isEmpty() || friend.getCountry().trim().equals("")) {
             holder.friendCountry.setVisibility(View.GONE);
         } else {
             holder.friendCountry.setText(friend.getCountry());
@@ -83,7 +83,7 @@ public class ProfileFriendsAdapter extends RecyclerView.Adapter<ProfileFriendsAd
 
             FilterResults filterResults = new FilterResults();
 
-            if(constraint == null || constraint.length() == 0 || constraint.toString().trim() == ""){
+            if(constraint == null || constraint.length() == 0 || constraint.toString().trim().equals("")){
                 filterResults.values = friendsOriginal;
                 filterResults.count = friendsOriginal.size();
             } else {

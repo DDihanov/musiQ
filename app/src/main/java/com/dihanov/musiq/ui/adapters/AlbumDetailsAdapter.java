@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
@@ -26,15 +26,15 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
     private boolean isFavoriteType;
     private Activity context;
     private List<Album> artistAlbumsList;
-    private SpecificAlbumSearchable presenter;
+    private SpecificAlbumViewHolderClickable presenter;
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumSearchable presenter) {
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter) {
         this.context = (Activity)context;
         this.artistAlbumsList = artistAlbumsList;
         this.presenter = presenter;
     }
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumSearchable presenter, boolean isFavoriteType) {
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, boolean isFavoriteType) {
         this.context = (Activity)context;
         this.artistAlbumsList = artistAlbumsList;
         this.presenter = presenter;

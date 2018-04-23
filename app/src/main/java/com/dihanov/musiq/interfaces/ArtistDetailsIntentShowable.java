@@ -8,4 +8,6 @@ import com.dihanov.musiq.ui.main.MainContract;
 
 public interface ArtistDetailsIntentShowable {
     void showArtistDetailsIntent(String artistName, MainContract.View mainActivity);
+
+    void showArtistDetailsIntent(String artistName, MainViewFunctionable mainViewFunctionable);
 }

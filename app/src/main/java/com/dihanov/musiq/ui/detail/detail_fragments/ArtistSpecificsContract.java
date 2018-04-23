@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
-import com.dihanov.musiq.interfaces.SpecificAlbumSearchable;
+import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
@@ -15,7 +15,7 @@ public interface ArtistSpecificsContract {
 
     }
 
-    interface Presenter extends BasePresenter<ArtistSpecificsContract.View>, SpecificAlbumSearchable {
+    interface Presenter extends BasePresenter<ArtistSpecificsContract.View>, SpecificAlbumViewHolderClickable {
 
     }
 }

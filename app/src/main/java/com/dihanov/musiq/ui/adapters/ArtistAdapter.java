@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
+import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
@@ -27,20 +27,21 @@ public class ArtistAdapter extends AbstractAdapter {
     private boolean isFavoriteType;
     private Context mainActivity;
     private List<Artist> artistList;
-    private SpecificArtistSearchable specificArtistSearchable;
+    private SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable;
 
-    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable) {
+    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable) {
         this.mainActivity = (Activity)context;
         this.artistList = albumList;
-        this.specificArtistSearchable = specificArtistSearchable;
+        this.specificArtistViewHolderSearchable = specificArtistViewHolderSearchable;
     }
 
-    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistSearchable specificArtistSearchable, boolean isFavoriteType) {
+    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable, boolean isFavoriteType) {
         this.mainActivity = (Activity)context;
         this.artistList = albumList;
-        this.specificArtistSearchable = specificArtistSearchable;
+        this.specificArtistViewHolderSearchable = specificArtistViewHolderSearchable;
         this.isFavoriteType = isFavoriteType;
     }
+
     @Override
     public ArtistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -76,7 +77,7 @@ public class ArtistAdapter extends AbstractAdapter {
             }
         });
 
-        this.specificArtistSearchable.addOnArtistResultClickedListener(holder, artist.getName());
+        this.specificArtistViewHolderSearchable.addOnArtistResultClickedListener(holder, artist.getName());
         this.setIsFavorited(holder, Constants.FAVORITE_ARTISTS_KEY);
     }
 

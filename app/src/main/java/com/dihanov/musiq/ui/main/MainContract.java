@@ -7,6 +7,7 @@ import android.support.v7.widget.SearchView;
 
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
+import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
@@ -32,7 +33,7 @@ public interface MainContract {
         void runOnUiThread(Runnable r);
     }
 
-    interface Presenter extends BasePresenter<View>{
+    interface Presenter extends BasePresenter<View>, SpecificArtistViewHolderSearchable{
         void setBackdropImageChangeListener(MainContract.View mainActivity);
 
         void setOnDrawerOpenedListener(MainContract.View mainActivity);

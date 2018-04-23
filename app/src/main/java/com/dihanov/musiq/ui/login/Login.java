@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +59,9 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @BindView(R.id.remember_me_checkbox)
     AppCompatCheckBox rememberMeCheckBox;
 
+    @BindView(R.id.sign_up)
+    TextView register;
+
     @Inject
     LoginContract.Presenter loginActivityPresenter;
 
@@ -70,6 +74,8 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+
+        register.setMovementMethod(LinkMovementMethod.getInstance());
         rememberMeCheckBox.setChecked(App.getSharedPreferences().getBoolean(Constants.REMEMBER_ME, false));
         loginActivityPresenter.takeView(Login.this);
     }
