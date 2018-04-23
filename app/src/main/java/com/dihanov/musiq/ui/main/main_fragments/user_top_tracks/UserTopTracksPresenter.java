@@ -90,6 +90,11 @@ public class UserTopTracksPresenter implements UserTopTracksContract.Presenter {
                     public void onNext(UserTopTracks userTopTracks) {
                         List<BarEntry> entries = new ArrayList<>();
                         List<String> labels = new ArrayList<>();
+
+                        if(userTopTracks == null || userTopTracks.getToptracks() == null || userTopTracks.getToptracks().getTrack() == null){
+                            return;
+                        }
+
                         List<Track> tracks = userTopTracks.getToptracks().getTrack();
                         int counter = 0;
 

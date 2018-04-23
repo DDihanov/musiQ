@@ -87,6 +87,9 @@ public class UserTopArtistsPresenter implements UserTopArtistsContract.Presenter
                     public void onNext(UserTopArtists userTopArtistsWrapper) {
                         List<BarEntry> entries = new ArrayList<>();
                         List<String> labels = new ArrayList<>();
+                        if(userTopArtistsWrapper == null || userTopArtistsWrapper.getTopartists() == null || userTopArtistsWrapper.getTopartists().getArtist() == null){
+                            return;
+                        }
                         List<Artist> artists = userTopArtistsWrapper.getTopartists().getArtist();
                         int counter = 0;
 

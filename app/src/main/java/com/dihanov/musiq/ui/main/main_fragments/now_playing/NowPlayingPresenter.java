@@ -118,7 +118,10 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
                             return;
                         }
 
-                        if(nowPlayingFragment == null){
+                        if(nowPlayingFragment == null ||
+                                recentTracksWrapper == null ||
+                                recentTracksWrapper.getRecenttracks() == null ||
+                                recentTracksWrapper.getRecenttracks().getTrack() == null){
                             return;
                         }
 
