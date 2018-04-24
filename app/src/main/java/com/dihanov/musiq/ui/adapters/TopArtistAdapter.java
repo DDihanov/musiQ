@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainPresenter;
@@ -59,6 +61,9 @@ public class TopArtistAdapter extends AbstractAdapter {
         Artist artist = topArtist.get(position);
         Glide.with(context.getApplicationContext())
                 .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
+                .apply(new RequestOptions().error(App.getAppContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                                .getPackageName())))
                 .transition(withCrossFade(2000))
                 .into(holder.getThumbnail());
         holder.getTitle().setText(artist.getName().toLowerCase());

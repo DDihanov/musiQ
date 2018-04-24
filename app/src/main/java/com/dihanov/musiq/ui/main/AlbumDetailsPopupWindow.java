@@ -17,7 +17,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.SpecificAlbum;
@@ -185,6 +187,9 @@ public class AlbumDetailsPopupWindow {
 
         Glide.with(activity)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
+                .apply(new RequestOptions().placeholder(App.getAppContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                                .getPackageName())))
                 .into(cover);
 
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;

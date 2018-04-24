@@ -146,4 +146,8 @@
     <string name="search_for_friends">search for friends</string>
     <string name="limit">limit:</string>
     <string name="register"><a href="https://www.last.fm/join">Or sign up</a></string>
+    <string name="track_unloved">Track unloved</string>
+    <string name="unlove_track_message">Unlove track?</string>
+    <string name="unlove_track_button">Unlove</string>
+    <string name="last_scrobbling_text">last scrobbled</string>
 </resources>

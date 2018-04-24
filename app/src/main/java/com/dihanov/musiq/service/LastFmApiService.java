@@ -6,7 +6,7 @@ import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.models.ArtistTopTags;
 import com.dihanov.musiq.models.ArtistTopTracks;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
-import com.dihanov.musiq.models.LovedTracks;
+import com.dihanov.musiq.models.UserLovedTracks;
 import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.SpecificAlbum;
@@ -56,7 +56,7 @@ public interface LastFmApiService{
     Observable<TopArtistsResult> chartTopArtists(@Query("limit") Integer limit);
 
     @GET(METHOD_CALL+"user.getlovedtracks")
-    Observable<LovedTracks> getUserLovedTracks(@Query("user") String username, @Query("limit") String limit);
+    Observable<UserLovedTracks> getUserLovedTracks(@Query("user") String username, @Query("limit") int limit);
 
     @GET(METHOD_CALL+"artist.gettoptracks")
     Observable<ArtistTopTracks> getArtistTopTracks(@Query("artist") String artist, @Query("limit") int limit);
@@ -98,4 +98,8 @@ public interface LastFmApiService{
     @FormUrlEncoded
     @POST(Config.LAST_FM_API_URL)
     Observable<Response> loveTrack(@Field("method") String trackLoveMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("sk") String sessionKey,@Field("format") String format);
+
+    @FormUrlEncoded
+    @POST(Config.LAST_FM_API_URL)
+    Observable<Response> unloveTrack(@Field("method") String trackUnloveMethod, @Field("artist") String artist, @Field("track") String track, @Field("api_key") String apiKey, @Field("api_sig") String apiSig, @Field("sk") String sessionKey,@Field("format") String format);
 }

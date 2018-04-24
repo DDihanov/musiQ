@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.User;
+import com.dihanov.musiq.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +59,9 @@ public class ProfileFriendsAdapter extends RecyclerView.Adapter<ProfileFriendsAd
             holder.friendCountry.setText(friend.getCountry());
         }
         Glide.with(context)
-                .load(friend.getImage().get(3).getText())
-                .apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000))
+                .load(friend.getImage().get(Constants.IMAGE_LARGE).getText())
+                .apply(RequestOptions.circleCropTransform().placeholder(context.getResources()
+                        .getIdentifier("ic_account_circle_black_24dp", "drawable", context.getPackageName()))).transition(withCrossFade(2000))
                 .into(holder.friendImage);
         holder.friendPlaycount.setText(context.getString(R.string.playcount) + " " + friend.getPlaycount());
         holder.friendUrl.setText(friend.getUrl());

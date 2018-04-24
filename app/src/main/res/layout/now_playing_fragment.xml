@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -75,6 +76,15 @@
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_favorite_black_48dp" />
 
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/recently_scrobbled"
                     style="@android:style/TextAppearance.Large"
@@ -87,22 +97,20 @@
                     android:text="@string/recentrly_scrobbled_text"
                     android:textAlignment="textStart"
                     android:visibility="visible" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recently_scrobbled_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollbars="vertical">
 
-            </RelativeLayout>
+                </android.support.v7.widget.RecyclerView>
 
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recently_scrobbled_recyclerview"
-                android:nestedScrollingEnabled="true"
-                android:clipToPadding="false"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/now_playing_fragment_layout">
-
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
 
 
     </android.support.v4.widget.NestedScrollView>

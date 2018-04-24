@@ -7,9 +7,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.dihanov.musiq.ui.settings.profile.user_bio.ProfileUserInfo;
 import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsInfo;
+import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksView;
 
 public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int TAB_COUNT = 2;
+    private static int TAB_COUNT = 3;
 
     public ProfileViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -22,6 +23,8 @@ public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
                 return ProfileUserInfo.newInstance();
             case 1:
                 return ProfileUserFriendsInfo.newInstance();
+            case 2:
+                return UserLovedTracksView.newInstance();
         }
         return null;
     }
@@ -39,6 +42,8 @@ public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
                 return ProfileUserInfo.TITLE;
             case 1:
                 return ProfileUserFriendsInfo.TITLE;
+            case 2:
+                return UserLovedTracksView.TITLE;
         }
         return null;
     }

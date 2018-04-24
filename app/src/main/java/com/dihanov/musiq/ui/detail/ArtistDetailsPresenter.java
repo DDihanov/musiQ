@@ -125,7 +125,9 @@ public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
 
         Glide.with(detailsActivity.getContext())
                 .load(profilePicUrl)
-                .apply(RequestOptions.circleCropTransform()).into(userAvatar);
+                .apply(RequestOptions.circleCropTransform().placeholder(App.getAppContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                                .getPackageName()))).into(userAvatar);
         usernameTextView.setText(detailsActivity.getContext().getString(R.string.logged_in_as) + " " + username);
         scrobbleCount.setText(detailsActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
 
@@ -144,7 +146,10 @@ public class ArtistDetailsPresenter implements ArtistDetailsContract.Presenter {
 
         Glide.with(detailsActivity.getContext())
                 .load(profilePicUrl)
-                .apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000)).into(userAvatar);
+                .apply(RequestOptions.circleCropTransform().placeholder(detailsActivity.getContext().getResources()
+                        .getIdentifier("ic_account_circle_black_24dp", "drawable", detailsActivity.getContext()
+                                .getPackageName())))
+                .transition(withCrossFade(2000)).into(userAvatar);
         usernameTextView.setText(detailsActivity.getContext().getString(R.string.logged_in_as) + " " + username);
         scrobbleCount.setText(detailsActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
     }

@@ -14,6 +14,7 @@ import com.dihanov.musiq.di.modules.NowPlayingFragmentModule;
 import com.dihanov.musiq.di.modules.ProfileModule;
 import com.dihanov.musiq.di.modules.ProfileUserFriendsModule;
 import com.dihanov.musiq.di.modules.ProfileUserInfoModule;
+import com.dihanov.musiq.di.modules.UserLovedTracksModule;
 import com.dihanov.musiq.di.modules.UserTopArtistsFragmentModule;
 import com.dihanov.musiq.di.modules.UserTopTracksFragmentModule;
 import com.dihanov.musiq.service.MediaControllerListenerService;
@@ -33,6 +34,7 @@ import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
 import com.dihanov.musiq.ui.settings.profile.Profile;
 import com.dihanov.musiq.ui.settings.profile.user_bio.ProfileUserInfo;
 import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsInfo;
+import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksView;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -110,4 +112,8 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = ProfileUserFriendsModule.class)
     abstract ProfileUserFriendsInfo bindProfileUserFriendsInfo();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = UserLovedTracksModule.class)
+    abstract UserLovedTracksView bindUserLovedTracks();
 }

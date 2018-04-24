@@ -149,7 +149,10 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
         Glide.with(mainActivity.getContext())
                 .load(profilePicUrl)
-                .apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000)).into(userAvatar);
+                .apply(RequestOptions.circleCropTransform().placeholder(mainActivity.getContext().getResources()
+                        .getIdentifier("ic_account_circle_black_24dp", "drawable", mainActivity.getContext()
+                                .getPackageName())))
+                .transition(withCrossFade(2000)).into(userAvatar);
         usernameTextView.setText(mainActivity.getContext().getString(R.string.logged_in_as) + " " + username);
         scrobbleCount.setText(mainActivity.getContext().getString(R.string.scrobbles) + " " + playcount);
 

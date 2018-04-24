@@ -94,7 +94,8 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
 
     @Override
     public void setUserImage(String url) {
-        Glide.with(this).load(url).apply(RequestOptions.circleCropTransform()).transition(withCrossFade(2000)).into(profileImage);
+        Glide.with(this).load(url).apply(RequestOptions.circleCropTransform().placeholder(this.getResources()
+                .getIdentifier("ic_account_circle_black_24dp", "drawable", this.getPackageName()))).transition(withCrossFade(2000)).into(profileImage);
     }
 
     private void initCollapsingToolbar() {

@@ -48,13 +48,35 @@ public class Track {
     private Date date;
     @SerializedName("image")
     @Expose
-    private List<Image> image = null;
+    private List<Image_> image = null;
+    @SerializedName("mbid")
+    @Expose
+    private String mbid;
+    @SerializedName("album")
+    @Expose
+    private Album album;
 
-    public List<Image> getImage() {
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public String getMbid() {
+        return mbid;
+    }
+
+    public void setMbid(String mbid) {
+        this.mbid = mbid;
+    }
+
+    public List<Image_> getImage() {
         return image;
     }
 
-    public void setImage(List<Image> image) {
+    public void setImage(List<Image_> image) {
         this.image = image;
     }
 

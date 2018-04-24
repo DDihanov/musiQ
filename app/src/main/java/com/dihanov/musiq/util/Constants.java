@@ -27,6 +27,7 @@ public class Constants {
     public static final String TRACK_SCROBBLE_METHOD = "track.scrobble";
     public static final String UPDATE_NOW_PLAYING_METHOD = "track.updateNowPlaying";
     public static final String LOVE_TRACK_METHOD = "track.love";
+    public static final String UNLOVE_TRACK_METHOD = "track.unlove";
     public static final String NO_NETWORK_CONN_FOUND = "ooops! i couldn't find an internet connection!";
     public static final long NETWORK_CHECK_DELAY = 10000;
     public static final String REMEMBER_ME = "remember me";

@@ -33,6 +33,25 @@ public class Attr {
     @SerializedName("rank")
     @Expose
     private String rank;
+    @SerializedName("nowplaying")
+    @Expose
+    private String nowplaying;
+
+    public String getNowplaying() {
+        return nowplaying;
+    }
+
+    public void setNowplaying(String nowplaying) {
+        this.nowplaying = nowplaying;
+    }
+
+    public String get_for() {
+        return _for;
+    }
+
+    public void set_for(String _for) {
+        this._for = _for;
+    }
 
     public Integer getAccepted() {
         return accepted;

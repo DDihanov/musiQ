@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
@@ -253,7 +254,9 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
 
     private void initArtistImage() {
-        Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText()).transition(withCrossFade(2000)).into(this.artistImage);
+        Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText())
+                .apply(new RequestOptions().placeholder(this.getResources()
+                        .getIdentifier("ic_missing_image", "drawable", this.getPackageName()))).transition(withCrossFade(2000)).into(this.artistImage);
     }
 
     @Override

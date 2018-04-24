@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import dagger.android.support.DaggerFragment;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class ProfileUserFriendsInfo extends DaggerFragment implements ProfileUserFriendsContract.View {
     public static final String TITLE = "friends";
@@ -46,9 +45,6 @@ public class ProfileUserFriendsInfo extends DaggerFragment implements ProfileUse
 
     @BindView(R.id.profile_friends_search)
     EditText friendsSearchBar;
-
-    private final String TAG = getClass().getSimpleName();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public static ProfileUserFriendsInfo newInstance() {
         Bundle args = new Bundle();

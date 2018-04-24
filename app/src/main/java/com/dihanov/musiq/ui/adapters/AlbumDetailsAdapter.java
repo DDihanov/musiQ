@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.BaseView;
@@ -17,6 +19,8 @@ import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.Iterator;
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Dimitar Dihanov on 19.9.2017 г..
@@ -64,6 +68,10 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         // loading album cover using Glide library
         Glide.with(context)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
+                .apply(new RequestOptions().placeholder(App.getAppContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                                .getPackageName())))
+                .transition(withCrossFade(1000))
                 .into(holder.getThumbnail());
 
         ((AlbumViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {

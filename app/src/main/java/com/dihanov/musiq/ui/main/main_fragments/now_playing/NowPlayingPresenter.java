@@ -128,7 +128,7 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
                         List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
 
                         RecentlyScrobbledAdapter adapter =
-                                new RecentlyScrobbledAdapter(result);
+                                new RecentlyScrobbledAdapter(result, nowPlayingFragment.getContext());
 
 
                         nowPlayingFragment.setRecyclerViewAdapter(adapter);

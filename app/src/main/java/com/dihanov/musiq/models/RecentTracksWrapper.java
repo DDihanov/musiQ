@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class RecentTracksWrapper {
-
     @SerializedName("recenttracks")
     @Expose
     private Recenttracks recenttracks;
