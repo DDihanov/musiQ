@@ -7,7 +7,8 @@ import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.interfaces.SpecificAlbumClickable;
 import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
 import com.dihanov.musiq.interfaces.ToastShowable;
-import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.interfaces.TrackLovable;
+import com.dihanov.musiq.interfaces.TrackUnlovable;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
@@ -25,9 +26,7 @@ public interface NowPlayingContract {
         void showToast(Context context, String message);
     }
 
-    interface Presenter extends BasePresenter<View>, SpecificAlbumClickable, SpecificArtistSearchable {
-        void loveTrack(Scrobble scrobble);
-
+    interface Presenter extends BasePresenter<View>, SpecificAlbumClickable, SpecificArtistSearchable, TrackLovable, TrackUnlovable {
         void loadRecentScrobbles(NowPlayingContract.View nowPlayingFragment);
     }
 }

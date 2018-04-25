@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.settings.profile.user_loved_tracks;
 
 import com.dihanov.musiq.interfaces.ToastShowable;
+import com.dihanov.musiq.interfaces.TrackUnlovable;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
@@ -16,10 +17,8 @@ public interface UserLovedTracksContract {
         void hideProgressBar();
     }
 
-    interface Presenter extends BasePresenter<View>{
+    interface Presenter extends BasePresenter<View>, TrackUnlovable{
         void fetchLovedTracks(int limit);
-
-        void unloveTrack(String artistName, String trackName);
     }
 }
 

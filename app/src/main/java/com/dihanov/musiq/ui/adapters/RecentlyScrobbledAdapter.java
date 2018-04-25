@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.adapters;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Track;
+import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingContract;
 import com.dihanov.musiq.util.Constants;
 
 import java.text.DateFormat;
@@ -29,11 +31,15 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrobbledAdapter.ViewHolder> {
     private List<Track> scrobbles;
-    private Context context;
+    private Activity context;
+    private AlertDialog.Builder builder;
+    private NowPlayingContract.Presenter presenter;
 
-    public RecentlyScrobbledAdapter(List<Track> scrobbles, Context context) {
+    public RecentlyScrobbledAdapter(List<Track> scrobbles, Activity context, NowPlayingContract.Presenter presenter) {
         this.scrobbles = scrobbles;
         this.context = context;
+        this.builder = new AlertDialog.Builder(context);
+        this.presenter = presenter;
     }
 
     @Override
@@ -54,7 +60,7 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
             return;
         }
         if (track.getDate() == null) {
-            if(track.getAttr() == null || track.getAttr().getNowplaying() == null){
+            if (track.getAttr() == null || track.getAttr().getNowplaying() == null) {
                 return;
             }
             holder.time.setText(R.string.last_scrobbling_text);
@@ -71,11 +77,53 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
                 .apply(RequestOptions.circleCropTransform().placeholder(context.getResources()
                         .getIdentifier("ic_music_note_black_24dp", "drawable", context.getPackageName())))
                 .transition(withCrossFade(2000))
-                    .into(holder.thumbnail);
+                .into(holder.thumbnail);
         if (!track.getLoved().equals("0")) {
             holder.loved.setVisibility(View.VISIBLE);
         } else {
             holder.loved.setVisibility(View.INVISIBLE);
+        }
+        holder.scrobble.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (holder.loved.getVisibility() == View.VISIBLE) {
+                    builder.setTitle(context.getString(R.string.note))
+                            .setMessage(context.getString(R.string.unlove_track_message))
+                            .setNeutralButton(context.getString(R.string.canc), (dialog, which) -> {
+                                return;
+                            })
+                            .setPositiveButton(context.getString(R.string.unlove_track_button), (dialog, which) -> {
+                                presenter.unloveTrack(track.getArtist().getName(),
+                                        track.getName());
+                                holder.loved.setVisibility(View.INVISIBLE);
+                                track.setLoved("0");
+                                notifyDataSetChanged();
+                            }).create().show();
+
+                } else {
+                    builder.setTitle(context.getString(R.string.note))
+                            .setMessage(context.getString(R.string.love_track_message))
+                            .setNeutralButton(context.getString(R.string.canc), (dialog, which) -> {
+                                return;
+                            })
+                            .setPositiveButton(context.getString(R.string.love_track_button), (dialog, which) -> {
+                                presenter.loveTrack(track.getArtist().getName(), track.getName());
+                                holder.loved.setVisibility(View.VISIBLE);
+                                track.setLoved("1");
+                                notifyDataSetChanged();
+                            }).create().show();
+                }
+
+                return true;
+            }
+        });
+    }
+
+    public void loveNowPlaying(String nowPlayingArtist, String nowPlayingTrackName) {
+        Track nowPlaying = scrobbles.get(0);
+        if (nowPlaying.getArtist().getName().equals(nowPlayingArtist) && nowPlaying.getName().equals(nowPlayingTrackName)) {
+            nowPlaying.setLoved("1");
+            notifyDataSetChanged();
         }
     }
 

@@ -20,6 +20,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
 import com.dihanov.musiq.util.Constants;
@@ -133,7 +134,9 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
 
     @OnClick(R.id.love_track_full)
     void loveTrack(View view) {
-        nowPlayingFragmentPresenter.loveTrack(scrobbler.getNowPlaying());
+        Scrobble nowPlaying = scrobbler.getNowPlaying();
+        nowPlayingFragmentPresenter.loveTrack(nowPlaying.getArtistName(), nowPlaying.getTrackName());
+        ((RecentlyScrobbledAdapter) recentTracks.getAdapter()).loveNowPlaying(nowPlaying.getArtistName(), nowPlaying.getTrackName());
     }
 
     @Override

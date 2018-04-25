@@ -150,4 +150,6 @@
     <string name="unlove_track_message">Unlove track?</string>
     <string name="unlove_track_button">Unlove</string>
     <string name="last_scrobbling_text">last scrobbled</string>
+    <string name="love_track_message">Love track?</string>
+    <string name="love_track_button">Love</string>
 </resources>

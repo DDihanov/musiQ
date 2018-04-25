@@ -52,7 +52,9 @@ public class ProfileUserFriendsPresenter implements ProfileUserFriendsContract.P
                     @Override
                     public void onNext(UserFriends userFriends) {
                         if(userFriends != null){
-                            if(userFriends.getFriends() != null && !userFriends.getFriends().getUser().isEmpty()){
+                            if(userFriends.getFriends() != null
+                                    && userFriends.getFriends().getUser() != null
+                                    && !userFriends.getFriends().getUser().isEmpty()){
                                 view.loadFriends(userFriends.getFriends().getUser());
                             }
                         }

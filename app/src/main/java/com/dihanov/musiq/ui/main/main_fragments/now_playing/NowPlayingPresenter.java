@@ -3,19 +3,16 @@ package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 import android.view.View;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.models.RecentTracksWrapper;
-import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.TrackLoveManager;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.List;
@@ -42,6 +39,7 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private NowPlayingContract.View nowPlayingFragment;
+    private TrackLoveManager trackLoveManager;
 
     @Inject
     public NowPlayingPresenter(LastFmApiClient lastFmApiClient) {
@@ -52,6 +50,7 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
     @Override
     public void takeView(NowPlayingContract.View view) {
         this.nowPlayingFragment = view;
+        this.trackLoveManager = new TrackLoveManager(lastFmApiClient, view);
     }
 
     @Override
@@ -60,44 +59,8 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
     }
 
     @Override
-    public void loveTrack(Scrobble scrobble) {
-        String apiSig = HelperMethods.generateSig(Constants.ARTIST, scrobble.getArtistName(),
-                Constants.TRACK, scrobble.getTrackName(),
-                Constants.METHOD, Constants.LOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .loveTrack(Constants.LOVE_TRACK_METHOD,
-                        scrobble.getArtistName(),
-                        scrobble.getTrackName(),
-                        Config.API_KEY,
-                        apiSig,
-                        App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if(response != null){
-                            nowPlayingFragment.showToast(nowPlayingFragment.getContext(), nowPlayingFragment.getContext().getString(R.string.track_loved));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(NowPlayingPresenter.class.getSimpleName(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+    public void loveTrack(String artistName, String trackName) {
+       this.trackLoveManager.loveTrack(artistName, trackName);
     }
 
     @Override
@@ -128,7 +91,7 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
                         List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
 
                         RecentlyScrobbledAdapter adapter =
-                                new RecentlyScrobbledAdapter(result, nowPlayingFragment.getContext());
+                                new RecentlyScrobbledAdapter(result, nowPlayingFragment.getMainActivity(), NowPlayingPresenter.this);
 
 
                         nowPlayingFragment.setRecyclerViewAdapter(adapter);
@@ -158,5 +121,10 @@ public class NowPlayingPresenter extends ArtistDetailsIntentShowableImpl impleme
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(click -> this.showArtistDetailsIntent(artistName, nowPlayingFragment.getMainActivity()));
+    }
+
+    @Override
+    public void unloveTrack(String artistName, String trackName) {
+        this.trackLoveManager.unloveTrack(artistName, trackName);
     }
 }

@@ -1,14 +1,11 @@
 package com.dihanov.musiq.ui.settings.profile.user_loved_tracks;
 
-import com.dihanov.musiq.R;
-import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.UserLovedTracks;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.TrackLoveManager;
 
 import javax.inject.Inject;
 
@@ -24,6 +21,7 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
     private LastFmApiClient lastFmApiClient;
     private UserLovedTracksContract.View view;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private TrackLoveManager trackLoveManager;
 
     @Inject
     public UserLovedTracksPresenter(LastFmApiClient lastFmApiClient) {
@@ -65,49 +63,13 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
 
     @Override
     public void unloveTrack(String artistName, String trackName) {
-        String apiSig = HelperMethods.generateSig(Constants.ARTIST, artistName,
-                Constants.TRACK, trackName,
-                Constants.METHOD, Constants.UNLOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .loveTrack(Constants.UNLOVE_TRACK_METHOD,
-                        artistName,
-                        trackName,
-                        Config.API_KEY,
-                        apiSig,
-                        App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if (response != null) {
-                            view.showToast(App.getAppContext(), App.getAppContext().getString(R.string.track_loved));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(view.getClass().getSimpleName(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+        this.trackLoveManager.unloveTrack(artistName, trackName);
     }
 
     @Override
     public void takeView(UserLovedTracksContract.View view) {
         this.view = view;
+        this.trackLoveManager = new TrackLoveManager(lastFmApiClient, view);
     }
 
     @Override
