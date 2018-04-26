@@ -103,6 +103,10 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
                             @Override
                             public void onNext(UserInfo userInfo) {
+                                if (userInfo == null || userInfo.getUser() == null) {
+                                    return;
+                                }
+
                                 String profilePicUrl = userInfo.getUser().getImage().get(Constants.IMAGE_LARGE).getText();
                                 String playcount = userInfo.getUser().getPlaycount();
 
@@ -201,7 +205,7 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
                                 MainPresenter.this,
                                 true);
                         mainActivity.getRecyclerView().setAdapter(topArtistAdapter);
-                        if(!artists.isEmpty()){
+                        if (!artists.isEmpty()) {
                             mainActivity.getRecyclerView().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
