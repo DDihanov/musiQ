@@ -158,9 +158,10 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
             @Override
             protected void onPostExecute(Artist deserializedArtist) {
+                String name = (deserializedArtist.getName() == null) ? deserializedArtist.getText() : deserializedArtist.getName();
                 artist = deserializedArtist;
                 favoriteArtistStar.setClickable(true);
-                setArtistTitle(artist.getName());
+                setArtistTitle(name);
                 initArtistImage();
                 hideProgressBar();
                 initViewPager();

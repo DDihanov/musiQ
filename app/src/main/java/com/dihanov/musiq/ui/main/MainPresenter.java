@@ -199,6 +199,9 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
                     @Override
                     public void onNext(UserTopArtists userTopArtists) {
+                        if (userTopArtists == null || userTopArtists.getTopartists() == null || userTopArtists.getTopartists().getArtist() == null) {
+                            return;
+                        }
                         List<Artist> artists = userTopArtists.getTopartists().getArtist();
                         TopArtistAdapter topArtistAdapter = new TopArtistAdapter(mainActivity,
                                 (ArrayList<Artist>) artists,

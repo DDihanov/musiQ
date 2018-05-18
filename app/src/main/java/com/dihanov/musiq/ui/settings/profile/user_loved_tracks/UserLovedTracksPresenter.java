@@ -43,6 +43,9 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
 
                     @Override
                     public void onNext(UserLovedTracks userLovedTracks) {
+                        if (userLovedTracks == null || userLovedTracks.getLovedtracks() == null) {
+                            return;
+                        }
                         view.loadLovedTracks(userLovedTracks.getLovedtracks().getTrack());
                     }
 

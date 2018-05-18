@@ -143,6 +143,9 @@ public class AlbumDetailsPopupWindow {
     }
 
     private void showAlbumDetails(Activity activity, Album album, int mainWindowId) {
+        if (album == null || album.getTracks() == null || album.getWiki() == null) {
+            return;
+        }
         CoordinatorLayout mainLayout = (CoordinatorLayout) activity.findViewById(mainWindowId);
 
         LayoutInflater inflater = LayoutInflater.from(activity);
