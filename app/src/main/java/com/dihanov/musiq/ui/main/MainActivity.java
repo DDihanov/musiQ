@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -59,7 +60,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     Button dummyButton;
 
     @BindView(R.id.bird)
-    TextView bird;
+    ImageView bird;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;

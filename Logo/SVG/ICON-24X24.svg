@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g>
+	<g>
+		<g>
+			<defs>
+				<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="2.131" y="1.313" width="19.821" height="19.821">
+					
+						<feColorMatrix  type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0" color-interpolation-filters="sRGB" result="source"/>
+					<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+					<feBlend  in="source" in2="back" mode="normal"/>
+				</filter>
+			</defs>
+			<mask maskUnits="userSpaceOnUse" x="2.131" y="1.313" width="19.821" height="19.821" id="SVGID_1_">
+				<g filter="url(#Adobe_OpacityMaskFilter)">
+					<circle fill="#FFFFFF" cx="12.115" cy="11.224" r="9.227"/>
+					<rect x="1.716" y="11.172" fill="#FFFFFF" width="20.755" height="10.481"/>
+				</g>
+			</mask>
+			<circle mask="url(#SVGID_1_)" fill="#00A287" cx="12.041" cy="11.224" r="9.91"/>
+			<g>
+				<path fill="#00A287" d="M21,8.52c1,0,2.781,1.245,2.781,2.781S22,14.083,21,14.083V8.52z"/>
+			</g>
+			<g>
+				<path fill="#00A287" d="M3,8.52c-1,0-2.781,1.245-2.781,2.781S2,14.083,3,14.083V8.52z"/>
+			</g>
+		</g>
+		<g>
+			<defs>
+				<filter id="Adobe_OpacityMaskFilter_1_" filterUnits="userSpaceOnUse" x="3.687" y="2.87" width="16.708" height="16.708">
+					
+						<feColorMatrix  type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0" color-interpolation-filters="sRGB" result="source"/>
+					<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+					<feBlend  in="source" in2="back" mode="normal"/>
+				</filter>
+			</defs>
+			<mask maskUnits="userSpaceOnUse" x="3.687" y="2.87" width="16.708" height="16.708" id="SVGID_2_">
+				<g filter="url(#Adobe_OpacityMaskFilter_1_)">
+					<circle fill="#FFFFFF" cx="12.041" cy="11.224" r="5.526"/>
+				</g>
+			</mask>
+			<circle mask="url(#SVGID_2_)" fill="#00A287" cx="12.041" cy="11.224" r="8.354"/>
+			<defs>
+				<filter id="Adobe_OpacityMaskFilter_2_" filterUnits="userSpaceOnUse" x="9.589" y="18.258" width="9.762" height="3.937">
+					
+						<feColorMatrix  type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0" color-interpolation-filters="sRGB" result="source"/>
+					<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+					<feBlend  in="source" in2="back" mode="normal"/>
+				</filter>
+			</defs>
+			<mask maskUnits="userSpaceOnUse" x="9.589" y="18.258" width="9.762" height="3.937" id="SVGID_3_">
+				<g filter="url(#Adobe_OpacityMaskFilter_2_)">
+					<polygon fill="#FFFFFF" points="19.186,19.95 17.581,22.241 16.059,20.631 19.533,19.315 					"/>
+				</g>
+			</mask>
+			<path mask="url(#SVGID_3_)" fill="#00A287" d="M13.821,18.258c0.258,0.076,0.489,0.159,0.694,0.25
+				c0.205,0.091,0.531,0.254,0.978,0.489c0.447,0.235,0.872,0.402,1.274,0.501c0.402,0.099,0.777,0.148,1.126,0.148
+				c0.288,0,0.538-0.015,0.751-0.046c0.212-0.031,0.447-0.099,0.705-0.205l-1.82,2.799c-0.076,0-0.167,0-0.273,0
+				c-0.106,0-0.19,0-0.25,0c-1.335,0-2.507-0.3-3.516-0.899c-1.009-0.6-1.794-1.058-2.355-1.377c-0.561-0.319-1.077-0.6-1.547-0.842
+				L13.821,18.258z"/>
+		</g>
+	</g>
+	<defs>
+		<filter id="Adobe_OpacityMaskFilter_3_" filterUnits="userSpaceOnUse" x="9.708" y="7.611" width="6.358" height="7.25">
+			
+				<feColorMatrix  type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0" color-interpolation-filters="sRGB" result="source"/>
+			<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+			<feBlend  in="source" in2="back" mode="normal"/>
+		</filter>
+	</defs>
+	<mask maskUnits="userSpaceOnUse" x="9.708" y="7.611" width="6.358" height="7.25" id="SVGID_4_">
+		<g filter="url(#Adobe_OpacityMaskFilter_3_)">
+			<g>
+				<rect x="10.516" y="9.428" fill="#FFFFFF" width="2.271" height="0.175"/>
+				<rect x="10.516" y="12.922" fill="#FFFFFF" width="2.271" height="0.175"/>
+				<rect x="10.866" y="10.302" fill="#FFFFFF" width="3.144" height="0.175"/>
+				<rect x="10.866" y="12.048" fill="#FFFFFF" width="3.144" height="0.175"/>
+				<rect x="9.992" y="11.175" fill="#FFFFFF" width="3.144" height="0.175"/>
+			</g>
+		</g>
+	</mask>
+	<g mask="url(#SVGID_4_)">
+		<path fill="#00A287" d="M15.915,11.496l-3.627,2.094l-0.483,0.279l-1.645,0.95c-0.136,0.078-0.255,0.026-0.301,0
+			c-0.045-0.026-0.15-0.104-0.15-0.261V7.913c0-0.157,0.105-0.234,0.15-0.261c0.027-0.016,0.082-0.041,0.152-0.041
+			c0.045,0,0.095,0.011,0.149,0.041l1.806,1.043l3.949,2.28c0.136,0.078,0.15,0.208,0.15,0.26
+			C16.066,11.288,16.051,11.418,15.915,11.496z"/>
+	</g>
+</g>
+</svg>

@@ -13,17 +13,17 @@
     tools:context="com.dihanov.musiq.ui.login.Login">
 
 
-    <TextView
+    <ImageView
         android:id="@+id/splash_logo"
-        android:layout_width="112dp"
-        android:layout_height="150dp"
+        android:src="@drawable/ic_launcher_icon_white"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
-        android:text="@string/app_bird"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="100sp"
@@ -32,7 +32,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.441"
-        tools:text="@string/app_bird" />
+        app:layout_constraintVertical_bias="0.441" />
 
 </android.support.constraint.ConstraintLayout>

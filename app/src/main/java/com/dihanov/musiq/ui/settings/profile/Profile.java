@@ -56,7 +56,7 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
     ProgressBar progressBar;
 
     @BindView(R.id.profile_bird)
-    TextView bird;
+    ImageView bird;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

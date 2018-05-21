@@ -101,7 +101,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     ProgressBar progressBar;
 
     @BindView(R.id.artist_details_bird)
-    TextView bird;
+    ImageView bird;
 
     private TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 

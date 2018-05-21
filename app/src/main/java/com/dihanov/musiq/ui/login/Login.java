@@ -13,6 +13,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +51,8 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @BindView(R.id.continue_without_sign_in)
     TextView continueWithoutLogin;
 
-    @BindView(R.id.login_bird)
-    TextView logo;
+    @BindView(R.id.login_logo)
+    ImageView logo;
 
     @BindView(R.id.login_progress)
     ProgressBar progressBar;

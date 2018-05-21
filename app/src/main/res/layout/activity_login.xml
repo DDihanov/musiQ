@@ -161,8 +161,9 @@
     </android.support.constraint.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/login_bird"
+    <ImageView
+        android:id="@+id/login_logo"
+        android:src="@drawable/ic_launcher_icon_white"
         android:layout_width="70dp"
         android:layout_height="80dp"
         android:layout_alignParentEnd="true"
@@ -172,7 +173,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="@string/app_bird"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="60sp"
@@ -180,8 +180,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="@string/app_bird" />
+        app:layout_constraintVertical_bias="0.0"/>
 
 
     <!-- Login progress -->

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
@@ -33,7 +34,7 @@ public class SplashScreen extends AppCompatActivity {
     private AlertDialog enableNotificationListenerAlertDialog;
 
     @BindView(R.id.splash_logo)
-    TextView splashLogo;
+    ImageView splashLogo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
