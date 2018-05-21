@@ -3,7 +3,7 @@ a musical encyclopedia
 
 <a href='https://play.google.com/store/apps/details?id=com.dihanov.musiq&utm_source=github&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="300"/></a>
 
-Special thanks to https://github.com/gabynnette for the design of the app icons, logos and Google Play Store banner, much appreciated!
+# Special thanks to https://github.com/gabynnette for the design of the app icons, logos and Google Play Store banner, much appreciated!
 
 This application is designed using the MVP pattern.
 The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:
