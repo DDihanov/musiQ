@@ -35,6 +35,8 @@ import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
 import com.dihanov.musiq.util.SettingsManager;
 
+import org.codechimp.apprater.AppRater;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -104,6 +106,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout_main);
         ButterKnife.bind(this);
+        AppRater.setPackageName("com.dihanov.musiq");
+        AppRater.app_launched(this, 1, 2);
+        AppRater.setVersionCodeCheckEnabled(true);
+
 
         if (savedInstanceState != null) {
             this.lastSearch = savedInstanceState.getString(TAG_LAST_SEARCH);
