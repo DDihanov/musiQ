@@ -68,7 +68,7 @@ public class ArtistSpecificsTopTracksPresenter implements ArtistSpecificsTopTrac
     @Override
     public void loadArtistTopTracks(ArtistSpecificsTopTracksContract.View view) {
 
-        if(artist == null && artist.getName() == null){
+        if(artist == null || artist.getName() == null){
             return;
         }
 

@@ -135,7 +135,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     @OnClick(R.id.love_track_full)
     void loveTrack(View view) {
         Scrobble nowPlaying = scrobbler.getNowPlaying();
-        if (nowPlaying == null) {
+        if (nowPlaying == null || nowPlaying.getArtistName() == null || nowPlaying.getTrackName() == null) {
             return;
         }
         nowPlayingFragmentPresenter.loveTrack(nowPlaying.getArtistName(), nowPlaying.getTrackName());

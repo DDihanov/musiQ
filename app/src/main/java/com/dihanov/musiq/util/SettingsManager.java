@@ -87,7 +87,7 @@ public class SettingsManager {
         }
     }
 
-    private void openProfile() {
+    private synchronized void openProfile() {
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
 
         if (username.isEmpty() || username == "") {

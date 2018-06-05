@@ -120,6 +120,9 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
     }
 
     public void loveNowPlaying(String nowPlayingArtist, String nowPlayingTrackName) {
+        if (scrobbles.isEmpty() || scrobbles.size() == 0){
+            return;
+        }
         Track nowPlaying = scrobbles.get(0);
         if (nowPlaying.getArtist().getName().equals(nowPlayingArtist) && nowPlaying.getName().equals(nowPlayingTrackName)) {
             nowPlaying.setLoved("1");

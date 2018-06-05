@@ -45,7 +45,14 @@ public class ProfileUserInfoPresenter implements ProfileUserInfoContract.Present
 
                     @Override
                     public void onNext(UserInfo userInfo) {
-                        if (userInfo != null && userInfo.getUser() != null) {
+                        //let's see you crash now >:(
+                        if (userInfo != null && userInfo.getUser() != null &&
+                                userInfo.getUser().getRealname() != null &&
+                                userInfo.getUser().getUrl() != null &&
+                                userInfo.getUser().getCountry() != null &&
+                                userInfo.getUser().getAge() != null &&
+                                userInfo.getUser().getPlaycount() != null &&
+                                userInfo.getUser().getRegistered().getUnixtime() != null) {
                             view.loadUserBio(userInfo.getUser().getRealname(),
                                     userInfo.getUser().getUrl(),
                                     userInfo.getUser().getCountry(),
