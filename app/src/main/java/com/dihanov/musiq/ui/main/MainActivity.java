@@ -107,7 +107,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         setContentView(R.layout.drawer_layout_main);
         ButterKnife.bind(this);
         AppRater.setPackageName("com.dihanov.musiq");
-        AppRater.app_launched(this, 1, 2);
+        AppRater.app_launched(this, 1, 1);
         AppRater.setVersionCodeCheckEnabled(true);
 
 
