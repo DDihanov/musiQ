@@ -1,8 +1,8 @@
 package com.dihanov.musiq.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -23,15 +23,15 @@ import com.dihanov.musiq.ui.settings.profile.Profile;
 
 public class SettingsManager {
     private Activity activity;
-    private AlertDialog.Builder alertDialogBuilder;
 
     public SettingsManager(Activity activity) {
         this.activity = activity;
-        this.alertDialogBuilder = new AlertDialog.Builder(activity);
     }
 
     private void openAbout() {
-        View layout = activity.getLayoutInflater().inflate(R.layout.about_layout, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+
+        View layout = activity.getLayoutInflater().inflate(R.layout.about_layout, null, false);
         TextView aboutMessage = layout.findViewById(R.id.about_message);
         SpannableString s =
                 new SpannableString(String.format(activity.getString(R.string.about_message), Constants.APP_VESRION));
@@ -40,13 +40,13 @@ public class SettingsManager {
         aboutMessage.setText(s);
         alertDialogBuilder.setTitle(R.string.about);
         if (!activity.isFinishing()) {
-            alertDialogBuilder
+            final AlertDialog alertDialog = alertDialogBuilder
                     .setView(layout)
                     .setCancelable(true)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setPositiveButton(R.string.dialog_action_dismiss, null)
-                    .create()
-                    .show();
+                    .create();
+            alertDialog.show();
         }
     }
 
@@ -87,19 +87,20 @@ public class SettingsManager {
         }
     }
 
-    private synchronized void openProfile() {
+    private void openProfile() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
 
-        if (username.isEmpty() || username == "") {
+        if (username.isEmpty() || username == "" && !activity.isFinishing()) {
             alertDialogBuilder.setCancelable(true);
             alertDialogBuilder.setTitle(activity.getString(R.string.note))
                     .setMessage(activity.getString(R.string.log_in_to_use_feature))
                     .setNeutralButton(activity.getString(R.string.dialog_action_dismiss), (dialog, which) -> {
                         dialog.dismiss();
                     });
-            if (!activity.isFinishing()) {
-                alertDialogBuilder.create().show();
-            }
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
             return;
         }
 

@@ -54,7 +54,8 @@ public class ProfileUserFriendsPresenter implements ProfileUserFriendsContract.P
                         if(userFriends != null){
                             if(userFriends.getFriends() != null
                                     && userFriends.getFriends().getUser() != null
-                                    && !userFriends.getFriends().getUser().isEmpty()){
+                                    && !userFriends.getFriends().getUser().isEmpty()
+                                    && view != null){
                                 view.loadFriends(userFriends.getFriends().getUser());
                             }
                         }
