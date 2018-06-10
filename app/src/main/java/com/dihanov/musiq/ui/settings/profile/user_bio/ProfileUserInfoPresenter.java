@@ -46,7 +46,7 @@ public class ProfileUserInfoPresenter implements ProfileUserInfoContract.Present
                     @Override
                     public void onNext(UserInfo userInfo) {
                         //let's see you crash now >:(
-                        if (userInfo != null && userInfo.getUser() != null &&
+                        if (view != null && userInfo != null && userInfo.getUser() != null &&
                                 userInfo.getUser().getRealname() != null &&
                                 userInfo.getUser().getUrl() != null &&
                                 userInfo.getUser().getCountry() != null &&
@@ -64,14 +64,18 @@ public class ProfileUserInfoPresenter implements ProfileUserInfoContract.Present
 
                     @Override
                     public void onError(Throwable e) {
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                         AppLog.log(TAG, e.getMessage());
                         compositeDisposable.clear();
                     }
 
                     @Override
                     public void onComplete() {
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                         compositeDisposable.clear();
                     }
                 });

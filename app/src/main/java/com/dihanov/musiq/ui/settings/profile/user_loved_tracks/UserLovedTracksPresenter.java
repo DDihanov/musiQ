@@ -43,7 +43,10 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
 
                     @Override
                     public void onNext(UserLovedTracks userLovedTracks) {
-                        if (userLovedTracks == null || userLovedTracks.getLovedtracks() == null || userLovedTracks.getLovedtracks().getTrack() == null) {
+                        if (userLovedTracks == null ||
+                                userLovedTracks.getLovedtracks() == null ||
+                                userLovedTracks.getLovedtracks().getTrack() == null
+                                || view == null) {
                             return;
                         }
                         view.loadLovedTracks(userLovedTracks.getLovedtracks().getTrack());
@@ -53,13 +56,17 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
                     public void onError(Throwable e) {
                         compositeDisposable.clear();
                         AppLog.log(TAG, e.getMessage());
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
                         compositeDisposable.clear();
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                     }
                 });
     }

@@ -64,13 +64,17 @@ public class ProfileUserFriendsPresenter implements ProfileUserFriendsContract.P
                     @Override
                     public void onError(Throwable e) {
                         AppLog.log(TAG, e.getMessage());
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                         compositeDisposable.clear();
                     }
 
                     @Override
                     public void onComplete() {
-                        view.hideProgressBar();
+                        if (view != null){
+                            view.hideProgressBar();
+                        }
                         compositeDisposable.clear();
                     }
                 });

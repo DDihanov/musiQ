@@ -103,9 +103,10 @@ public class MainPresenter extends ArtistDetailsIntentShowableImpl implements Ma
 
                             @Override
                             public void onNext(UserInfo userInfo) {
-                                if (userInfo == null || userInfo.getUser() == null ||
+                                if (navigationView == null || userInfo == null || userInfo.getUser() == null ||
                                         userInfo.getUser().getImage().get(Constants.IMAGE_LARGE) == null ||
-                                        userInfo.getUser().getPlaycount() == null) {
+                                        userInfo.getUser().getPlaycount() == null
+                                        && navigationView != null) {
                                     return;
                                 }
 

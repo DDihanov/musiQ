@@ -87,11 +87,12 @@ public class UserTopTracksPresenter implements UserTopTracksContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(UserTopTracks userTopTracks) {
+                    public void
+                    onNext(UserTopTracks userTopTracks) {
                         List<BarEntry> entries = new ArrayList<>();
                         List<String> labels = new ArrayList<>();
 
-                        if(userTopTracks == null || userTopTracks.getToptracks() == null || userTopTracks.getToptracks().getTrack() == null){
+                        if(view == null || userTopTracks == null || userTopTracks.getToptracks() == null || userTopTracks.getToptracks().getTrack() == null){
                             return;
                         }
 
