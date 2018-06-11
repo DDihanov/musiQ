@@ -46,7 +46,9 @@ public class ProfileUserFriendsPresenter implements ProfileUserFriendsContract.P
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
-                        view.showProgressBar();
+                        if (view != null){
+                            view.showProgressBar();
+                        }
                     }
 
                     @Override

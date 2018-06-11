@@ -95,7 +95,7 @@ public class TrackLoveManager implements TrackLovable, TrackUnlovable {
                     @Override
                     public void onNext(Response response) {
                         if (response != null) {
-                            toastShowable.showToast(App.getAppContext(), App.getAppContext().getString(R.string.track_loved));
+                            toastShowable.showToast(App.getAppContext(), App.getAppContext().getString(R.string.track_unlove));
                         }
                     }
 

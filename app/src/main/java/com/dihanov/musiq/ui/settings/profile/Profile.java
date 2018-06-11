@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.Binds;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -58,6 +59,9 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
     @BindView(R.id.profile_bird)
     ImageView bird;
 
+    @BindView(R.id.profile_appbar)
+    AppBarLayout appBarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
@@ -74,6 +78,11 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         }
 
         initViewPager();
+    }
+
+    @Override
+    public AppBarLayout getAppBarLayout() {
+        return this.appBarLayout;
     }
 
     @Override
@@ -102,7 +111,6 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
         collapsingToolbar.setTitle(username);
         HelperMethods.setToolbarFont(collapsingToolbar, this);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.profile_appbar);
         appBarLayout.setExpanded(true);
 
 

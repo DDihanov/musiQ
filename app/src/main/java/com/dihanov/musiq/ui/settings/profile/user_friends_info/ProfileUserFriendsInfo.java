@@ -6,16 +6,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.ui.adapters.ProfileFriendsAdapter;
+import com.dihanov.musiq.ui.settings.profile.Profile;
+import com.dihanov.musiq.util.KeyboardHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import dagger.android.support.DaggerFragment;
@@ -81,6 +89,23 @@ public class ProfileUserFriendsInfo extends DaggerFragment implements ProfileUse
     @OnTextChanged(R.id.profile_friends_search)
     void searchForFriend(CharSequence charSequence){
         ((ProfileFriendsAdapter)friendRecyclerView.getAdapter()).getFilter().filter(charSequence);
+    }
+
+    @OnEditorAction(R.id.profile_friends_search)
+    boolean onEditTextSearch(TextView v, int actionId, KeyEvent event){
+        boolean handled = false;
+
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            KeyboardHelper.hideKeyboard(ProfileUserFriendsInfo.this.getActivity());
+            handled = true;
+        }
+
+        return handled;
+    }
+
+    @OnFocusChange(R.id.profile_friends_search)
+    void onSearchClick(View v){
+        ((Profile) getActivity()).getAppBarLayout().setExpanded(false);
     }
 
     @Override

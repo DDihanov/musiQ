@@ -40,7 +40,9 @@ public class ProfileUserInfoPresenter implements ProfileUserInfoContract.Present
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
-                        view.showProgressBar();
+                        if (view != null){
+                            view.showProgressBar();
+                        }
                     }
 
                     @Override
