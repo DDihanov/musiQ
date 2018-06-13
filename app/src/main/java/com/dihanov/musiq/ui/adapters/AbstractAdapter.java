@@ -14,13 +14,20 @@ import java.util.Set;
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewHolder> {
     protected void setIsFavorited(AbstractViewHolder holder, String key){
+        boolean isFavorited = false;
         //this automatically makes it so the button displays the correct setting
         Set<String> stringSet = App.getSharedPreferences().getStringSet(key, new HashSet<>());
         for (String s : stringSet) {
-            if(s.equals(holder.getTitle().getText().toString())){
-                holder.setIsFavorited(true);
+            if(s.toLowerCase().equals(holder.getTitle().getText().toString())){
+                isFavorited = true;
                 break;
             }
+        }
+
+        if (isFavorited){
+            holder.setIsFavorited(true);
+        } else {
+            holder.setIsFavorited(false);
         }
     }
 

@@ -22,7 +22,9 @@ public class Constants {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String FAVORITE_ARTISTS_KEY = "favorite_artists";
+    public static final String FAVORITE_ARTISTS_SERIALIZED_KEY = "favorite_artists_serialized";
     public static final String FAVORITE_ALBUMS_KEY = "favorite_albums";
+    public static final String FAVORITE_ALBUMS_SERIALIZED_KEY = "favorite_albums_serialized";
     public static final String AUTH_MOBILE_SESSION_METHOD = "auth.getMobileSession";
     public static final String TRACK_SCROBBLE_METHOD = "track.scrobble";
     public static final String UPDATE_NOW_PLAYING_METHOD = "track.updateNowPlaying";

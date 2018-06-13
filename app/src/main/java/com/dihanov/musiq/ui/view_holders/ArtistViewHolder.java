@@ -9,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.interfaces.Favoritable;
+import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.listeners.MyMenuItemClickListener;
 import com.dihanov.musiq.util.Constants;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +42,7 @@ public class ArtistViewHolder extends AbstractViewHolder {
     }
 
     @Override
-    public void showPopupMenu(Context context, View view, AbstractAdapter adapter)  {
+    public void showPopupMenu(Context context, View view, AbstractAdapter adapter, Favoritable favoritable)  {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -55,7 +58,7 @@ public class ArtistViewHolder extends AbstractViewHolder {
         }
 
 
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.getTitle().getText().toString(),
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(favoritable.getName().toLowerCase(), new Gson().toJson(favoritable, Artist.class),
                 this, Constants.FAVORITE_ARTISTS_KEY, adapter));
         popup.show();
     }

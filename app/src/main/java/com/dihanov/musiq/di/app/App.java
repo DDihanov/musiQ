@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
+import com.dihanov.musiq.BuildConfig;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.modules.NetworkModule;
@@ -63,11 +64,33 @@ public class App extends Application implements HasActivityInjector, HasServiceI
                 .build());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        //TODO: REMOVE THIS FOR NEXT RELEASE
+        if (BuildConfig.VERSION_CODE == 35){
+            if (!App.getSharedPreferences().getBoolean("VERSION_35_DELETE", false)){
+                sharedPreferences.edit().putStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>())
+                        .putStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>())
+                        .apply();
+                sharedPreferences.edit()
+                        .putStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>())
+                        .putStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>())
+                        .apply();
+                App.getSharedPreferences().edit().putBoolean("VERSION_35_DELETE", true).apply();
+            }
+        }
+
         if(!sharedPreferences.contains(Constants.FAVORITE_ARTISTS_KEY)){
-            sharedPreferences.edit().putStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>()).apply();
+            sharedPreferences.edit()
+                    .putStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>())
+                    .putStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>())
+                    .apply();
         }
         if(!sharedPreferences.contains(Constants.FAVORITE_ALBUMS_KEY)){
-            sharedPreferences.edit().putStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>()).apply();
+            sharedPreferences.edit()
+                    .putStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>())
+                    .putStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>())
+                    .apply();
         }
 
         scrobbler.scrobbleFromCache();

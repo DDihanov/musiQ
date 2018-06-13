@@ -72,7 +72,7 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
 
         this.favoriteFragmentPresenter.takeView(this);
         this.favoriteFragmentPresenter.loadFavoriteArtists(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_KEY, new HashSet<>()),
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()),
                 this);
 
         return view;
@@ -104,6 +104,14 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
     @Override
     public Context getContext() {
         return this.mainActivity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.favoriteFragmentPresenter.loadFavoriteArtists(
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()),
+                this);
     }
 
     @Override

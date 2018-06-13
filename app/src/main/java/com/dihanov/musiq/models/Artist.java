@@ -1,12 +1,13 @@
 
 package com.dihanov.musiq.models;
 
+import com.dihanov.musiq.interfaces.Favoritable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Artist {
+public class Artist implements Favoritable {
     @SerializedName("corrected")
     @Expose
     private String corrected;

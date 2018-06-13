@@ -74,7 +74,7 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
         initRecyclerView();
         this.favoriteFragmentsPresenter.takeView(this);
         this.favoriteFragmentsPresenter.loadFavoriteAlbums(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_KEY, new HashSet<>()),
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()),
                 this);
 
         return view;
@@ -117,6 +117,15 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
     @Override
     public RecyclerView getRecyclerView() {
         return this.recyclerView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //we need to refresh the artists just in case the user has modified the favorites
+        this.favoriteFragmentsPresenter.loadFavoriteAlbums(
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()),
+                this);
     }
 
     @Override

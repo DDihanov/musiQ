@@ -158,6 +158,9 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
             @Override
             protected void onPostExecute(Artist deserializedArtist) {
+                if (deserializedArtist == null){
+                    return;
+                }
                 String name = (deserializedArtist.getName() == null) ? deserializedArtist.getText() : deserializedArtist.getName();
                 artist = deserializedArtist;
                 favoriteArtistStar.setClickable(true);
@@ -289,12 +292,14 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         if (((boolean) favoriteArtistStar.getTag()) == false) {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_on);
             this.favoriteArtistStar.setTag(true);
-            FavoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase());
+            FavoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY,
+                    this.artist.getName().toLowerCase(), new Gson().toJson(this.artist, Artist.class));
             Toast.makeText(this, "Artist added to favorites", Toast.LENGTH_SHORT).show();
         } else {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
             this.favoriteArtistStar.setTag(false);
-            FavoritesManager.removeFromFavorites(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase());
+            FavoritesManager.removeFromFavorites(Constants.FAVORITE_ARTISTS_KEY,
+                    this.artist.getName().toLowerCase(), new Gson().toJson(this.artist, Artist.class));
             Toast.makeText(this, "Artist removed from favorites", Toast.LENGTH_SHORT).show();
         }
     }
@@ -318,10 +323,14 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(" ");
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    getSupportActionBar().setHomeButtonEnabled(false);
                     isShow = true;
                 } else if (isShow) {
 //                    collapsingToolbar.setTitle(getString(R.string.app_name));
                     collapsingToolbar.setTitle(" ");
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setHomeButtonEnabled(true);
                     isShow = false;
                 }
             }

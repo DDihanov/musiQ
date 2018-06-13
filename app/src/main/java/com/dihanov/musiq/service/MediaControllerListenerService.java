@@ -41,6 +41,8 @@ public class MediaControllerListenerService extends NotificationListenerService
     private static final String TAG = MediaControllerListenerService.class.getSimpleName();
     private static String currentPlayingControllerPackageName;
 
+    private NetworkConnectionReceiver networkConnectionReceiver;
+
     @Inject
     Scrobbler scrobbler;
 
@@ -62,8 +64,17 @@ public class MediaControllerListenerService extends NotificationListenerService
         //controller will be found only after the user interacts with the media player, thus, skipping a track
         List<MediaController> initialSessions = mediaSessionManager.getActiveSessions(componentName);
         onActiveSessionsChanged(initialSessions);
-        this.registerReceiver(new NetworkConnectionReceiver(scrobbler), new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        this.networkConnectionReceiver = new NetworkConnectionReceiver(scrobbler);
+        this.registerReceiver(networkConnectionReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         App.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (networkConnectionReceiver != null){
+            unregisterReceiver(networkConnectionReceiver);
+        }
     }
 
     @Override

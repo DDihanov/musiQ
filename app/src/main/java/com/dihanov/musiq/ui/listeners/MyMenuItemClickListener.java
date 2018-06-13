@@ -15,14 +15,16 @@ import com.dihanov.musiq.util.FavoritesManager;
 
 public class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
     private ClickableArtistViewHolder viewHolder;
-    private String stringValue = "";
+    private String serializedValue = "";
     private String key;
+    private String name;
     private AbstractAdapter adapterToRefresh;
 
 
     //the key will be used to either add favorites to the artists or the albums category
-    public MyMenuItemClickListener(String value, ClickableArtistViewHolder viewHolder, String key, AbstractAdapter adapter) {
-        stringValue = value;
+    public MyMenuItemClickListener(String name, String value, ClickableArtistViewHolder viewHolder, String key, AbstractAdapter adapter) {
+        this.serializedValue = value;
+        this.name = name;
         this.viewHolder = viewHolder;
         this.key = key;
         this.adapterToRefresh = adapter;
@@ -32,13 +34,13 @@ public class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListene
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.action_add_favourite):
-                FavoritesManager.addToFavorites(key, stringValue);
+                FavoritesManager.addToFavorites(key, name,serializedValue);
                 viewHolder.setIsFavorited(true);
                 return true;
             case (R.id.action_remove_favorite):
-                FavoritesManager.removeFromFavorites(key, stringValue);
+                FavoritesManager.removeFromFavorites(key, name, serializedValue);
                 viewHolder.setIsFavorited(false);
-                adapterToRefresh.remove(stringValue);
+                adapterToRefresh.remove(name);
                 return true;
             default:
                 break;

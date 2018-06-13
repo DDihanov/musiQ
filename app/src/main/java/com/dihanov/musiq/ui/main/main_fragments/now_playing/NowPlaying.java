@@ -139,7 +139,11 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
             return;
         }
         nowPlayingFragmentPresenter.loveTrack(nowPlaying.getArtistName(), nowPlaying.getTrackName());
-        ((RecentlyScrobbledAdapter) recentTracks.getAdapter()).loveNowPlaying(nowPlaying.getArtistName(), nowPlaying.getTrackName());
+        RecentlyScrobbledAdapter adapter = (RecentlyScrobbledAdapter) recentTracks.getAdapter();
+        if (adapter == null) {
+            return;
+        }
+        adapter.loveNowPlaying(nowPlaying.getArtistName(), nowPlaying.getTrackName());
     }
 
     @Override

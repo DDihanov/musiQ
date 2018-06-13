@@ -1,17 +1,23 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
+import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.util.AppLog;
+import com.dihanov.musiq.util.Constants;
+import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +26,8 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -29,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsContract.Presenter{
+public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsContract.Presenter {
     private static final long DELAY_IN_MILLIS = 500;
 
     private final LastFmApiClient lastFmApiClient;
@@ -51,7 +59,7 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
 
     @Override
     public void leaveView() {
-        if(this.compositeDisposable != null){
+        if (this.compositeDisposable != null) {
             compositeDisposable.clear();
         }
         this.artistResultFragment = null;
@@ -73,23 +81,25 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
         //resetting the adapter
         recyclerViewExposable.getRecyclerView().setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this, true));
 
+        List<Artist> deserializedList = new ArrayList<>();
 
-        List<Observable<SpecificArtist>> observables = new ArrayList<>();
+        for (String serializedArtist : favorites) {
+            String actualValue = serializedArtist.split(" \\_\\$\\_ ")[1];
+            Artist artist;
+            try {
+                artist = new Gson().fromJson(actualValue, Artist.class);
+            } catch (IllegalStateException e) {
+                SpecificArtist specificArtist = new Gson().fromJson(actualValue, SpecificArtist.class);
+                artist = specificArtist.getArtist();
+            }
 
-        for (String favorite : favorites) {
-            observables.add(lastFmApiClient.getLastFmApiService().getSpecificArtistInfo(favorite).subscribeOn(Schedulers.io()));
+            deserializedList.add(artist);
         }
 
-        Observable.zip(observables, objects -> {
-            List<Artist> result = new ArrayList<>();
-            for (Object object : objects) {
-                result.add(((SpecificArtist) object).getArtist());
-            }
-            return result;
-        })
+        Single.just(deserializedList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Artist>>() {
+                .subscribe(new SingleObserver<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         mainActivity.showProgressBar();
@@ -97,20 +107,13 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
                     }
 
                     @Override
-                    public void onNext(List<Artist> generalArtistSearch) {
-                        for (Artist artistSearch : generalArtistSearch) {
-                            ((ArtistAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).addArtist(artistSearch);
-                        }
+                    public void onSuccess(List<Artist> artists) {
+                        ((ArtistAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).setArtistList(artists);
                         recyclerViewExposable.getRecyclerView().getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        AppLog.log(this.getClass().getSimpleName(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
                         mainActivity.hideProgressBar();
                         compositeDisposable.clear();
                     }

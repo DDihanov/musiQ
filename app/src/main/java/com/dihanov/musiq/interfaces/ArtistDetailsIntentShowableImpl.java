@@ -11,6 +11,7 @@ import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.ui.main.MainContract;
+import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.Gson;
@@ -84,7 +85,7 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(ArtistAdapter.class.toString(), e.getMessage());
+                        AppLog.log(ArtistAdapter.class.toString(), e.getMessage());
                     }
 
                     @Override
@@ -141,7 +142,7 @@ public abstract class ArtistDetailsIntentShowableImpl implements ArtistDetailsIn
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(ArtistAdapter.class.toString(), e.getMessage());
+                        AppLog.log(ArtistAdapter.class.toString(), e.getMessage());
                     }
 
                     @Override

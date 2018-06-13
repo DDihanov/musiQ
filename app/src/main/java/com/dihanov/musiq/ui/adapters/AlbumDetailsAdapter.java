@@ -45,6 +45,10 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         this.isFavoriteType = isFavoriteType;
     }
 
+    public void setArtistAlbumsList(List<Album> artistAlbumsList) {
+        this.artistAlbumsList = artistAlbumsList;
+    }
+
     @Override
     public AlbumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -62,7 +66,11 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
 
         holder.getTitle().setText(album.getName().toLowerCase());
         if(album.getPlaycount() != null){
-            holder.getCount().setText(HelperMethods.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
+            if (album.getPlaycount() instanceof Double){
+                holder.getCount().setText(HelperMethods.formatNumberWithSeperator((double)album.getPlaycount()) + " plays");
+            } else {
+                holder.getCount().setText(HelperMethods.formatNumberWithSeperator((int)album.getPlaycount()) + " plays");
+            }
         }
 
         // loading album cover using Glide library
@@ -78,7 +86,7 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
             @Override
             public void onClick(View v) {
                 holder.showPopupMenu(context, ((AlbumViewHolder)holder).getOverflow(),
-                        AlbumDetailsAdapter.this);
+                        AlbumDetailsAdapter.this, album);
             }
         });
 

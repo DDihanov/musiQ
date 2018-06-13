@@ -107,7 +107,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         setContentView(R.layout.drawer_layout_main);
         ButterKnife.bind(this);
         AppRater.setPackageName("com.dihanov.musiq");
-        AppRater.app_launched(this, 1, 1);
+        AppRater.app_launched(this, 1, 2);
         AppRater.setVersionCodeCheckEnabled(true);
 
 
@@ -240,11 +240,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
                 if (scrollRange + verticalOffset == 0) {
                     searchBar.setVisibility(View.INVISIBLE);
                     collapsingToolbar.setTitle(" ");
-
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    getSupportActionBar().setHomeButtonEnabled(false);
                     isShow = true;
                 } else if (isShow) {
                     searchBar.setVisibility(View.VISIBLE);
                     collapsingToolbar.setTitle(getString(R.string.app_name));
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setHomeButtonEnabled(true);
                     isShow = false;
                 }
             }

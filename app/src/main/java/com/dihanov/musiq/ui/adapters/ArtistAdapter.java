@@ -54,6 +54,10 @@ public class ArtistAdapter extends AbstractAdapter {
         return new ArtistViewHolder(itemView);
     }
 
+    public void setArtistList(List<Artist> artistList) {
+        this.artistList = artistList;
+    }
+
     @Override
     public void onBindViewHolder(AbstractViewHolder holder, int position) {
         if (artistList.isEmpty()) {
@@ -80,7 +84,7 @@ public class ArtistAdapter extends AbstractAdapter {
             @Override
             public void onClick(View v) {
                 holder.showPopupMenu(mainActivity, ((ArtistViewHolder) holder).getOverflow(),
-                        ArtistAdapter.this);
+                        ArtistAdapter.this, artist);
             }
         });
 

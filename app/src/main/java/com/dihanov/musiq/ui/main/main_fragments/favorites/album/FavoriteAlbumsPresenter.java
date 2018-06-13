@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
@@ -11,8 +12,11 @@ import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.AppLog;
+import com.dihanov.musiq.util.Constants;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +24,8 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -69,23 +75,18 @@ public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter
         //resetting the adapter
         recyclerViewExposable.getRecyclerView().setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), FavoriteAlbumsPresenter.this, true));
 
+        List<Album> deserializedList = new ArrayList<>();
 
-        List<Observable<GeneralAlbumSearch>> observables = new ArrayList<>();
-
-        for (String favorite : favorites) {
-            observables.add(lastFmApiClient.getLastFmApiService().searchForAlbum(favorite, LIMIT).subscribeOn(Schedulers.io()));
+        for (String serializedAlbum : favorites) {
+            String actualValue = serializedAlbum.split(" \\_\\$\\_ ")[1];
+            Album album = new Gson().fromJson(actualValue, Album.class);
+            deserializedList.add(album);
         }
 
-        Observable.zip(observables, objects -> {
-            List<Album> result = new ArrayList<>();
-            for (Object object : objects) {
-                result.add(((GeneralAlbumSearch) object).getResults().getAlbummatches().getAlbum().get(0));
-            }
-            return result;
-        })
+        Single.just(deserializedList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Album>>() {
+                .subscribe(new SingleObserver<List<Album>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         mainActivity.showProgressBar();
@@ -93,20 +94,13 @@ public class FavoriteAlbumsPresenter implements FavoriteAlbumsContract.Presenter
                     }
 
                     @Override
-                    public void onNext(List<Album> generalAlbumSearch) {
-                        for (Album albumSearch : generalAlbumSearch) {
-                            ((AlbumDetailsAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).addAlbum(albumSearch);
-                        }
+                    public void onSuccess(List<Album> albums) {
+                        ((AlbumDetailsAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).setArtistAlbumsList(albums);
                         recyclerViewExposable.getRecyclerView().getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        AppLog.log(this.getClass().getSimpleName(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
                         mainActivity.hideProgressBar();
                         compositeDisposable.clear();
                     }

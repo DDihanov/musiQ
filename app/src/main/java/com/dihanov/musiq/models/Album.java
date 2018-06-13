@@ -1,6 +1,7 @@
 
 package com.dihanov.musiq.models;
 
+import com.dihanov.musiq.interfaces.Favoritable;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class Album {
+public class Album implements Favoritable {
 
     @SerializedName("#text")
     @Expose
