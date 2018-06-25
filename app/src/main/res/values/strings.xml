@@ -153,4 +153,5 @@
     <string name="love_track_message">Love track?</string>
     <string name="love_track_button">Love</string>
     <string name="track_unlove">Track unloved</string>
+    <string name="error_could_not_find_artist">Could not find artist</string>
 </resources>

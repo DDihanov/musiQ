@@ -34,7 +34,6 @@ public class Notificator {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-
         builder.setContentIntent(contentIntent);
         builder.setContentText(content);
         builder.setContentTitle(title);
@@ -48,17 +47,22 @@ public class Notificator {
 
         Notification notification = builder.build();
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_LOW;
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_LOW;
 
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
-            notificationChannel.enableVibration(false);
-            nm.createNotificationChannel(notificationChannel);
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, importance);
+                notificationChannel.enableVibration(false);
+                nm.createNotificationChannel(notificationChannel);
 
-            nm.notify(NOTIFICATION_CHANNEL_NAME, NOTIFICATION_ID, notification);
-        } else {
-            nm.notify(NOTIFICATION_ID, notification);
+                nm.notify(NOTIFICATION_CHANNEL_NAME, NOTIFICATION_ID, notification);
+            } else {
+                nm.notify(NOTIFICATION_ID, notification);
+            }
+        } catch (RuntimeException e) {
+            AppLog.log(Notificator.class.getSimpleName(), e.getMessage());
         }
+
     }
 
     public static void cancelNotification(Context context) {

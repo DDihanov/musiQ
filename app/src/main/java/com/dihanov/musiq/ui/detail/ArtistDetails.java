@@ -32,6 +32,7 @@ import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.Tag;
+import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
@@ -159,6 +160,11 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             @Override
             protected void onPostExecute(Artist deserializedArtist) {
                 if (deserializedArtist == null){
+                    hideProgressBar();
+                    Toast.makeText(getApplicationContext(), R.string.error_could_not_find_artist, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ArtistDetails.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ArtistDetails.this.startActivity(intent);
                     return;
                 }
                 String name = (deserializedArtist.getName() == null) ? deserializedArtist.getText() : deserializedArtist.getName();
