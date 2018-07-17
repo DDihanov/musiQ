@@ -116,17 +116,22 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     @Override
     public void onHeaderClick(Header header, int position) {
-        super.onHeaderClick(header, position);
-        if (header.id == R.id.top_artist_source_header || header.id == R.id.scrobble_review_header) {
-            showNoAccountDialog();
-        } else {
-            createListPreferenceDialog();
+        if (header.id == R.id.top_artist_source_header) {
+            if (!isNotLoggedIn()) {
+                createListPreferenceDialog();
+            }
+        } else if (header.id == R.id.scrobble_review_header) {
+            if (isNotLoggedIn()) {
+                return;
+            }
         }
+        super.onHeaderClick(header, position);
     }
 
-    private void showNoAccountDialog() {
+    private boolean isNotLoggedIn() {
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
-        if (username.isEmpty() || username.equals("")) {
+        boolean result = username.isEmpty() || username.equals("");
+        if (result) {
             AlertDialog.Builder b = new AlertDialog.Builder(AppCompatPreferenceActivity.this);
             b.setTitle(getString(R.string.note));
             b.setMessage(getString(R.string.log_in_to_use_feature));
@@ -134,6 +139,8 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
             b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
             b.create().show();
         }
+
+        return result;
     }
 
     private void createListPreferenceDialog() {

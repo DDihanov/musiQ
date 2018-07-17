@@ -46,6 +46,7 @@ import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter;
 import com.dihanov.musiq.util.Connectivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -304,20 +305,14 @@ public class Settings extends AppCompatPreferenceActivity {
             View view = inflater.inflate(R.layout.scrobble_review_fragment, container, false);
             ButterKnife.bind(this, view);
 
-            //test
-//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Forty six & two", System.currentTimeMillis() / 1000L));
-//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Sober", System.currentTimeMillis() / 1000L));
-//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Lateralus", System.currentTimeMillis() / 1000L ));
-//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Parabola", System.currentTimeMillis() / 1000L));
-//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Parabol", System.currentTimeMillis() / 1000L));
-
             return view;
         }
 
         private void init() {
-            cachedScrobbles = scrobbleDB.getCachedScrobbles();
+            List<Scrobble> cachedScrobbles = scrobbleDB.getCachedScrobbles();
+            this.cachedScrobbles = cachedScrobbles;
 
-            if (cachedScrobbles.isEmpty()) {
+            if (this.cachedScrobbles.isEmpty()) {
                 empty.setVisibility(View.VISIBLE);
                 scrobbleAll.setVisibility(View.INVISIBLE);
                 scrobbleListView.setVisibility(View.INVISIBLE);
@@ -325,7 +320,7 @@ public class Settings extends AppCompatPreferenceActivity {
                 empty.setVisibility(View.INVISIBLE);
             }
 
-            scrobbleListView.setAdapter(new ScrobbleReviewAdapter(getActivity(), R.layout.scrobble_review_layout, cachedScrobbles, scrobbler, scrobbleDB));
+            scrobbleListView.setAdapter(new ScrobbleReviewAdapter(getActivity(), R.layout.scrobble_review_layout, this.cachedScrobbles, scrobbler, scrobbleDB));
 
             scrobbleAll.setOnClickListener(v -> {
                 if (!Connectivity.isConnected(getActivity())) {
@@ -333,7 +328,7 @@ public class Settings extends AppCompatPreferenceActivity {
                     return;
                 }
 
-                if (cachedScrobbles.size() >= 50) {
+                if (this.cachedScrobbles.size() >= 50) {
                     AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                     b.setTitle(getString(R.string.review_warning));
                     b.setMessage(R.string.review_messages);

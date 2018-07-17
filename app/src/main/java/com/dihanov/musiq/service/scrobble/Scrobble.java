@@ -2,6 +2,7 @@ package com.dihanov.musiq.service.scrobble;
 
 import android.graphics.Bitmap;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,5 +127,24 @@ public class Scrobble {
     @Override
     public String toString() {
         return this.artistName + " - " + this.trackName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Scrobble scrobble = (Scrobble) o;
+        return duration == scrobble.duration &&
+                timestamp == scrobble.timestamp &&
+                trackStartTime == scrobble.trackStartTime &&
+                Objects.equals(artistName, scrobble.artistName) &&
+                Objects.equals(trackName, scrobble.trackName) &&
+                Objects.equals(albumName, scrobble.albumName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(artistName, trackName, albumName, duration, timestamp, trackStartTime);
     }
 }

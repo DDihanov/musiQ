@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">musiQ</string>
     <string name="app_name_bird">musiQ🐧</string>
     <string name="app_bird">🐧</string>

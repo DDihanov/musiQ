@@ -4,12 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Layout;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
@@ -19,6 +22,7 @@ import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.util.Connectivity;
 
+import java.text.DateFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,6 +91,12 @@ public class ScrobbleReviewAdapter extends ArrayAdapter<Scrobble> {
             }
         });
 
+        viewHolder.date.setText(DateUtils.formatSameDayTime(
+                scrobble.getTimestamp() * 1000L,
+                System.currentTimeMillis(),
+                DateFormat.SHORT,
+                DateFormat.SHORT));
+
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,11 +114,13 @@ public class ScrobbleReviewAdapter extends ArrayAdapter<Scrobble> {
         @BindView(R.id.scrobble_review_track)
         EditText track;
         @BindView(R.id.scrobble_review_confirm)
-        View confirm;
+        ImageView confirm;
         @BindView(R.id.scrobble_review_revert)
-        View revert;
+        ImageView revert;
         @BindView(R.id.scrobble_review_delete)
-        View delete;
+        ImageView delete;
+        @BindView(R.id.scrobble_review_date)
+        TextView date;
 
         public ScrobbleReviewViewHolder(View view) {
             ButterKnife.bind(this, view);

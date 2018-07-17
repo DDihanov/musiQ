@@ -34,6 +34,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class Scrobbler {
+    private static long lastScrobbleTime = System.currentTimeMillis();
+    private static Object object = new Object();
+
     private static final String TAG = Scrobbler.class.getSimpleName();
     private static State state;
     private ScrobbleDB scrobbleDB;
@@ -188,7 +191,9 @@ public class Scrobbler {
     public void setStatus(PlaybackState playbackState) {
         int state = playbackState.getState();
 
-        manageScrobble(nowPlaying);
+        synchronized (object) {
+            manageScrobble(nowPlaying);
+        }
 
         if (playbackState.getState() == PlaybackState.STATE_NONE) {
             this.setNowPlaying(null);
@@ -348,7 +353,9 @@ public class Scrobbler {
 
     public void updateTrackInfo(MediaMetadata metadata) {
         if (this.nowPlaying != null) {
-            manageScrobble(this.nowPlaying);
+            synchronized (object) {
+                manageScrobble(this.nowPlaying);
+            }
         }
 
         if (metadata == null) {
@@ -400,12 +407,17 @@ public class Scrobbler {
         long minimumTrackTime = scrobble.getDuration() / 2;
         long requiredTime = trackBeginTime + minimumTrackTime;
 
-        if (currentTime >= requiredTime) {
+        if (requiredTime <= currentTime ) {
+            long start = System.currentTimeMillis();
+            if (lastScrobbleTime + 5000 >= start) {
+                return;
+            }
             if (App.getSharedPreferences().getBoolean("scrobble_review", false)) {
                 storeInDb(scrobble);
             } else {
                 this.scrobble(scrobble);
             }
+            lastScrobbleTime = start;
         }
     }
 }
