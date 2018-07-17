@@ -45,7 +45,8 @@
 
         <activity
             android:name=".ui.settings.Settings"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"
+            android:windowSoftInputMode="adjustPan" ></activity>
     </application>
 
 </manifest>

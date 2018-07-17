@@ -117,18 +117,22 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     public void onHeaderClick(Header header, int position) {
         super.onHeaderClick(header, position);
-        if (header.id == R.id.top_artist_source_header) {
-            String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
-            if (username.isEmpty() || username.equals("")) {
-                AlertDialog.Builder b = new AlertDialog.Builder(AppCompatPreferenceActivity.this);
-                b.setTitle(getString(R.string.note));
-                b.setMessage(getString(R.string.log_in_to_use_feature));
-                b.setCancelable(true);
-                b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
-                b.create().show();
-            } else {
-                createListPreferenceDialog();
-            }
+        if (header.id == R.id.top_artist_source_header || header.id == R.id.scrobble_review_header) {
+            showNoAccountDialog();
+        } else {
+            createListPreferenceDialog();
+        }
+    }
+
+    private void showNoAccountDialog() {
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        if (username.isEmpty() || username.equals("")) {
+            AlertDialog.Builder b = new AlertDialog.Builder(AppCompatPreferenceActivity.this);
+            b.setTitle(getString(R.string.note));
+            b.setMessage(getString(R.string.log_in_to_use_feature));
+            b.setCancelable(true);
+            b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
+            b.create().show();
         }
     }
 

@@ -2,6 +2,7 @@ package com.dihanov.musiq.di.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
 import android.app.Service;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -23,14 +24,19 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import dagger.android.HasFragmentInjector;
 import dagger.android.HasServiceInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by Dimitar Dihanov on 14.9.2017 г..
  */
 
-public class App extends Application implements HasActivityInjector, HasServiceInjector{
+public class App extends Application implements
+        HasActivityInjector,
+        HasServiceInjector,
+        HasFragmentInjector {
     private static SharedPreferences sharedPreferences;
     private static Application app;
 
@@ -42,6 +48,9 @@ public class App extends Application implements HasActivityInjector, HasServiceI
 
     @Inject
     DispatchingAndroidInjector<Service> serviceDispatchingAndroidInjector;
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
@@ -105,6 +114,11 @@ public class App extends Application implements HasActivityInjector, HasServiceI
     @Override
     public AndroidInjector<Service> serviceInjector() {
         return serviceDispatchingAndroidInjector;
+    }
+
+    @Override
+    public AndroidInjector<Fragment> fragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
     }
 
     public static Application getAppContext(){

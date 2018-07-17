@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
@@ -208,6 +209,76 @@ public class Scrobbler {
     public void scrobbleFromCache() {
         List<Scrobble> cached = scrobbleDB.getCachedScrobbles();
 
+        if (cached.isEmpty() || App.getSharedPreferences().getBoolean("scrobble_review", false)) return;
+
+        List<Observable<Response>> observables = new ArrayList<>();
+        String apiSig = "";
+
+        for (int i = 0; i < 50 && i < cached.size(); i++) {
+            Scrobble scrobble = cached.get(i);
+            String artistName = scrobble.getArtistName();
+            String trackName = scrobble.getTrackName();
+            String timestamp = String.valueOf(scrobble.getTimestamp());
+            apiSig = HelperMethods.generateSig(Constants.ARTIST, artistName,
+                    Constants.TRACK, trackName,
+                    Constants.TIMESTAMP, timestamp,
+                    Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
+
+
+            observables.add(lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
+                    artistName,
+                    trackName,
+                    Config.API_KEY,
+                    apiSig,
+                    timestamp,
+                    App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                    Config.FORMAT)
+                    .subscribeOn(Schedulers.io()));
+        }
+
+        Observable.zipIterable(observables, objects -> {
+            List<Response> result = new ArrayList<>();
+            for (Object object : objects) {
+                result.add((Response) object);
+            }
+            return result;
+        }, false, 10)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<List<Response>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(List<Response> responses) {
+                        if (responses != null) {
+                            for (Response respons : responses) {
+                                AppLog.log(TAG, "Scrobbled " +
+                                        respons.getScrobbles().getScrobble().getArtist().getText() +
+                                        " - " +
+                                        respons.getScrobbles().getScrobble().getTrack().getText());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AppLog.log(TAG, e.getMessage());
+                        compositeDisposable.clear();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        compositeDisposable.clear();
+                        scrobbleDB.clearCache();
+                    }
+                });
+    }
+
+    public void scrobbleFromCacheDirectly() {
+        List<Scrobble> cached = scrobbleDB.getCachedScrobbles();
+
         if (cached.isEmpty()) return;
 
         List<Observable<Response>> observables = new ArrayList<>();
@@ -330,7 +401,11 @@ public class Scrobbler {
         long requiredTime = trackBeginTime + minimumTrackTime;
 
         if (currentTime >= requiredTime) {
-            this.scrobble(scrobble);
+            if (App.getSharedPreferences().getBoolean("scrobble_review", false)) {
+                storeInDb(scrobble);
+            } else {
+                this.scrobble(scrobble);
+            }
         }
     }
 }

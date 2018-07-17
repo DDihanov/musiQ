@@ -4,4 +4,12 @@
         android:key="enable_auto_detect"
         android:summary="@string/scrobble_auto_detect"
         android:title="@string/auto_detect"/>
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="scrobble_review"
+        android:title="@string/scrobble_review"
+        android:summary="NOTE: this will disable automatic scrobbling, and all scrobbles will be cached for review/editing in the 'Manage pending scrobbles' section in the Settings menu"/>
+
 </PreferenceScreen>

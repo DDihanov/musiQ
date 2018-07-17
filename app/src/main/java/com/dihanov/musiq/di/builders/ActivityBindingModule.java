@@ -31,6 +31,7 @@ import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
 import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
 import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
 import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
+import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.ui.settings.profile.Profile;
 import com.dihanov.musiq.ui.settings.profile.user_bio.ProfileUserInfo;
 import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsInfo;
@@ -116,4 +117,8 @@ public abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector(modules = UserLovedTracksModule.class)
     abstract UserLovedTracksView bindUserLovedTracks();
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract Settings.ScrobbleReviewFragment bindReviewFragment();
 }

@@ -111,7 +111,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="player_preference">Manage players for scrobbling</string>
+    <string name="player_preference">Manage scrobbling</string>
     <string name="scrobble_auto_detect">Enable auto-configuration of players</string>
     <string name="auto_detect">Auto-configuration</string>
     <string name="remember_me">Remember me:</string>
@@ -154,4 +154,13 @@
     <string name="love_track_button">Love</string>
     <string name="track_unlove">Track unloved</string>
     <string name="error_could_not_find_artist">Could not find artist</string>
+    <string name="scrobble_review">Enable manual scrobbling and review</string>
+    <string name="manage_pending_scrobbles">Manage pending scrobbles</string>
+    <string name="scrobble_all">Scrobble all</string>
+    <string name="no_cached_scrobbles_found">No cached scrobbles found</string>
+    <string name="review_warning">WARNING: OVER 50 SCROBBLES DETECTED</string>
+    <string name="review_messages">Woah, it seems there are over 50 tracks in your cached scrobbles!
+        Since last.fm allows only up to 50 scrobbles at a time, please scrobble some tracks manually first.</string>
+    <string name="internet_error">No internet connection found</string>
+    <string name="track_scrobbled">Track scrobbled</string>
 </resources>

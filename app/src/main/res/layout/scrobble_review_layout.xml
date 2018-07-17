@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/scrobble_review_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:text="short"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:background="@android:color/transparent"/>
+
+    <EditText
+        android:id="@+id/scrobble_review_track"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrobble_review_artist"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="short"
+        android:textSize="20sp"
+        android:background="@android:color/transparent"/>
+
+    <ImageView
+        android:id="@+id/scrobble_review_confirm"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/scrobble_review_track"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_check_circle_black_24dp"
+        android:visibility="visible"
+        android:layout_marginBottom="5dp"/>
+
+    <ImageView
+        android:id="@+id/scrobble_review_revert"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/scrobble_review_confirm"
+        android:layout_below="@id/scrobble_review_track"
+        android:src="@drawable/ic_settings_backup_restore_black_24dp"
+        android:visibility="visible"
+        android:layout_marginBottom="5dp"/>
+
+    <ImageView
+        android:id="@+id/scrobble_review_delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toRightOf="@id/scrobble_review_confirm"
+        android:layout_below="@id/scrobble_review_track"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_delete_forever_black_24dp"
+        android:visibility="visible"
+        android:layout_marginBottom="5dp"/>
+
+
+</RelativeLayout>

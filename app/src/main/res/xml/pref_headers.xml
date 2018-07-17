@@ -13,8 +13,16 @@
         android:title="@string/pref_header_notifications" />
 
     <header
+        android:fragment="com.dihanov.musiq.ui.settings.Settings$ScrobbleReviewFragment"
+        android:id="@+id/scrobble_review_header"
+        android:title="@string/manage_pending_scrobbles"
+        android:icon="@drawable/ic_edit_black_24dp"/>
+
+    <header
         android:id="@+id/top_artist_source_header"
         android:title="@string/top_artist_chart_source"
         android:icon="@drawable/ic_music_note_black_24dp">
     </header>
+
+
 </preference-headers>

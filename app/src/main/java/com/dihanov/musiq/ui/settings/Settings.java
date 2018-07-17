@@ -19,17 +19,43 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.db.ScrobbleDB;
 import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.service.MediaControllerListenerService;
+import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
+import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter;
+import com.dihanov.musiq.util.Connectivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.support.AndroidSupportInjection;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -168,7 +194,8 @@ public class Settings extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || PlayerPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || NotificationPreferenceFragment.class.getName().equals(fragmentName)
+                || ScrobbleReviewFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -243,6 +270,98 @@ public class Settings extends AppCompatPreferenceActivity {
                 return true;
             }
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class ScrobbleReviewFragment extends android.app.Fragment {
+        @BindView(R.id.scrobble_review_list)
+        ListView scrobbleListView;
+
+        @BindView(R.id.scrobble_review_scrobble_all)
+        Button scrobbleAll;
+
+        @BindView(R.id.scrobble_review_empty)
+        TextView empty;
+
+        @Inject
+        ScrobbleDB scrobbleDB;
+
+        @Inject
+        Scrobbler scrobbler;
+
+        private List<Scrobble> cachedScrobbles;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            AndroidInjection.inject(this);
+            super.onCreate(savedInstanceState);
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.scrobble_review_fragment, container, false);
+            ButterKnife.bind(this, view);
+
+            //test
+//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Forty six & two", System.currentTimeMillis() / 1000L));
+//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Sober", System.currentTimeMillis() / 1000L));
+//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Lateralus", System.currentTimeMillis() / 1000L ));
+//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Parabola", System.currentTimeMillis() / 1000L));
+//            scrobbleDB.writeScrobble(new Scrobble("Tool", "Parabol", System.currentTimeMillis() / 1000L));
+
+            return view;
+        }
+
+        private void init() {
+            cachedScrobbles = scrobbleDB.getCachedScrobbles();
+
+            if (cachedScrobbles.isEmpty()) {
+                empty.setVisibility(View.VISIBLE);
+                scrobbleAll.setVisibility(View.INVISIBLE);
+                scrobbleListView.setVisibility(View.INVISIBLE);
+            } else {
+                empty.setVisibility(View.INVISIBLE);
+            }
+
+            scrobbleListView.setAdapter(new ScrobbleReviewAdapter(getActivity(), R.layout.scrobble_review_layout, cachedScrobbles, scrobbler, scrobbleDB));
+
+            scrobbleAll.setOnClickListener(v -> {
+                if (!Connectivity.isConnected(getActivity())) {
+                    Toast.makeText(getActivity(), getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (cachedScrobbles.size() >= 50) {
+                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                    b.setTitle(getString(R.string.review_warning));
+                    b.setMessage(R.string.review_messages);
+                    b.setCancelable(true);
+                    b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
+                    b.create().show();
+                } else {
+                    scrobbler.scrobbleFromCacheDirectly();
+                    ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).clear();
+                    ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).notifyDataSetChanged();
+                }
+            });
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), Settings.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+        @Override
+        public void onResume() {
+            init();
+            super.onResume();
         }
     }
 }

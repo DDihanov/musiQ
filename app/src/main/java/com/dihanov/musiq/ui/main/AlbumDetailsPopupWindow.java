@@ -25,6 +25,8 @@ import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.SpecificAlbum;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.models.Track;
+import com.dihanov.musiq.models.Tracks;
+import com.dihanov.musiq.models.Wiki;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
@@ -143,8 +145,20 @@ public class AlbumDetailsPopupWindow {
     }
 
     private void showAlbumDetails(Activity activity, Album album, int mainWindowId) {
-        if (album == null || album.getTracks() == null || album.getWiki() == null) {
+        if (album == null) {
             return;
+        }
+
+        if (album.getTracks() == null) {
+            album.setTracks(new Tracks());
+            album.getTracks().setTrack(new ArrayList<>());
+        }
+
+        if (album.getWiki() == null) {
+            album.setWiki(new Wiki());
+            album.getWiki().setContent("");
+            album.getWiki().setSummary("");
+            album.getWiki().setPublished("");
         }
         CoordinatorLayout mainLayout = (CoordinatorLayout) activity.findViewById(mainWindowId);
 

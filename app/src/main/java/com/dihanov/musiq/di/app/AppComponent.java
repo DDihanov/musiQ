@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.dihanov.musiq.di.builders.ActivityBindingModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
+import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter$ScrobbleReviewViewHolder_ViewBinding;
+import com.dihanov.musiq.ui.settings.Settings;
 
 import javax.inject.Singleton;
 
