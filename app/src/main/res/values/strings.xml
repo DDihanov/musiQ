@@ -163,4 +163,6 @@
         Since last.fm allows only up to 50 scrobbles at a time, please scrobble some tracks manually first.</string>
     <string name="internet_error">No internet connection found</string>
     <string name="track_scrobbled">Track scrobbled</string>
+    <string name="scrobble_all_confirmation">You are about to scrobble all tracks, continue?</string>
+    <string name="confirm">CONFIRM</string>
 </resources>

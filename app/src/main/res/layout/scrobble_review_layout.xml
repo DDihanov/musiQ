@@ -6,25 +6,27 @@
 
     <EditText
         android:id="@+id/scrobble_review_artist"
+        android:textAlignment="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
         android:background="@android:color/transparent"
-        android:text="short"
+        android:text="The Heliocentrics and other test"
         android:textSize="30sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/scrobble_review_track"
+        android:textAlignment="center"
         android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrobble_review_artist"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="short"
+        android:text="The Heliocentrics and other test"
         android:textSize="20sp"
         android:background="@android:color/transparent"/>
 

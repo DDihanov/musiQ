@@ -2,6 +2,7 @@ package com.dihanov.musiq.ui.settings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -328,17 +329,26 @@ public class Settings extends AppCompatPreferenceActivity {
                     return;
                 }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                 if (this.cachedScrobbles.size() >= 50) {
-                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                     b.setTitle(getString(R.string.review_warning));
                     b.setMessage(R.string.review_messages);
                     b.setCancelable(true);
                     b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
                     b.create().show();
                 } else {
-                    scrobbler.scrobbleFromCacheDirectly();
-                    ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).clear();
-                    ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).notifyDataSetChanged();
+                    b.setTitle(getString(R.string.scrobble_all_confirmation));
+                    b.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            scrobbler.scrobbleFromCacheDirectly();
+                            ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).clear();
+                            ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).notifyDataSetChanged();
+                        }
+                    });
+                    b.setCancelable(true);
+                    b.setNeutralButton(getString(R.string.dialog_action_dismiss), (dialog, which) -> dialog.dismiss());
+                    b.create().show();
                 }
             });
         }
