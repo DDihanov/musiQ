@@ -144,7 +144,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     }
 
     private void createListPreferenceDialog() {
-        Dialog dialog;
+        Dialog dialog = null;
         final String[] str = getResources().getStringArray(R.array.top_artist_source);
         int selectedItem = App.getSharedPreferences().getInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.LAST_FM_CHARTS);
         AlertDialog.Builder b = new AlertDialog.Builder(this);
@@ -159,6 +159,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
                 b.setTitle(getString(R.string.select_timeframe));
                 b.setSingleChoiceItems(R.array.timeframe_options, selectedTimeframe, (dialog2, which1) -> {
                     App.getSharedPreferences().edit().putInt(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, which1).apply();
+                    dialog1.dismiss();
                     dialog2.dismiss();
                 });
                 b.create().show();

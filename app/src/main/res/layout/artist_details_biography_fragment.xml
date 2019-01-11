@@ -32,7 +32,5 @@
                 fontPath="fonts/cabin_regular.ttf"
                 android:textColor="@android:color/black" />
         </RelativeLayout>
-
-
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

@@ -39,7 +39,7 @@
                 android:layout_alignParentTop="true"
                 android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="enterAlwaysCollapsed"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
 

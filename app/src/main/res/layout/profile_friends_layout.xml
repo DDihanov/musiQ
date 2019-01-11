@@ -45,22 +45,14 @@
         android:layout_alignStart="@+id/profile_friends_search"
         android:text="@string/limit" />
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
         android:layout_below="@id/friends_limit_spinner"
+        android:id="@+id/profile_friends_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:clipToPadding="false"
-        android:fillViewport="true">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/profile_friends_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"
-            android:nestedScrollingEnabled="true"/>
-
-    </android.support.v4.widget.NestedScrollView>
+        android:scrollbars="vertical"
+        android:nestedScrollingEnabled="true"/>
 
 </RelativeLayout>
