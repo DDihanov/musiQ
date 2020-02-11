@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.dihanov.musiq"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 39
-        versionName "1.900"
+        targetSdkVersion 28
+        versionCode 40
+        versionName "1.902"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", API_KEY)
         buildConfigField("String", "API_SECRET", API_SECRET)
@@ -99,13 +99,13 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-leanback-v17:2.0.0'
 
     //Retrofit2 with RxJava and Gson parser
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
-    def daggerVersion = '2.11'
+    def daggerVersion = '2.15'
     def butterKnifeVersion = '8.8.1'
     //dagger2 and butterknife
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"

@@ -2,7 +2,9 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.Track;
+import com.dihanov.musiq.service.ArtistImageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -46,6 +48,7 @@ public class NetworkModule {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Album.class, new Album.DataStateDeserializer())
                 .registerTypeAdapter(Track.class, new Track.TrackDataStateDeserializer())
+                .registerTypeAdapter(Artist.class, new ArtistImageDeserializer())
                 .create();
         return GsonConverterFactory.create(gson);
     }
