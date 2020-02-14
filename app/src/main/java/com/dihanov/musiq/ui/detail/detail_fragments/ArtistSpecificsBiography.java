@@ -90,14 +90,4 @@ public class ArtistSpecificsBiography extends ArtistSpecifics {
         result = result.replaceAll("\\n", "<br>");
         return result;
     }
-
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
-
 }

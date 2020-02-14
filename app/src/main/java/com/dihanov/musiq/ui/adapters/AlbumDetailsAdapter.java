@@ -32,13 +32,15 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
     private List<Album> artistAlbumsList;
     private SpecificAlbumViewHolderClickable presenter;
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter) {
+    private OnItemClickedListener<AlbumViewHolder> onItemClickedListener;
+
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, OnItemClickedListener onItemClickedListener) {
         this.context = (Activity)context;
         this.artistAlbumsList = artistAlbumsList;
         this.presenter = presenter;
     }
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, boolean isFavoriteType) {
+    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, boolean isFavoriteType, OnItemClickedListener onItemClickedListener) {
         this.context = (Activity)context;
         this.artistAlbumsList = artistAlbumsList;
         this.presenter = presenter;
@@ -90,7 +92,9 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
             }
         });
 
-        this.presenter.setClickListenerFetchEntireAlbumInfo((AlbumViewHolder)holder, album.getArtist().toString(), album.getName());
+        ((AlbumViewHolder) holder).getThumbnail().setOnClickListener(__->
+                onItemClickedListener.onItemClicked(holder));
+
         this.setIsFavorited(holder, Constants.FAVORITE_ALBUMS_KEY);
     }
 

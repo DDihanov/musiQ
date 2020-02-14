@@ -1,9 +1,6 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
-import com.dihanov.musiq.R;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindow;
-import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 
 import javax.inject.Inject;
 
@@ -18,7 +15,6 @@ public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Present
 
     private ArtistSpecificsContract.View artistDetailsFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private com.dihanov.musiq.ui.detail.ArtistDetailsContract.View artistDetailsActivity;
 
     @Inject
     public ArtistSpecificsPresenter(LastFmApiClient lastFmApiClient) {
@@ -27,8 +23,7 @@ public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Present
 
     @Override
     public void takeView(ArtistSpecificsContract.View view) {
-        this.artistDetailsFragment = (ArtistSpecifics) view;
-        this.artistDetailsActivity = artistDetailsFragment.getArtistDetailsActivity();
+        this.artistDetailsFragment = view;
     }
 
     @Override
@@ -38,9 +33,4 @@ public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Present
     }
 
 
-    @Override
-    public void setClickListenerFetchEntireAlbumInfo(AlbumViewHolder viewHolder, String artistName, String albumName) {
-        AlbumDetailsPopupWindow albumDetailsPopupWindow = new AlbumDetailsPopupWindow(lastFmApiClient, artistDetailsActivity);
-        albumDetailsPopupWindow.showPopupWindow(artistDetailsActivity, viewHolder, artistName, albumName, R.id.detail_content);
-    }
 }

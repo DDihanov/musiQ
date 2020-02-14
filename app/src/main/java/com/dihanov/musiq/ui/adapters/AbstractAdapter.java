@@ -13,6 +13,10 @@ import java.util.Set;
  */
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewHolder> {
+    interface OnItemClickedListener<T extends AbstractViewHolder> {
+        void onItemClicked(AbstractViewHolder abstractViewHolder);
+    }
+
     protected void setIsFavorited(AbstractViewHolder holder, String key){
         boolean isFavorited = false;
         //this automatically makes it so the button displays the correct setting

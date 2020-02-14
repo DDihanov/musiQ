@@ -2,7 +2,6 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,6 +25,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
@@ -37,8 +40,12 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
     private List<Album> artistAlbums;
     private String serializedAlbums;
 
-    @Inject ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
-    @BindView(R.id.albums_recycler_view) RecyclerView recyclerView;
+    private Disposable disposable = null;
+
+    @Inject
+    ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
+    @BindView(R.id.albums_recycler_view)
+    RecyclerView recyclerView;
 
     public ArtistSpecificsAlbum() {
         this.artistAlbums = new ArrayList<>();
@@ -77,26 +84,31 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
     }
 
     private void initAlbums() {
-        new AsyncTask<Void, Void, List<Album>>(){
+        disposable = Single.just(artistAlbums)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess(__ -> {
+                    if (artistAlbums.size() == 0) {
+                        serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
+                        //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
+                        //because this wont deserialize correctly, we need to use the model we created for this cause
+                        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
+                        artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
+                    } else {
+                        artistAlbums = new ArrayList<>();
+                    }
+                    initRecyclerView();
+                })
+                .subscribe();
+        disposable.dispose();
+    }
 
-            @Override
-            protected List<Album> doInBackground(Void... voids) {
-                if(artistAlbums.size() == 0){
-                    serializedAlbums = artistDetailsActivity.getSerialiedAlbums();
-                    //very important not to use a genertic type token: e.g. new TypeToken<ArrayList<Album>>(){}.getType();
-                    //because this wont deserialize correctly, we need to use the model we created for this cause
-                    GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Album.class, new Album.DataStateDeserializer());
-                    return artistAlbums = gsonBuilder.create().fromJson(serializedAlbums, TopArtistAlbums.class).getTopalbums().getAlbum();
-                } else {
-                    return new ArrayList<>();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<Album> albums) {
-                initRecyclerView();
-            }
-        }.execute();
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -108,7 +120,7 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
         com.dihanov.musiq.ui.detail.ArtistDetails artistDetails = (com.dihanov.musiq.ui.detail.ArtistDetails) this.artistDetailsActivity;
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (HelperMethods.isTablet(artistDetails)){
+        if (HelperMethods.isTablet(artistDetails)) {
             layoutManager = new GridLayoutManager(artistDetails, 3);
             recyclerView.addItemDecoration(new ArtistSpecificsAlbum.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, artistDetails), true));
         } else {
@@ -116,7 +128,7 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
             recyclerView.addItemDecoration(new ArtistSpecificsAlbum.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, artistDetails), true));
         }
 
-        if(layoutManager == null){
+        if (layoutManager == null) {
             return;
         }
 
@@ -127,7 +139,7 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
 
     @Override
     public Context getContext() {
-        return (Context)this.artistDetailsActivity;
+        return (Context) this.artistDetailsActivity;
     }
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

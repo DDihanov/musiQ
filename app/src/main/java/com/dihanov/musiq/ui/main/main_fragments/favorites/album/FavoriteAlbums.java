@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
+import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
@@ -32,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class FavoriteAlbums extends ViewPagerCustomizedFragment implements FavoriteAlbumsContract.View{
+public class FavoriteAlbums extends ViewPagerCustomizedFragment implements FavoriteAlbumsContract.View, AbstractAdapter.OnItemClickedListener {
     public static final String TITLE = "favorite albums";
 
     @BindView(R.id.recycler_view)
@@ -100,7 +102,7 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
         recyclerView.setAdapter(new AlbumDetailsAdapter(mainActivity,
                 new ArrayList<>(),
                 favoriteFragmentsPresenter,
-                true));
+                true, this));
     }
 
     @Override
@@ -135,6 +137,11 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
                 new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClicked(AbstractViewHolder abstractViewHolder) {
+        favoriteFragmentsPresenter.
     }
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

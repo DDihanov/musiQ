@@ -69,35 +69,7 @@ public class AlbumDetailsPopupWindow {
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(click -> {
-                    lastFmApiClient.getLastFmApiService()
-                            .searchForSpecificAlbum(artistName, albumName)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .map(specificAlbum -> specificAlbum)
-                            .subscribe(new Observer<SpecificAlbum>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-                                    activity.showProgressBar();
-                                    HelperMethods.showTooltip(activity, activity.getBirdIcon(), LOADING_ALBUM);
-                                }
 
-                                @Override
-                                public void onNext(SpecificAlbum specificAlbum) {
-                                    Album fullAlbum = specificAlbum.getAlbum();
-                                    //just a small proof of concept
-                                    loadedAlbum[0] = fullAlbum;
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e(this.getClass().toString(), e.getMessage());
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                    activity.hideProgressBar();
-                                    showAlbumDetails((Activity) activity, loadedAlbum[0], mainWindowId);
-                                }
                             });
 
                 });

@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.AndroidInjection;
 import dagger.android.support.DaggerAppCompatActivity;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -146,38 +150,31 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     private void initArtistSpecifics() {
-        new AsyncTask<Void, Void, Artist>() {
-            @Override
-            protected void onPreExecute() {
-                showProgressBar();
-            }
-
-            @Override
-            protected Artist doInBackground(Void... voids) {
-                return new Gson().fromJson(serializedArtist, SpecificArtist.class).getArtist();
-            }
-
-            @Override
-            protected void onPostExecute(Artist deserializedArtist) {
-                if (deserializedArtist == null){
+        Artist deserialized = new Gson().fromJson(serializedArtist, SpecificArtist.class).getArtist();
+        Single.just(deserialized)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(__ -> showProgressBar())
+                .doOnSuccess(deserializedArtist -> {
+                    if (deserializedArtist == null){
+                        hideProgressBar();
+                        Toast.makeText(getApplicationContext(), R.string.error_could_not_find_artist, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ArtistDetails.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        ArtistDetails.this.startActivity(intent);
+                        return;
+                    }
+                    String name = (deserializedArtist.getName() == null) ? deserializedArtist.getText() : deserializedArtist.getName();
+                    artist = deserializedArtist;
+                    favoriteArtistStar.setClickable(true);
+                    setArtistTitle(name);
+                    initArtistImage();
                     hideProgressBar();
-                    Toast.makeText(getApplicationContext(), R.string.error_could_not_find_artist, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ArtistDetails.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ArtistDetails.this.startActivity(intent);
-                    return;
-                }
-                String name = (deserializedArtist.getName() == null) ? deserializedArtist.getText() : deserializedArtist.getName();
-                artist = deserializedArtist;
-                favoriteArtistStar.setClickable(true);
-                setArtistTitle(name);
-                initArtistImage();
-                hideProgressBar();
-                initViewPager();
-                initTags();
-                configureIcon();
-            }
-        }.execute();
+                    initViewPager();
+                    initTags();
+                    configureIcon();
+                })
+                .subscribe();
     }
 
     private void configureIcon() {
@@ -204,7 +201,21 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
         if (!username.isEmpty() && username != "") {
-            presenter.setOnDrawerOpenedListener(this);
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(@NonNull View view, float v) { }
+
+                @Override
+                public void onDrawerOpened(@NonNull View view) {
+                    presenter.getUserInfo();
+                }
+
+                @Override
+                public void onDrawerClosed(@NonNull View view) { }
+
+                @Override
+                public void onDrawerStateChanged(int i) { }
+            } );
         }
     }
 
@@ -310,6 +321,27 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         }
     }
 
+    @Override
+    public void setUserInfo(String profilePicUrl, String playcount, String username) {
+        RelativeLayout drawerLayout = (RelativeLayout) navigationView.getHeaderView(0);
+
+        TextView usernameTextView = (TextView) drawerLayout.getChildAt(0);
+        TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
+        ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
+
+        usernameTextView.setVisibility(View.VISIBLE);
+        scrobbleCount.setVisibility(View.VISIBLE);
+
+        Glide.with(this)
+                .load(profilePicUrl)
+                .apply(RequestOptions.circleCropTransform().placeholder(App.getAppContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                                .getPackageName()))).into(userAvatar);
+        usernameTextView.setText(this.getString(R.string.logged_in_as) + " " + username);
+        scrobbleCount.setText(this.getString(R.string.scrobbles) + " " + playcount);
+
+    }
+
     private void initCollapsingToolbar() {
         collapsingToolbar.setTitle(" ");
         HelperMethods.setToolbarFont(collapsingToolbar, this);
@@ -343,7 +375,6 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         });
     }
 
-    @Override
     public String getArtistBiography() {
         if (this.artist == null) {
             return " ";
@@ -351,45 +382,10 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         return this.artist.getBio().getContent();
     }
 
-    @Override
-    public DrawerLayout getDrawerLayout() {
-        return drawerLayout;
-    }
-
-    @Override
-    public NavigationView getNavigationView() {
-        return navigationView;
-    }
-
     //this prevents the popupwindow from closing
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public String getSerialiedAlbums() {
-        return this.serializedAlbumList;
-    }
-
-    @Override
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
-
-    @Override
-    public Artist getArtist() {
-        return this.artist;
-    }
-
-    @Override
-    public ArtistDetails getDetailActivity() {
-        return this;
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
     }
 
     @Override
@@ -412,8 +408,19 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         return this.bird;
     }
 
-
     public void setArtistTitle(String artistTitle) {
         this.artistTitle.setText(artistTitle);
+    }
+
+    public String getSerialiedAlbums() {
+        return this.serializedAlbumList;
+    }
+
+    public Artist getArtist() {
+        return this.artist;
+    }
+
+    public ArtistDetails getDetailActivity() {
+        return this;
     }
 }

@@ -2,6 +2,8 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
 
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
@@ -12,7 +14,7 @@ import dagger.android.support.DaggerFragment;
 
  public abstract class ArtistSpecifics extends DaggerFragment implements ArtistSpecificsContract.View{
     @Inject ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
-    protected com.dihanov.musiq.ui.detail.ArtistDetailsContract.View artistDetailsActivity;
+    protected ArtistDetails artistDetailsActivity;
 
     public ArtistSpecifics() {
     }
@@ -20,7 +22,7 @@ import dagger.android.support.DaggerFragment;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.artistDetailsActivity = (com.dihanov.musiq.ui.detail.ArtistDetailsContract.View) context;
+        this.artistDetailsActivity = (ArtistDetails) context;
     }
 
     @Override
@@ -30,7 +32,7 @@ import dagger.android.support.DaggerFragment;
     }
 
     public com.dihanov.musiq.ui.detail.ArtistDetails getArtistDetailsActivity() {
-        return (com.dihanov.musiq.ui.detail.ArtistDetails)artistDetailsActivity;
+        return artistDetailsActivity;
     }
 
     protected ArtistSpecificsContract.Presenter getPresenter(){
