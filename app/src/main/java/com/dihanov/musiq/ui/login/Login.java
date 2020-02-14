@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
@@ -24,6 +22,7 @@ import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;
+import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
@@ -63,6 +62,9 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @BindView(R.id.sign_up)
     TextView register;
 
+    @BindView(R.id.login_layout)
+    ConstraintLayout loginLayout;
+
     @Inject
     LoginContract.Presenter loginActivityPresenter;
 
@@ -92,7 +94,19 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
         String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
 
-        loginActivityPresenter.authenticateUser(usernameString, passwordString, this, rememberMeCheckBox.isChecked());
+        if (checkConnection()){
+            HelperMethods.setLayoutChildrenEnabled(true, loginLayout);
+        } else {
+            loginActivityPresenter.authenticateUser(usernameString, passwordString, rememberMeCheckBox.isChecked());
+        }
+    }
+
+    private boolean checkConnection() {
+        if(!Connectivity.isConnected(this)){
+            HelperMethods.showNetworkErrorTooltip(this, getBirdIcon());
+            return true;
+        }
+        return false;
     }
 
     private void checkIntent(Intent intent) {
@@ -104,7 +118,7 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
             HelperMethods.setLayoutChildrenEnabled(false, layout);
             this.username.setText(username);
             this.password.setText(password);
-            loginActivityPresenter.authenticateUser(username, password, this, rememberMeCheckBox.isChecked());
+            loginActivityPresenter.authenticateUser(username, password, rememberMeCheckBox.isChecked());
         }
     }
 
@@ -149,6 +163,21 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     }
 
     @Override
+    public void toggleChildrenAvailability(boolean enabled) {
+        HelperMethods.setLayoutChildrenEnabled(enabled, loginLayout);
+    }
+
+    @Override
+    public void showInvalidLogin() {
+        HelperMethods.showTooltip(this, getBirdIcon(), getString((R.string.error_username_password)));
+    }
+
+    @Override
+    public void showLoginSuccess() {
+        HelperMethods.showTooltip(this, getBirdIcon(),  getString((R.string.logging_in_text)));
+    }
+
+    @Override
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
     }
@@ -156,11 +185,6 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

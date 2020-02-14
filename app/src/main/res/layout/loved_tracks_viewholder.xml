@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <ImageView
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/loved_track_thumbnail"
@@ -20,6 +19,7 @@
         android:padding="8dp"/>
 
     <TextView
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/loved_track_adapter_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,6 +37,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/loved_track_love"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -54,6 +55,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/loved_track_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

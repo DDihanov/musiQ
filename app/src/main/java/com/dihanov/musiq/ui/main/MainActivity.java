@@ -1,9 +1,13 @@
 package com.dihanov.musiq.ui.main;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -26,16 +29,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
+import com.dihanov.musiq.ui.adapters.TopArtistAdapter;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+import com.dihanov.musiq.util.ActivityStarterWithIntentExtras;
+import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
 import com.dihanov.musiq.util.SettingsManager;
+import com.dihanov.musiq.util.TopArtistSource;
+import com.dihanov.musiq.util.UserInfoSetter;
 
 import org.codechimp.apprater.AppRater;
+
+import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -52,11 +65,20 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Dihanov on 9/16/2017.
  */
 
-public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
+public class MainActivity extends DaggerAppCompatActivity implements MainContract.View, AbstractAdapter.OnItemClickedListener<Artist> {
     private static final String TAG_LAST_SEARCH = "lastSearch";
 
     @Inject
     MainContract.Presenter mainActivityPresenter;
+
+    @Inject
+    ActivityStarterWithIntentExtras activityStarterWithIntentExtras;
+
+    @Inject
+    UserInfoSetter userInfoSetter;
+
+    @Inject
+    SettingsManager settingsManager;
 
     @BindView(R.id.dummy_button)
     Button dummyButton;
@@ -93,7 +115,26 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
     private SearchView searchBar;
     private String lastSearch;
-    private SettingsManager settingsManager;
+    private NetworkChangeReceiver networkChangeReceiver;
+
+    private class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (isOnline(context)) {
+                    loadBackdrop((MainActivity) context);
+                } else {
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private boolean isOnline(Context context) {
+            return Connectivity.isConnected(context);
+        }
+    }
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -115,7 +156,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
             this.lastSearch = savedInstanceState.getString(TAG_LAST_SEARCH);
         }
 
-        settingsManager = new SettingsManager(this);
+        settingsManager.setActivity(this);
 
         initGridView();
         initViewPager();
@@ -185,8 +226,25 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
             return true;
         });
         String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
-        if (!username.isEmpty() && username != ""){
-            mainActivityPresenter.setOnDrawerOpenedListener(this);
+        if (!username.isEmpty() && username != "") {
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(@NonNull View view, float v) {
+                }
+
+                @Override
+                public void onDrawerOpened(@NonNull View view) {
+                    mainActivityPresenter.getUserInfo();
+                }
+
+                @Override
+                public void onDrawerClosed(@NonNull View view) {
+                }
+
+                @Override
+                public void onDrawerStateChanged(int i) {
+                }
+            });
         }
     }
 
@@ -255,18 +313,52 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mainActivityPresenter.leaveView();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         initViewPager();
-        mainActivityPresenter.setBackdropImageChangeListener(this);
         this.invalidateOptionsMenu();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        this.registerReceiver(networkChangeReceiver, filter);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            this.unregisterReceiver(networkChangeReceiver);
+        }
+        mainActivityPresenter.leaveView();
+    }
+
+    private void loadBackdrop(MainActivity mainActivity) {
+        int limit = HelperMethods.determineArtistLimit(mainActivity);
+
+        int which = App.getSharedPreferences().getInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.LAST_FM_CHARTS);
+
+        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+
+        if (username.isEmpty() || username.equals("")) {
+            mainActivityPresenter.loadChartTopArtists(limit);
+            return;
+        }
+
+        if (which == TopArtistSource.LAST_FM_CHARTS) {
+            mainActivityPresenter.loadChartTopArtists(limit);
+        } else {
+            String period = HelperMethods.determineSelectedTimeframeFromInt();
+            mainActivityPresenter.loadUserTopArtists(period, username, limit);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -282,19 +374,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         return true;
     }
 
-    @Override
     public SearchView getSearchBar() {
         return this.searchBar;
-    }
-
-    @Override
-    public DrawerLayout getDrawerLayout() {
-        return drawerLayout;
-    }
-
-    @Override
-    public NavigationView getNavigationView() {
-        return navigationView;
     }
 
     //prevent popupwindow close on rotation
@@ -303,19 +384,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public RecyclerView getRecyclerView() {
-        return this.recyclerView;
-    }
-
-    @Override
-    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
-        recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.getAdapter().notifyDataSetChanged();
-    }
 
     @Override
     public void showProgressBar() {
@@ -325,11 +393,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showToast(Context context, String message) {
-
     }
 
     @Override
@@ -343,13 +406,19 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     }
 
     @Override
-    public Context getContext() {
-        return this;
+    public void setUserInfo(String profilePicUrl, String playcount, String username) {
+        userInfoSetter.setUserInfo(profilePicUrl, playcount, username, navigationView, this);
     }
 
+
     @Override
-    public MainActivity getMainActivity() {
-        return this;
+    public void setTopArtists(List<Artist> artists) {
+        TopArtistAdapter topArtistAdapter = new TopArtistAdapter(this,
+                artists,
+                true,
+                this);
+        recyclerView.setAdapter(topArtistAdapter);
+        recyclerView.postDelayed(() -> recyclerView.smoothScrollToPosition(artists.size() - 1), 1000);
     }
 
     private void initGridView() {
@@ -361,5 +430,16 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
     public void setViewPagerSelection(int position) {
         this.viewPager.setCurrentItem(position, true);
+    }
+
+    @Override
+    public void onItemClicked(Artist item) {
+        mainActivityPresenter.fetchArtist(item.getName());
+    }
+
+    @Override
+    public void startActivityWithExtras(HashMap<String, String> bundleExtra) {
+        bundleExtra.put(Constants.LAST_SEARCH, searchBar.getQuery().toString());
+        activityStarterWithIntentExtras.startActivityWithExtras(bundleExtra, this, ArtistDetails.class);
     }
 }

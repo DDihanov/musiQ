@@ -2,6 +2,7 @@ package com.dihanov.musiq.ui.detail.detail_fragments;
 
 import android.content.Context;
 
+import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
 
 import javax.inject.Inject;
@@ -31,11 +32,21 @@ import dagger.android.support.DaggerFragment;
         this.artistDetailsFragmentPresenter.leaveView();
     }
 
-    public com.dihanov.musiq.ui.detail.ArtistDetails getArtistDetailsActivity() {
-        return artistDetailsActivity;
-    }
-
     protected ArtistSpecificsContract.Presenter getPresenter(){
         return this.artistDetailsFragmentPresenter;
+    }
+
+    @Override
+    public void showProgressBar() {
+        artistDetailsActivity.showProgressBar();
+    }
+
+    @Override
+    public void showAlbumDetails(Album fullAlbum) {
+    }
+
+    @Override
+    public void hideProgressBar() {
+        artistDetailsActivity.hideProgressBar();
     }
 }

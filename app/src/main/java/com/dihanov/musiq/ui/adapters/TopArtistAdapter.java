@@ -1,7 +1,6 @@
 package com.dihanov.musiq.ui.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -11,10 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainPresenter;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
@@ -31,22 +27,22 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 public class TopArtistAdapter extends AbstractAdapter {
     private boolean isFavoriteType = false;
-    private MainPresenter mainPresenter;
     private Context context;
     private List<Artist> topArtist;
+    private OnItemClickedListener<Artist> onItemClickedListener;
 
-    public TopArtistAdapter(BaseView<?> context, List<Artist> topArtist, MainPresenter mainPresenter) {
-        this.context = (Activity)context;
+    public TopArtistAdapter(Context context, List<Artist> topArtist, OnItemClickedListener<Artist> onItemClickedListener) {
+        this.context = context;
         this.topArtist = topArtist;
-        this.mainPresenter = mainPresenter;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
 
-    public TopArtistAdapter(BaseView<?> context, List<Artist> topArtist, MainPresenter mainPresenter, boolean isFavoriteType) {
-        this.context = (Activity)context;
+    public TopArtistAdapter(Context context, List<Artist> topArtist, boolean isFavoriteType, OnItemClickedListener<Artist> onItemClickedListener) {
+        this.context = context;
         this.topArtist = topArtist;
-        this.mainPresenter = mainPresenter;
         this.isFavoriteType = isFavoriteType;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
     @Override
@@ -61,8 +57,8 @@ public class TopArtistAdapter extends AbstractAdapter {
         Artist artist = topArtist.get(position);
         Glide.with(context.getApplicationContext())
                 .load(artist.getImage().get(Constants.IMAGE_XLARGE).getText())
-                .apply(new RequestOptions().error(App.getAppContext().getResources()
-                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                .apply(new RequestOptions().error(context.getApplicationContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", context
                                 .getPackageName())))
                 .transition(withCrossFade(2000))
                 .into(holder.getThumbnail());
@@ -72,7 +68,7 @@ public class TopArtistAdapter extends AbstractAdapter {
         holder.getThumbnail().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainPresenter.addOnArtistResultClickedListener(holder, artist.getName());
+                onItemClickedListener.onItemClicked(artist);
             }
         });
 

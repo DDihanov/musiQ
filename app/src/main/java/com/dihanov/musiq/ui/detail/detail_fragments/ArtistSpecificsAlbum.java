@@ -1,6 +1,5 @@
 package com.dihanov.musiq.ui.detail.detail_fragments;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,10 @@ import android.view.ViewGroup;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindowManager;
 import com.dihanov.musiq.util.HelperMethods;
 import com.google.gson.GsonBuilder;
 
@@ -34,18 +36,22 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistSpecificsAlbum extends ArtistSpecifics {
+public class ArtistSpecificsAlbum extends ArtistSpecifics implements AbstractAdapter.OnItemClickedListener<Album> {
     public static final String TITLE = "artist top albums";
 
     private List<Album> artistAlbums;
     private String serializedAlbums;
 
-    private Disposable disposable = null;
+    private Disposable disposable;
 
     @Inject
     ArtistSpecificsContract.Presenter artistDetailsFragmentPresenter;
+
     @BindView(R.id.albums_recycler_view)
     RecyclerView recyclerView;
+
+    @Inject
+    AlbumDetailsPopupWindowManager albumDetailsPopupWindowManager;
 
     public ArtistSpecificsAlbum() {
         this.artistAlbums = new ArrayList<>();
@@ -100,7 +106,6 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
                     initRecyclerView();
                 })
                 .subscribe();
-        disposable.dispose();
     }
 
     @Override
@@ -117,7 +122,7 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
     }
 
     private void initRecyclerView() {
-        com.dihanov.musiq.ui.detail.ArtistDetails artistDetails = (com.dihanov.musiq.ui.detail.ArtistDetails) this.artistDetailsActivity;
+        ArtistDetails artistDetails =  this.artistDetailsActivity;
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
         if (HelperMethods.isTablet(artistDetails)) {
@@ -128,19 +133,21 @@ public class ArtistSpecificsAlbum extends ArtistSpecifics {
             recyclerView.addItemDecoration(new ArtistSpecificsAlbum.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, artistDetails), true));
         }
 
-        if (layoutManager == null) {
-            return;
-        }
-
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AlbumDetailsAdapter(artistDetails, this.artistAlbums, artistDetailsFragmentPresenter));
+        recyclerView.setAdapter(new AlbumDetailsAdapter(artistDetails, this.artistAlbums, this));
     }
 
     @Override
-    public Context getContext() {
-        return (Context) this.artistDetailsActivity;
+    public void showAlbumDetails(Album fullAlbum) {
+        albumDetailsPopupWindowManager.showAlbumDetails(requireActivity(), fullAlbum);
     }
+
+    @Override
+    public void onItemClicked(Album item) {
+        artistDetailsFragmentPresenter.fetchEntireAlbumInfo(item.getArtist().toString(), item.getName());
+    }
+
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 

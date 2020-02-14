@@ -1,11 +1,8 @@
 package com.dihanov.musiq.ui.main.main_fragments.user_top_tracks;
 
-import android.content.Context;
-
+import com.dihanov.musiq.models.UserTopTracks;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 
 /**
  * Created by dimitar.dihanov on 2/22/2018.
@@ -13,14 +10,14 @@ import com.github.mikephil.charting.charts.HorizontalBarChart;
 
 public interface UserTopTracksContract {
     interface View extends BaseView<UserTopTracksContract.Presenter> {
-        Context getContext();
+        void configureBarChart(UserTopTracks userTopTracksModel);
 
-        MainActivity getMainActivity();
+        void showProgressBar();
 
-        HorizontalBarChart getHorizontalBarChart();
+        void hideProgressBar();
     }
 
     interface Presenter extends BasePresenter<UserTopTracksContract.View>{
-        void loadTopTracks(UserTopTracksContract.View view, String timeframe);
+        void loadTopTracks(String timeframe);
     }
 }

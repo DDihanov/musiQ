@@ -18,25 +18,37 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.RecentTracksWrapper;
+import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
+import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindowManager;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
+import com.dihanov.musiq.util.ActivityStarterWithIntentExtras;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.jakewharton.rxbinding2.view.RxView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayingContract.View {
+public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayingContract.View, RecentlyScrobbledAdapter.RecentlyScrobbledItemClickListener {
     public static final String TITLE = "now playing";
 
     @BindView(R.id.now_playing_fragment_layout)
@@ -70,7 +82,10 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     NowPlayingContract.Presenter nowPlayingFragmentPresenter;
 
     @Inject
-    Context context;
+    AlbumDetailsPopupWindowManager albumDetailsPopupWindowManager;
+
+    @Inject
+    ActivityStarterWithIntentExtras activityStarterWithIntentExtras;
 
     private MainActivity mainActivity;
 
@@ -121,16 +136,29 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
             nowPlayingArtist.setText(nowPlaying.getArtistName());
             nowPlayingTitle.setText(nowPlaying.getTrackName());
             nowPlayingAlbum.setText(nowPlaying.getAlbumName());
-            nowPlayingFragmentPresenter.setClickListenerFetchEntireAlbumInfo(nowPlayingArtistImage, nowPlaying.getArtistName(), nowPlaying.getAlbumName());
-            nowPlayingFragmentPresenter.addOnArtistResultClickedListener(nowPlayingArtist, nowPlaying.getArtistName());
+
+            RxView.clicks(nowPlayingArtistImage)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(click -> {
+                        nowPlayingFragmentPresenter.fetchEntireAlbumInfo(nowPlaying.getArtistName(), nowPlaying.getAlbumName());
+                    });
+
+            RxView.clicks(nowPlayingArtist)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(click -> {
+                        nowPlayingFragmentPresenter.fetchArtist(nowPlaying.getArtistName());
+                    });
         }
 
         if (App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) {
-            nowPlayingFragmentPresenter.loadRecentScrobbles(this);
+            nowPlayingFragmentPresenter.loadRecentScrobbles();
         }
 
         return view;
     }
+
 
     @OnClick(R.id.love_track_full)
     void loveTrack(View view) {
@@ -153,13 +181,8 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     }
 
     @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
     public View getBirdIcon() {
-        return mainActivity.getBirdIcon();
+        return null;
     }
 
     @Override
@@ -173,17 +196,21 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     }
 
     @Override
-    public void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
+    public void setRecentTracks(RecentTracksWrapper recentTracksWrapper) {
+        if (recentTracksWrapper == null) {
+            return;
+        }
 
-    @Override
-    public RecyclerView getRecyclerView() {
-        return this.recentTracks;
-    }
+        if (recentTracksWrapper.getRecenttracks() == null || recentTracksWrapper.getRecenttracks().getTrack() == null) {
+            return;
+        }
 
-    @Override
-    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+        List<Track> result = recentTracksWrapper.getRecenttracks().getTrack();
+
+        RecentlyScrobbledAdapter adapter =
+                new RecentlyScrobbledAdapter(result, requireContext(), this);
+
+
         recentTracks.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
@@ -194,5 +221,37 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     @Override
     public MainActivity getMainActivity() {
         return this.mainActivity;
+    }
+
+    @Override
+    public void onTrackLoved(Track track) {
+        nowPlayingFragmentPresenter.loveTrack(track.getArtist().getName(), track.getName());
+    }
+
+    @Override
+    public void onTrackUnloved(Track track) {
+        nowPlayingFragmentPresenter.unloveTrack(track.getArtist().getName(), track.getName());
+    }
+
+    @Override
+    public void showToastTrackLoved() {
+        Toast.makeText(requireContext(), getString(R.string.track_loved), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastTrackUnloved() {
+        Toast.makeText(requireContext(), R.string.track_unloved, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void startActivityWithExtras(HashMap<String, String> bundleExtra) {
+        bundleExtra.put(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
+        activityStarterWithIntentExtras.startActivityWithExtras(bundleExtra, requireActivity(), ArtistDetails.class);
+    }
+
+    @Override
+    public void showAlbumDetails(Album fullAlbum) {
+        albumDetailsPopupWindowManager.showAlbumDetails(requireActivity(), fullAlbum);
     }
 }

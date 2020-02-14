@@ -1,6 +1,5 @@
 package com.dihanov.musiq.ui.settings.profile.user_loved_tracks;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Track;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.LovedTracksAdapter;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import dagger.android.support.DaggerFragment;
 
-public class UserLovedTracksView extends DaggerFragment implements UserLovedTracksContract.View {
+public class UserLovedTracksView extends DaggerFragment implements UserLovedTracksContract.View, AbstractAdapter.OnItemClickedListener<Track> {
     public static final String TITLE = "loved tracks";
 
     @BindView(R.id.loved_tracks_progressbar)
@@ -61,7 +61,7 @@ public class UserLovedTracksView extends DaggerFragment implements UserLovedTrac
 
     @Override
     public void loadLovedTracks(List<Track> lovedTracks) {
-        recyclerView.setAdapter(new LovedTracksAdapter(lovedTracks, getContext(), presenter));
+        recyclerView.setAdapter(new LovedTracksAdapter(lovedTracks, getContext(), this));
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -84,13 +84,24 @@ public class UserLovedTracksView extends DaggerFragment implements UserLovedTrac
     }
 
     @Override
+    public void showToastTrackLoved() {
+        Toast.makeText(requireContext(), getString(R.string.track_loved), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastTrackUnloved() {
+        Toast.makeText(requireContext(), R.string.track_unloved, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onDestroy() {
         this.presenter.leaveView();
         super.onDestroy();
     }
 
     @Override
-    public void showToast(Context context, String message) {
-        Toast.makeText(context, R.string.track_unloved, Toast.LENGTH_SHORT).show();
+    public void onItemClicked(Track item) {
+        presenter.unloveTrack(item.getArtist().getName(),
+                item.getName());
     }
 }

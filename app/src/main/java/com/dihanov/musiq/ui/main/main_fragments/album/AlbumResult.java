@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,20 +14,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
+import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.GeneralAlbumSearch;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
+import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
+import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindowManager;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.HelperMethods;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumResult extends DaggerFragment implements AlbumResultContract.View{
+public class AlbumResult extends DaggerFragment implements AlbumResultContract.View, AbstractAdapter.OnItemClickedListener<Album> {
+    private static final long DELAY_IN_MILLIS = 2000;
     public static final String TITLE = "albums";
 
     @BindView(R.id.recycler_view)
@@ -36,6 +51,9 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
 
     @Inject
     AlbumResultContract.Presenter albumResultFragmentPresenter;
+
+    @Inject
+    AlbumDetailsPopupWindowManager albumDetailsPopupWindowManager;
 
     private MainActivity mainActivity;
 
@@ -54,7 +72,7 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mainActivity = (MainActivity)getActivity();
+        this.mainActivity = (MainActivity) getActivity();
     }
 
     @Nullable
@@ -81,14 +99,31 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        albumResultFragmentPresenter.addOnSearchBarTextChangedListener(mainActivity);
+        addOnSearchBarTextChangedListener();
         mainActivity.getSearchBar().setIconified(false);
+    }
+
+    private void addOnSearchBarTextChangedListener() {
+        Observable<GeneralAlbumSearch> observable = RxSearchView.queryTextChanges(mainActivity.getSearchBar())
+                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
+                .filter(s -> s.length() >= 2)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(s -> {
+                    HelperMethods.checkConnection(mainActivity);
+                    mainActivity.showProgressBar();
+                })
+                .observeOn(Schedulers.io())
+                .flatMap((Function<CharSequence, Observable<GeneralAlbumSearch>>) s -> albumResultFragmentPresenter.searchForAlbum(s.toString()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry();
+
+        albumResultFragmentPresenter.publishResult(observable);
     }
 
     private void initRecyclerView() {
         RecyclerView.LayoutManager layoutManager = null;
         //check if tablet --> 3 columns instead of 2;
-        if (HelperMethods.isTablet(mainActivity)){
+        if (HelperMethods.isTablet(mainActivity)) {
             layoutManager = new GridLayoutManager(mainActivity, 3);
             recyclerView.addItemDecoration(new AlbumResult.GridSpacingItemDecoration(3, HelperMethods.dpToPx(10, mainActivity), true));
         } else {
@@ -96,7 +131,7 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
             recyclerView.addItemDecoration(new AlbumResult.GridSpacingItemDecoration(2, HelperMethods.dpToPx(10, mainActivity), true));
         }
 
-        if(layoutManager == null){
+        if (layoutManager == null) {
             return;
         }
 
@@ -116,19 +151,42 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
     }
 
     @Override
-    public RecyclerView getRecyclerView() {
-        return this.recyclerView;
+    public void hideProgressBar() {
+        mainActivity.hideProgressBar();
     }
 
     @Override
-    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
-        recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.getAdapter().notifyDataSetChanged();
+    public void hideKeyboard() {
+        mainActivity.hideKeyboard();
     }
 
+    @Override
+    public void setSearchResults(GeneralAlbumSearch albumSearchResults) {
+        List<Album> result = new ArrayList<>(albumSearchResults.getResults().getAlbummatches().getAlbum());
+        if(result.isEmpty()){
+            result = Collections.emptyList();
+        }
+
+        AlbumDetailsAdapter albumAdapter = new AlbumDetailsAdapter(requireContext(),
+                result, this);
+
+        recyclerView.setAdapter(albumAdapter);
+    }
+
+    @Override
+    public void showProgressBar() {
+        mainActivity.showProgressBar();
+    }
+
+    @Override
+    public void showAlbumDetails(Album fullAlbum) {
+        albumDetailsPopupWindowManager.showAlbumDetails(mainActivity, fullAlbum);
+    }
+
+    @Override
+    public void onItemClicked(Album item) {
+        albumResultFragmentPresenter.fetchEntireAlbumInfo(item.getArtist().toString(), item.getName());
+    }
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 

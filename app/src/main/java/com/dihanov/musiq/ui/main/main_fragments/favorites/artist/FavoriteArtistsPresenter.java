@@ -1,26 +1,18 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
-import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
+import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -31,20 +23,18 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl implements FavoriteArtistsContract.Presenter {
-    private static final long DELAY_IN_MILLIS = 500;
-
+public class FavoriteArtistsPresenter implements FavoriteArtistsContract.Presenter {
     private final LastFmApiClient lastFmApiClient;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private FavoriteArtistsContract.View artistResultFragment;
-    private MainContract.View mainActivity;
 
     @Inject
     public FavoriteArtistsPresenter(LastFmApiClient lastFmApiClient) {
@@ -54,7 +44,6 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
     @Override
     public void takeView(FavoriteArtistsContract.View view) {
         this.artistResultFragment = view;
-        this.mainActivity = artistResultFragment.getMainActivity();
     }
 
     @Override
@@ -66,21 +55,7 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
     }
 
     @Override
-    public void addOnArtistResultClickedListener(ClickableArtistViewHolder viewHolder, String artistName) {
-        RxView.clicks(viewHolder.getThumbnail())
-                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(click -> {
-                    this.showArtistDetailsIntent(artistName, mainActivity);
-                });
-    }
-
-
-    @Override
-    public void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable) {
-        //resetting the adapter
-        recyclerViewExposable.getRecyclerView().setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), FavoriteArtistsPresenter.this, true));
-
+    public void loadFavoriteArtists(Set<String> favorites) {
         List<Artist> deserializedList = new ArrayList<>();
 
         for (String serializedArtist : favorites) {
@@ -102,20 +77,72 @@ public class FavoriteArtistsPresenter extends ArtistDetailsIntentShowableImpl im
                 .subscribe(new SingleObserver<List<Artist>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        mainActivity.showProgressBar();
+                        artistResultFragment.showProgressBar();
                         compositeDisposable.add(d);
                     }
 
                     @Override
                     public void onSuccess(List<Artist> artists) {
-                        ((ArtistAdapter) recyclerViewExposable.getRecyclerView().getAdapter()).setArtistList(artists);
-                        recyclerViewExposable.getRecyclerView().getAdapter().notifyDataSetChanged();
+                        artistResultFragment.setArtistList(artists);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mainActivity.hideProgressBar();
+                        artistResultFragment.hideProgressBar();
                         compositeDisposable.clear();
+                    }
+                });
+    }
+
+    @Override
+    public void fetchArtist(String artistName) {
+        HashMap<String, String> bundleExtra = new HashMap<>();
+
+        Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
+                .getSpecificArtistInfo(artistName)
+                .subscribeOn(Schedulers.io());
+        Observable<TopArtistAlbums> topAlbumRequest = lastFmApiClient.getLastFmApiService()
+                .searchForArtistTopAlbums(artistName, Constants.ALBUM_LIMIT)
+                .subscribeOn(Schedulers.newThread());
+
+        Observable.zip(
+                specificArtistRequest,
+                topAlbumRequest,
+                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
+                    @Override
+                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
+                        HashMap<String, String> result = new HashMap<>();
+
+                        result.put(Constants.ARTIST, new Gson().toJson(specificArtist, SpecificArtist.class));
+                        result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums, TopArtistAlbums.class));
+
+                        return result;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HashMap<String, String>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(HashMap<String, String> stringStringHashMap) {
+                        bundleExtra.putAll(stringStringHashMap);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AppLog.log(ArtistAdapter.class.toString(), e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //important we use .clear and not .dispose, since .dispose will not allow any further subscribing
+                        compositeDisposable.clear();
+                        artistResultFragment.hideProgressBar();
+                        artistResultFragment.startActivityWithExtras(bundleExtra);
                     }
                 });
     }

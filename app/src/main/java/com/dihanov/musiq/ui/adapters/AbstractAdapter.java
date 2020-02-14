@@ -13,8 +13,8 @@ import java.util.Set;
  */
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewHolder> {
-    interface OnItemClickedListener<T extends AbstractViewHolder> {
-        void onItemClicked(AbstractViewHolder abstractViewHolder);
+    public interface OnItemClickedListener<T> {
+        void onItemClicked(T item);
     }
 
     protected void setIsFavorited(AbstractViewHolder holder, String key){

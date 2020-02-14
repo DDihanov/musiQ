@@ -1,26 +1,35 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
-import android.content.Context;
-
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
+import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainContract;
+
+import java.util.HashMap;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
 public interface ArtistResultContract {
-    interface View extends BaseView<Presenter>, RecyclerViewExposable {
-        MainActivity getMainActivity();
+    interface View extends BaseView<Presenter> {
+        void hideProgressBar();
 
-        Context getContext();
+        void hideKeyboard();
+
+        void setSearchResults(ArtistSearchResults artistSearchResults);
+
+        void showProgressBar();
+
+        void startActivityWithExtras(HashMap<String, String> bundleExtra);
     }
 
-    interface Presenter extends BasePresenter<View>, SpecificArtistViewHolderSearchable {
-        void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity);
+    interface Presenter extends BasePresenter<View> {
+        Observable<ArtistSearchResults> searchForArtist(String artistName);
+
+        void fetchArtist(String artistName);
+
+        void publishResult(Observable<ArtistSearchResults> observable);
     }
 }

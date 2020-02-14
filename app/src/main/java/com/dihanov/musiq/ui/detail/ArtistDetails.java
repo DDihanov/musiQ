@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +37,7 @@ import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.SettingsManager;
+import com.dihanov.musiq.util.UserInfoSetter;
 import com.google.gson.Gson;
 import com.veinhorn.tagview.TagView;
 
@@ -75,6 +75,12 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @Inject
     ArtistDetailsContract.Presenter presenter;
 
+    @Inject
+    UserInfoSetter userInfoSetter;
+
+    @Inject
+    SettingsManager settingsManager;
+
     @BindView(R.id.navigation)
     NavigationView navigationView;
 
@@ -108,9 +114,8 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @BindView(R.id.artist_details_bird)
     ImageView bird;
 
-    private TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 
-    private SettingsManager settingsManager;
+    private TagView firstTag, secondTag, thirdTag, fourthTag, fifthTag;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -135,7 +140,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             this.serializedAlbumList = albumSerialized;
         }
 
-        settingsManager = new SettingsManager(this);
+        settingsManager.setActivity(this);
 
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
@@ -323,23 +328,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
     @Override
     public void setUserInfo(String profilePicUrl, String playcount, String username) {
-        RelativeLayout drawerLayout = (RelativeLayout) navigationView.getHeaderView(0);
-
-        TextView usernameTextView = (TextView) drawerLayout.getChildAt(0);
-        TextView scrobbleCount = (TextView) drawerLayout.getChildAt(1);
-        ImageView userAvatar = (ImageView) drawerLayout.getChildAt(2);
-
-        usernameTextView.setVisibility(View.VISIBLE);
-        scrobbleCount.setVisibility(View.VISIBLE);
-
-        Glide.with(this)
-                .load(profilePicUrl)
-                .apply(RequestOptions.circleCropTransform().placeholder(App.getAppContext().getResources()
-                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
-                                .getPackageName()))).into(userAvatar);
-        usernameTextView.setText(this.getString(R.string.logged_in_as) + " " + username);
-        scrobbleCount.setText(this.getString(R.string.scrobbles) + " " + playcount);
-
+        userInfoSetter.setUserInfo(profilePicUrl, playcount, username, navigationView, this);
     }
 
     private void initCollapsingToolbar() {
@@ -396,11 +385,6 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     @Override
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

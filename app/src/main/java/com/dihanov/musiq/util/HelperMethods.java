@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
@@ -151,20 +150,6 @@ public class HelperMethods {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/cabin_regular.ttf");
         toolbarLayout.setExpandedTitleTypeface(typeface);
         toolbarLayout.setCollapsedTitleTypeface(typeface);
-    }
-
-    public static void showTooltip(MainViewFunctionable activity, View view, String text){
-        ViewTooltip.on(view)
-                .corner(60)
-                .color(R.color.colorSecondary)
-                .textSize(TypedValue.COMPLEX_UNIT_DIP, 20)
-                .align(ViewTooltip.ALIGN.CENTER)
-                .textTypeFace(Typeface.createFromAsset(((Activity)activity).getAssets(), "fonts/cabin_regular.ttf"))
-                .position(ViewTooltip.Position.BOTTOM)
-                .text(text)
-                .textColor(Color.WHITE)
-                .animation(new ViewTooltip.FadeTooltipAnimation())
-                .show();
     }
 
     public static void showTooltip(Activity activity, View view, String text){

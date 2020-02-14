@@ -1,32 +1,37 @@
 package com.dihanov.musiq.ui.main.main_fragments.now_playing;
 
-import android.content.Context;
-
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificAlbumClickable;
-import com.dihanov.musiq.interfaces.SpecificArtistSearchable;
-import com.dihanov.musiq.interfaces.ToastShowable;
 import com.dihanov.musiq.interfaces.TrackLovable;
 import com.dihanov.musiq.interfaces.TrackUnlovable;
+import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
+
+import java.util.HashMap;
 
 /**
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
 public interface NowPlayingContract {
-    interface View extends BaseView<Presenter>, RecyclerViewExposable, ToastShowable, MainViewFunctionable {
-        Context getContext();
+    interface View extends BaseView<Presenter>, MainViewFunctionable {
+        void setRecentTracks(RecentTracksWrapper recentTracksWrapper);
 
-        MainActivity getMainActivity();
+        void showToastTrackLoved();
 
-        void showToast(Context context, String message);
+        void showToastTrackUnloved();
+
+        void startActivityWithExtras(HashMap<String, String> bundleExtra);
+
+        void showAlbumDetails(Album fullAlbum);
     }
 
-    interface Presenter extends BasePresenter<View>, SpecificAlbumClickable, SpecificArtistSearchable, TrackLovable, TrackUnlovable {
-        void loadRecentScrobbles(NowPlayingContract.View nowPlayingFragment);
+    interface Presenter extends BasePresenter<View>, TrackLovable, TrackUnlovable {
+        void loadRecentScrobbles();
+
+        void fetchArtist(String artistName);
+
+        void fetchEntireAlbumInfo(String artistName, String albumName);
     }
 }

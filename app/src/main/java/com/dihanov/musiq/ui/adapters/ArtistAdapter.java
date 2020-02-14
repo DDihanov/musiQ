@@ -1,6 +1,5 @@
 package com.dihanov.musiq.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +8,18 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -28,21 +28,22 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  */
 
 public class ArtistAdapter extends AbstractAdapter {
+    private static final long DELAY_IN_MILLIS = 500;
     private boolean isFavoriteType;
     private Context mainActivity;
     private List<Artist> artistList;
-    private SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable;
+    private OnItemClickedListener<Artist> onItemClickedListener;
 
-    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable) {
-        this.mainActivity = (Activity)context;
+    public ArtistAdapter(Context context, List<Artist> albumList, OnItemClickedListener<Artist> onItemClickedListener) {
+        this.mainActivity =context;
         this.artistList = albumList;
-        this.specificArtistViewHolderSearchable = specificArtistViewHolderSearchable;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
-    public ArtistAdapter(BaseView<?> context, List<Artist> albumList, SpecificArtistViewHolderSearchable specificArtistViewHolderSearchable, boolean isFavoriteType) {
-        this.mainActivity = (Activity)context;
+    public ArtistAdapter(Context context, List<Artist> albumList, boolean isFavoriteType, OnItemClickedListener<Artist>  onItemClickedListener) {
+        this.mainActivity = context;
         this.artistList = albumList;
-        this.specificArtistViewHolderSearchable = specificArtistViewHolderSearchable;
+        this.onItemClickedListener = onItemClickedListener;
         this.isFavoriteType = isFavoriteType;
     }
 
@@ -56,6 +57,7 @@ public class ArtistAdapter extends AbstractAdapter {
 
     public void setArtistList(List<Artist> artistList) {
         this.artistList = artistList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -75,8 +77,8 @@ public class ArtistAdapter extends AbstractAdapter {
         // loading album cover using Glide library
         Glide.with(mainActivity)
                 .load(artist.getImage().get(Constants.IMAGE_LARGE).getText())
-                .apply(new RequestOptions().placeholder(App.getAppContext().getResources()
-                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                .apply(new RequestOptions().placeholder(mainActivity.getApplicationContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", mainActivity
                                 .getPackageName()))).transition(withCrossFade(1000))
                 .into(holder.getThumbnail());
 
@@ -88,7 +90,11 @@ public class ArtistAdapter extends AbstractAdapter {
             }
         });
 
-        this.specificArtistViewHolderSearchable.addOnArtistResultClickedListener(holder, artist.getName());
+        RxView.clicks(holder.getThumbnail())
+                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(click -> onItemClickedListener.onItemClicked(artist));
+
         this.setIsFavorited(holder, Constants.FAVORITE_ARTISTS_KEY);
     }
 

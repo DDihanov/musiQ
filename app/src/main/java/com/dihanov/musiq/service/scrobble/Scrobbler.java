@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
@@ -131,7 +130,7 @@ public class Scrobbler {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         Toast.makeText(context, R.string.spired_session, Toast.LENGTH_SHORT).show();
-        App.getAppContext().startActivity(intent);
+        context.startActivity(intent);
     }
 
     public Scrobble getNowPlaying() {

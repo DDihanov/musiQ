@@ -1,13 +1,11 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.album;
 
-import android.content.Context;
-
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
+import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,13 +13,17 @@ import java.util.Set;
  */
 
 public interface FavoriteAlbumsContract {
-    interface View extends BaseView<FavoriteAlbumsContract.Presenter>, RecyclerViewExposable {
-        Context getContext();
+    interface View extends BaseView<FavoriteAlbumsContract.Presenter> {
+        void showProgressBar();
 
-        MainActivity getMainActivity();
+        void showAlbumDetails(Album fullAlbum);
+
+        void hideProgressBar();
+
+        void setArtistAlbumsList(List<Album> albums);
     }
 
     interface Presenter extends BasePresenter<FavoriteAlbumsContract.View>, SpecificAlbumViewHolderClickable {
-        void loadFavoriteAlbums(Set<String> favorites, RecyclerViewExposable recyclerViewExposable);
+        void loadFavoriteAlbums(Set<String> favorites);
     }
 }

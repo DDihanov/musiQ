@@ -13,16 +13,15 @@ import com.dihanov.musiq.util.FavoritesManager;
  */
 
 
-public class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+public class OverflowClickListener implements PopupMenu.OnMenuItemClickListener {
     private ClickableArtistViewHolder viewHolder;
     private String serializedValue = "";
     private String key;
     private String name;
     private AbstractAdapter adapterToRefresh;
 
-
     //the key will be used to either add favorites to the artists or the albums category
-    public MyMenuItemClickListener(String name, String value, ClickableArtistViewHolder viewHolder, String key, AbstractAdapter adapter) {
+    public OverflowClickListener(String name, String value, ClickableArtistViewHolder viewHolder, String key, AbstractAdapter adapter) {
         this.serializedValue = value;
         this.name = name;
         this.viewHolder = viewHolder;

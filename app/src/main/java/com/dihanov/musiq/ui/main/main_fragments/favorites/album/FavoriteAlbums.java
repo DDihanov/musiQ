@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +13,19 @@ import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.AlbumDetailsAdapter;
+import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindowManager;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
-import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -34,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class FavoriteAlbums extends ViewPagerCustomizedFragment implements FavoriteAlbumsContract.View, AbstractAdapter.OnItemClickedListener {
+public class FavoriteAlbums extends ViewPagerCustomizedFragment implements FavoriteAlbumsContract.View, AbstractAdapter.OnItemClickedListener<Album> {
     public static final String TITLE = "favorite albums";
 
     @BindView(R.id.recycler_view)
@@ -42,6 +44,9 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
 
     @Inject
     FavoriteAlbumsContract.Presenter favoriteFragmentsPresenter;
+
+    @Inject
+    AlbumDetailsPopupWindowManager albumDetailsPopupWindowManager;
 
     private MainActivity mainActivity;
 
@@ -76,8 +81,7 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
         initRecyclerView();
         this.favoriteFragmentsPresenter.takeView(this);
         this.favoriteFragmentsPresenter.loadFavoriteAlbums(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()),
-                this);
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()));
 
         return view;
     }
@@ -101,7 +105,6 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new AlbumDetailsAdapter(mainActivity,
                 new ArrayList<>(),
-                favoriteFragmentsPresenter,
                 true, this));
     }
 
@@ -117,31 +120,36 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
     }
 
     @Override
-    public RecyclerView getRecyclerView() {
-        return this.recyclerView;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         //we need to refresh the artists just in case the user has modified the favorites
-        this.favoriteFragmentsPresenter.loadFavoriteAlbums(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()),
-                this);
+        loadFavoriteAlbums(
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ALBUMS_SERIALIZED_KEY, new HashSet<>()));
     }
 
     @Override
-    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
-        recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(this.getContext(), GridLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.getAdapter().notifyDataSetChanged();
+    public void onItemClicked(Album item) {
+        favoriteFragmentsPresenter.fetchEntireAlbumInfo(item.getArtist().toString(), item.getName());
     }
 
     @Override
-    public void onItemClicked(AbstractViewHolder abstractViewHolder) {
-        favoriteFragmentsPresenter.
+    public void showProgressBar() {
+        mainActivity.showProgressBar();
+    }
+
+    @Override
+    public void showAlbumDetails(Album fullAlbum) {
+        albumDetailsPopupWindowManager.showAlbumDetails(mainActivity, fullAlbum);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mainActivity.hideProgressBar();
+    }
+
+    @Override
+    public void setArtistAlbumsList(List<Album> albums) {
+        ((AlbumDetailsAdapter) recyclerView.getAdapter()).setArtistAlbumsList(albums);
     }
 
     private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
@@ -177,5 +185,11 @@ public class FavoriteAlbums extends ViewPagerCustomizedFragment implements Favor
                 }
             }
         }
+    }
+
+    private void loadFavoriteAlbums(Set<String> favorites) {
+        //resetting the adapter
+        recyclerView.setAdapter(new AlbumDetailsAdapter(this.mainActivity, new ArrayList<>(), true, this));
+        favoriteFragmentsPresenter.loadFavoriteAlbums(favorites);
     }
 }

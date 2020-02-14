@@ -13,14 +13,21 @@ import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.models.Artist;
+import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
+import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
+import com.dihanov.musiq.util.ActivityStarterWithIntentExtras;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -31,12 +38,15 @@ import butterknife.ButterKnife;
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class FavoriteArtist extends ViewPagerCustomizedFragment implements FavoriteArtistsContract.View {
+public class FavoriteArtist extends ViewPagerCustomizedFragment implements FavoriteArtistsContract.View, AbstractAdapter.OnItemClickedListener<Artist> {
     public static final String TITLE = "favorite artists";
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     @Inject FavoriteArtistsContract.Presenter favoriteFragmentPresenter;
+
+    @Inject
+    ActivityStarterWithIntentExtras activityStarterWithIntentExtras;
 
     private MainActivity mainActivity;
 
@@ -71,11 +81,17 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
         initRecyclerView();
 
         this.favoriteFragmentPresenter.takeView(this);
-        this.favoriteFragmentPresenter.loadFavoriteArtists(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()),
-                this);
+        loadFavoriteArtists(
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()));
 
         return view;
+    }
+
+    private void loadFavoriteArtists(Set<String> stringSet) {
+        //resetting the adapter
+        recyclerView.setAdapter(new ArtistAdapter(this.mainActivity, new ArrayList<>(), true, this));
+
+        favoriteFragmentPresenter.loadFavoriteArtists(stringSet);
     }
 
     private void initRecyclerView() {
@@ -97,21 +113,14 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new ArtistAdapter(mainActivity,
                 new ArrayList<>(),
-                favoriteFragmentPresenter,
-                true));
-    }
-
-    @Override
-    public Context getContext() {
-        return this.mainActivity;
+                true, this));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         this.favoriteFragmentPresenter.loadFavoriteArtists(
-                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()),
-                this);
+                App.getSharedPreferences().getStringSet(Constants.FAVORITE_ARTISTS_SERIALIZED_KEY, new HashSet<>()));
     }
 
     @Override
@@ -121,15 +130,30 @@ public class FavoriteArtist extends ViewPagerCustomizedFragment implements Favor
     }
 
 
-
     @Override
-    public RecyclerView getRecyclerView() {
-        return this.recyclerView;
+    public void onItemClicked(Artist item) {
+        favoriteFragmentPresenter.fetchArtist(item.getName());
     }
 
     @Override
-    public void setRecyclerViewAdapter(RecyclerView.Adapter<?> adapter) {
+    public void hideProgressBar() {
+        mainActivity.hideProgressBar();
+    }
 
+    @Override
+    public void showProgressBar() {
+        mainActivity.showProgressBar();
+    }
+
+    @Override
+    public void setArtistList(List<Artist> artists) {
+        ((ArtistAdapter) recyclerView.getAdapter()).setArtistList(artists);
+    }
+
+    @Override
+    public void startActivityWithExtras(HashMap<String, String> bundleExtra) {
+        bundleExtra.put(Constants.LAST_SEARCH, mainActivity.getSearchBar().getQuery().toString());
+        activityStarterWithIntentExtras.startActivityWithExtras(bundleExtra, requireActivity(), ArtistDetails.class);
     }
 
 

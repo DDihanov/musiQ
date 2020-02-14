@@ -17,14 +17,22 @@ import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.ui.settings.profile.Profile;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by dimitar.dihanov on 2/15/2018.
  */
 
+@Singleton
 public class SettingsManager {
     private Activity activity;
 
-    public SettingsManager(Activity activity) {
+    @Inject
+    public SettingsManager() {
+    }
+
+    public void setActivity(Activity activity) {
         this.activity = activity;
     }
 

@@ -1,26 +1,33 @@
 package com.dihanov.musiq.ui.main.main_fragments.album;
 
-import android.content.Context;
-
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
 import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
+import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
-import com.dihanov.musiq.ui.main.MainContract;
+
+import io.reactivex.Observable;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
 public interface AlbumResultContract {
-    interface View extends BaseView<AlbumResultContract.Presenter>, RecyclerViewExposable {
-        Context getContext();
+    interface View extends BaseView<AlbumResultContract.Presenter> {
+        void hideProgressBar();
 
-        MainActivity getMainActivity();
+        void hideKeyboard();
+
+        void setSearchResults(GeneralAlbumSearch albumSearchResults);
+
+        void showProgressBar();
+
+        void showAlbumDetails(Album fullAlbum);
     }
 
     interface Presenter extends BasePresenter<AlbumResultContract.View>, SpecificAlbumViewHolderClickable {
-        void addOnSearchBarTextChangedListener(MainContract.View fragmentActivity);
+        Observable<GeneralAlbumSearch> searchForAlbum(String albumName);
+
+        void publishResult(Observable<GeneralAlbumSearch> observable);
     }
 }

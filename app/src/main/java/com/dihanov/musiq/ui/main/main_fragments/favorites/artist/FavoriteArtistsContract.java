@@ -1,23 +1,27 @@
 package com.dihanov.musiq.ui.main.main_fragments.favorites.artist;
 
-import android.content.Context;
-
-import com.dihanov.musiq.interfaces.RecyclerViewExposable;
-import com.dihanov.musiq.interfaces.SpecificArtistViewHolderSearchable;
+import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.main.MainActivity;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public interface FavoriteArtistsContract {
-    interface View extends BaseView<Presenter>, RecyclerViewExposable {
-        Context getContext();
+    interface View extends BaseView<Presenter> {
+        void hideProgressBar();
 
-        MainActivity getMainActivity();
+        void showProgressBar();
+
+        void setArtistList(List<Artist> artists);
+
+        void startActivityWithExtras(HashMap<String, String> bundleExtra);
     }
 
-    interface Presenter extends BasePresenter<View>, SpecificArtistViewHolderSearchable {
-        void loadFavoriteArtists(Set<String> favorites, RecyclerViewExposable recyclerViewExposable);
+    interface Presenter extends BasePresenter<View> {
+        void loadFavoriteArtists(Set<String> favorites);
+
+        void fetchArtist(String artistName);
     }
 }

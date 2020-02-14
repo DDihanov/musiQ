@@ -2,15 +2,14 @@ package com.dihanov.musiq.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -19,20 +18,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Album;
-import com.dihanov.musiq.models.SpecificAlbum;
 import com.dihanov.musiq.models.Tag;
 import com.dihanov.musiq.models.Track;
 import com.dihanov.musiq.models.Tracks;
 import com.dihanov.musiq.models.Wiki;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.BaseView;
-import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.HelperMethods;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.veinhorn.tagview.TagView;
 
 import java.util.ArrayList;
@@ -41,82 +32,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import javax.inject.Inject;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumDetailsPopupWindow {
-    private static final long DELAY_IN_MILLIS = 500;
-    private static final String LOADING_ALBUM = "just a sec, let me find this album for you";
+public class AlbumDetailsPopupWindowManager {
 
-    private LastFmApiClient lastFmApiClient;
-    private BaseView view;
-
-    public AlbumDetailsPopupWindow(LastFmApiClient lastFmApiClient, BaseView<?> view) {
-        this.lastFmApiClient = lastFmApiClient;
-        this.view = view;
+    @Inject
+    public AlbumDetailsPopupWindowManager() {
     }
 
-    public void showPopupWindow(MainViewFunctionable activity, AlbumViewHolder viewHolder, String artistName, String albumName, int mainWindowId) {
-        //just a small proof of concept
-        final Album[] loadedAlbum = new Album[1];
-        RxView.clicks(viewHolder.getThumbnail())
-                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(click -> {
-
-                            });
-
-                });
-    }
-
-    public void showPopupWindow(MainViewFunctionable activity, View view, String artistName, String albumName, int mainWindowId) {
-        //just a small proof of concept
-        final Album[] loadedAlbum = new Album[1];
-        RxView.clicks(view)
-                .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(click -> {
-                    lastFmApiClient.getLastFmApiService()
-                            .searchForSpecificAlbum(artistName, albumName)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .map(specificAlbum -> specificAlbum)
-                            .subscribe(new Observer<SpecificAlbum>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-                                    activity.showProgressBar();
-                                    HelperMethods.showTooltip(activity, activity.getBirdIcon(), LOADING_ALBUM);
-                                }
-
-                                @Override
-                                public void onNext(SpecificAlbum specificAlbum) {
-                                    Album fullAlbum = specificAlbum.getAlbum();
-                                    //just a small proof of concept
-                                    loadedAlbum[0] = fullAlbum;
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e(this.getClass().toString(), e.getMessage());
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                    activity.hideProgressBar();
-                                    showAlbumDetails((Activity) activity, loadedAlbum[0], mainWindowId);
-                                }
-                            });
-
-                });
-    }
-
-    private void showAlbumDetails(Activity activity, Album album, int mainWindowId) {
+    public void showAlbumDetails(Activity activity, Album album) {
         if (album == null) {
             return;
         }
@@ -132,7 +60,9 @@ public class AlbumDetailsPopupWindow {
             album.getWiki().setSummary("");
             album.getWiki().setPublished("");
         }
-        CoordinatorLayout mainLayout = (CoordinatorLayout) activity.findViewById(mainWindowId);
+        int color = ContextCompat.getColor(activity, R.color.colorAccent);
+        ViewGroup root = (ViewGroup) ((ViewGroup) activity
+                .findViewById(android.R.id.content)).getChildAt(0);
 
         LayoutInflater inflater = LayoutInflater.from(activity);
         View albumDetails = inflater.inflate(R.layout.album_popup_info, null);
@@ -151,7 +81,7 @@ public class AlbumDetailsPopupWindow {
             sb.append(String.format("%s - %s\n", track.getName(), duration));
         }
 
-        initTags(album, albumDetails);
+        initTags(album, albumDetails, color);
         tracks.setText(sb.toString());
         title.setText(album.getName());
 
@@ -176,8 +106,8 @@ public class AlbumDetailsPopupWindow {
 
         Glide.with(activity)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
-                .apply(new RequestOptions().placeholder(App.getAppContext().getResources()
-                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                .apply(new RequestOptions().placeholder(activity.getApplicationContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", activity
                                 .getPackageName())))
                 .into(cover);
 
@@ -191,12 +121,12 @@ public class AlbumDetailsPopupWindow {
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
         popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+        popupWindow.showAtLocation(root, Gravity.CENTER, 0, 0);
     }
 
 
     @SuppressLint("ResourceType")
-    private void initTags(Album album, View rootLayout) {
+    private void initTags(Album album, View rootLayout, int color) {
         TagView firstTag = (TagView) rootLayout.findViewById(R.id.popup_first_tag);
         TagView secondTag = (TagView) rootLayout.findViewById(R.id.popup_second_tag);
         TagView thirdTag = (TagView) rootLayout.findViewById(R.id.popup_third_tag);
@@ -234,7 +164,7 @@ public class AlbumDetailsPopupWindow {
         for (int i = 0; i < tagText.size(); i++) {
             TagView currTag = tags[i];
             currTag.setText(firstFive.get(i));
-            currTag.setTagColor(Color.parseColor(((Activity) view).getString(R.color.colorAccent)));
+            currTag.setTagColor(color);
         }
     }
 

@@ -1,23 +1,15 @@
 package com.dihanov.musiq.ui.main.main_fragments.artist;
 
-import com.dihanov.musiq.interfaces.ArtistDetailsIntentShowableImpl;
-import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
-import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
+import com.dihanov.musiq.models.SpecificArtist;
+import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.ui.main.MainContract;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.FavoritesManager;
-import com.dihanov.musiq.util.HelperMethods;
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding2.view.RxView;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -26,22 +18,20 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
  */
 
-public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl implements ArtistResultContract.Presenter{
-    private static final long DELAY_IN_MILLIS = 2000;
+public class ArtistResultPresenter implements ArtistResultContract.Presenter{
     private static final int limit = 20;
 
     private final LastFmApiClient lastFmApiClient;
 
     private ArtistResultContract.View artistResultFragment;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MainContract.View mainActivity;
 
     @Inject
     public ArtistResultPresenter(LastFmApiClient lastFmApiClient) {
@@ -51,7 +41,6 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
     @Override
     public void takeView(ArtistResultContract.View view) {
         this.artistResultFragment = view;
-        this.mainActivity = artistResultFragment.getMainActivity();
     }
 
     @Override
@@ -62,82 +51,94 @@ public class ArtistResultPresenter extends ArtistDetailsIntentShowableImpl imple
         this.artistResultFragment = null;
     }
 
+
     @Override
-    public void addOnSearchBarTextChangedListener(MainContract.View mainActivity) {
-        ArtistResultPresenter artistResultPresenter = this;
-        if(mainActivity.getSearchBar() == null){
-            return;
-        }
-        Observable<ArtistSearchResults> autocompleteResponseObservable =
-                RxSearchView.queryTextChanges(mainActivity.getSearchBar())
-                        .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
-                        .filter(s -> s.length() >= 2)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext(s -> {
-                            HelperMethods.checkConnection(mainActivity.getContext());
-                            mainActivity.showProgressBar();
-                        })
-                        .observeOn(Schedulers.io())
-                        .flatMap(new Function<CharSequence, Observable<ArtistSearchResults>>() {
-                            @Override
-                            public Observable<ArtistSearchResults> apply(CharSequence s) throws Exception {
-                                return lastFmApiClient.getLastFmApiService()
-                                        .searchForArtist(s.toString(), limit);
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .retry();
+    public Observable<ArtistSearchResults> searchForArtist(String artistName) {
+        return lastFmApiClient.getLastFmApiService()
+                .searchForArtist(artistName, limit);
+    }
 
+    @Override
+    public void fetchArtist(String artistName) {
+        HashMap<String, String> bundleExtra = new HashMap<>();
 
-        autocompleteResponseObservable
-                .subscribe(new Observer<ArtistSearchResults>() {
-                    private static final String TAG = "ArtistResult";
+        Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
+                .getSpecificArtistInfo(artistName)
+                .subscribeOn(Schedulers.io());
+        Observable<TopArtistAlbums> topAlbumRequest = lastFmApiClient.getLastFmApiService()
+                .searchForArtistTopAlbums(artistName, Constants.ALBUM_LIMIT)
+                .subscribeOn(Schedulers.newThread());
 
+        Observable.zip(
+                specificArtistRequest,
+                topAlbumRequest,
+                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
+                    @Override
+                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
+                        HashMap<String, String> result = new HashMap<>();
+
+                        result.put(Constants.ARTIST, new Gson().toJson(specificArtist, SpecificArtist.class));
+                        result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums, TopArtistAlbums.class));
+
+                        return result;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HashMap<String, String>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(ArtistSearchResults artistSearchResults) {
-                        AppLog.log(TAG, artistSearchResults.toString());
-
-                        List<Artist> result = new ArrayList<>();
-                        result.addAll(artistSearchResults.getResults().getArtistmatches().getArtistMatches());
-                        if(result.isEmpty()){
-                            result = Collections.emptyList();
-                        }
-
-                        ArtistAdapter artistAdapter = new ArtistAdapter(mainActivity, result, artistResultPresenter);
-
-                        artistResultFragment.getRecyclerView().setAdapter(artistAdapter);
-                        mainActivity.hideKeyboard();
-                        mainActivity.hideProgressBar();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mainActivity.hideProgressBar();
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, "onCompleted");
+                    public void onNext(HashMap<String, String> stringStringHashMap) {
+                        bundleExtra.putAll(stringStringHashMap);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mainActivity.hideProgressBar();
-                        AppLog.log(TAG, e.getMessage());
+                        AppLog.log(ArtistAdapter.class.toString(), e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //important we use .clear and not .dispose, since .dispose will not allow any further subscribing
                         compositeDisposable.clear();
+                        artistResultFragment.hideProgressBar();
+                        artistResultFragment.startActivityWithExtras(bundleExtra);
                     }
                 });
     }
 
     @Override
-    public void addOnArtistResultClickedListener(ClickableArtistViewHolder viewHolder, String artistName) {
-        RxView.clicks(viewHolder.getThumbnail())
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(click -> {
-                    this.showArtistDetailsIntent(artistName, mainActivity);
+    public void publishResult(Observable<ArtistSearchResults> observable) {
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<ArtistSearchResults>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ArtistSearchResults albumSearchResults) {
+                        artistResultFragment.setSearchResults(albumSearchResults);
+                        artistResultFragment.hideKeyboard();
+                        artistResultFragment.hideProgressBar();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        artistResultFragment.hideProgressBar();
+                        compositeDisposable.clear();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        artistResultFragment.hideProgressBar();
+                        compositeDisposable.clear();
+                    }
                 });
     }
 }

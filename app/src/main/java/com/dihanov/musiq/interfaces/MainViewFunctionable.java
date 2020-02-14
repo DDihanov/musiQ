@@ -1,6 +1,5 @@
 package com.dihanov.musiq.interfaces;
 
-import android.content.Context;
 import android.view.View;
 
 /**
@@ -11,5 +10,4 @@ public interface MainViewFunctionable{
     View getBirdIcon();
     void showProgressBar();
     void hideProgressBar();
-    void showToast(Context context, String message);
 }

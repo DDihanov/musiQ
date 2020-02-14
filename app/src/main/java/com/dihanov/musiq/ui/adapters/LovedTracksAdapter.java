@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Track;
-import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksContract;
 import com.dihanov.musiq.util.Constants;
 
 import java.text.DateFormat;
@@ -33,12 +32,12 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class LovedTracksAdapter extends RecyclerView.Adapter<LovedTracksAdapter.ViewHolder> {
     private List<Track> scrobbles;
     private Context context;
-    private UserLovedTracksContract.Presenter presenter;
+    private AbstractAdapter.OnItemClickedListener<Track> onItemClickedListener;
 
-    public LovedTracksAdapter(List<Track> scrobbles, Context context, UserLovedTracksContract.Presenter presenter) {
+    public LovedTracksAdapter(List<Track> scrobbles, Context context, AbstractAdapter.OnItemClickedListener<Track> onItemClickedListener) {
         this.scrobbles = scrobbles;
         this.context = context;
-        this.presenter = presenter;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
     @Override
@@ -86,13 +85,12 @@ public class LovedTracksAdapter extends RecyclerView.Adapter<LovedTracksAdapter.
                         .setPositiveButton(context.getString(R.string.unlove_track_button), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                presenter.unloveTrack(track.getArtist().getName(),
-                                        track.getName());
+                                onItemClickedListener.onItemClicked(track);
                                 removeTrack(position);
                             }
                         }).create().show();
 
-                return true;
+                return false;
             }
         });
     }

@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.main_fragments.ViewPagerCustomizedFragment;
+import com.dihanov.musiq.util.BarChartConfigurator;
 import com.dihanov.musiq.util.Period;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 
@@ -25,17 +25,20 @@ import butterknife.OnItemSelected;
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class UserTopArtists extends ViewPagerCustomizedFragment implements UserTopArtistsContract.View{
+public class UserTopArtists extends ViewPagerCustomizedFragment implements UserTopArtistsContract.View {
     public static final String TITLE = "your top artists";
 
     @BindView(R.id.user_top_artists_chart)
-    HorizontalBarChart topArtistsChart;
+    HorizontalBarChart barChart;
 
     @BindView(R.id.top_artists_timeframe_spinner)
     Spinner timeFrameSpinner;
 
     @Inject
     UserTopArtistsContract.Presenter userTopArtistsPresenter;
+
+    @Inject
+    BarChartConfigurator barChartConfigurator;
 
     private MainActivity mainActivity;
 
@@ -45,20 +48,6 @@ public class UserTopArtists extends ViewPagerCustomizedFragment implements UserT
         UserTopArtists userTopArtists = new UserTopArtists();
         userTopArtists.setArguments(args);
         return userTopArtists;
-    }
-
-    public MainActivity getMainActivity() {
-        return mainActivity;
-    }
-
-    @Override
-    public HorizontalBarChart getTopArtistsBarChart() {
-        return this.topArtistsChart;
-    }
-
-    @Override
-    public void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -76,44 +65,35 @@ public class UserTopArtists extends ViewPagerCustomizedFragment implements UserT
         //very important to call this - this enables us to use the below method(onCreateOptionsMenu), and allows us
         //to receive calls from MainActivity's onCreateOptionsMenu
         setHasOptionsMenu(true);
-        configureChart();
+        barChartConfigurator.configureChartColor(barChart);
+        barChart.setNoDataText(getString(R.string.NO_DATA_MESSAGE));
 
 
         this.userTopArtistsPresenter.takeView(this);
         return view;
     }
 
-
-    private void configureChart() {
-        topArtistsChart.setNoDataTextColor(R.color.colorPrimary);
-        topArtistsChart.setNoDataText(getString(R.string.NO_DATA_MESSAGE));
-    }
-
     @OnItemSelected(R.id.top_artists_timeframe_spinner)
-    public void spinnerItemSelected(Spinner spinner, int position){
-        switch(position){
+    public void spinnerItemSelected(Spinner spinner, int position) {
+        switch (position) {
             case 0:
-                this.userTopArtistsPresenter.loadTopArtists(this, Period.OVERALL);
+                this.userTopArtistsPresenter.loadTopArtists(Period.OVERALL);
                 return;
             case 1:
-                this.userTopArtistsPresenter.loadTopArtists(this, Period.SEVEN_DAY);
+                this.userTopArtistsPresenter.loadTopArtists(Period.SEVEN_DAY);
                 return;
             case 2:
-                this.userTopArtistsPresenter.loadTopArtists(this, Period.ONE_MONTH);
+                this.userTopArtistsPresenter.loadTopArtists(Period.ONE_MONTH);
                 return;
             case 3:
-                this.userTopArtistsPresenter.loadTopArtists(this, Period.THREE_MONTH);
+                this.userTopArtistsPresenter.loadTopArtists(Period.THREE_MONTH);
                 return;
             case 4:
-                this.userTopArtistsPresenter.loadTopArtists(this, Period.TWELVE_MONTH);
+                this.userTopArtistsPresenter.loadTopArtists(Period.TWELVE_MONTH);
                 return;
         }
     }
 
-    @Override
-    public Context getContext() {
-        return this.mainActivity;
-    }
 
     @Override
     public void onDestroy() {
@@ -121,6 +101,18 @@ public class UserTopArtists extends ViewPagerCustomizedFragment implements UserT
         this.userTopArtistsPresenter.leaveView();
     }
 
+    @Override
+    public void configureBarChart(com.dihanov.musiq.models.UserTopArtists userTopArtists) {
+        barChartConfigurator.configureBarChartArtist(userTopArtists.getTopartists().getArtist(), TITLE, requireActivity(), barChart);
+    }
 
+    @Override
+    public void showProgressBar() {
+        mainActivity.showProgressBar();
+    }
 
+    @Override
+    public void hideProgressBar() {
+        mainActivity.hideProgressBar();
+    }
 }

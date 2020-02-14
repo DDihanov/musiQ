@@ -12,12 +12,14 @@ public interface LoginContract {
     interface View extends BaseView<Presenter>, MainViewFunctionable {
         void redirectToMain();
 
-        <T extends android.view.View> T findViewById(int id);
+        void toggleChildrenAvailability(boolean enabled);
 
-        String getString(int id);
+        void showInvalidLogin();
+
+        void showLoginSuccess();
     }
 
     interface Presenter extends BasePresenter<View> {
-        void authenticateUser(String username, String password, LoginContract.View context, boolean rememberMe);
+        void authenticateUser(String username, String password, boolean rememberMe);
     }
 }

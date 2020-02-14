@@ -12,7 +12,7 @@ import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.Favoritable;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
-import com.dihanov.musiq.ui.listeners.MyMenuItemClickListener;
+import com.dihanov.musiq.ui.listeners.OverflowClickListener;
 import com.dihanov.musiq.util.Constants;
 import com.google.gson.Gson;
 
@@ -58,7 +58,7 @@ public class AlbumViewHolder extends AbstractViewHolder {
         }
 
 
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(favoritable.getName().toLowerCase(), new Gson().toJson(favoritable, Album.class),
+        popup.setOnMenuItemClickListener(new OverflowClickListener(favoritable.getName().toLowerCase(), new Gson().toJson(favoritable, Album.class),
                 this, Constants.FAVORITE_ALBUMS_KEY,
                 adapter));
         popup.show();

@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.adapters;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.interfaces.SpecificAlbumViewHolderClickable;
 import com.dihanov.musiq.models.Album;
-import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
 import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
@@ -28,27 +25,27 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 public class AlbumDetailsAdapter extends AbstractAdapter {
     private boolean isFavoriteType;
-    private Activity context;
+    private Context context;
     private List<Album> artistAlbumsList;
-    private SpecificAlbumViewHolderClickable presenter;
 
-    private OnItemClickedListener<AlbumViewHolder> onItemClickedListener;
+    private OnItemClickedListener<Album> onItemClickedListener;
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, OnItemClickedListener onItemClickedListener) {
-        this.context = (Activity)context;
+    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, OnItemClickedListener onItemClickedListener) {
+        this.context = context;
         this.artistAlbumsList = artistAlbumsList;
-        this.presenter = presenter;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
-    public AlbumDetailsAdapter(BaseView<?> context, List<Album> artistAlbumsList, SpecificAlbumViewHolderClickable presenter, boolean isFavoriteType, OnItemClickedListener onItemClickedListener) {
-        this.context = (Activity)context;
+    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, boolean isFavoriteType, OnItemClickedListener onItemClickedListener) {
+        this.context = context;
         this.artistAlbumsList = artistAlbumsList;
-        this.presenter = presenter;
+        this.onItemClickedListener = onItemClickedListener;
         this.isFavoriteType = isFavoriteType;
     }
 
     public void setArtistAlbumsList(List<Album> artistAlbumsList) {
         this.artistAlbumsList = artistAlbumsList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -78,8 +75,8 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         // loading album cover using Glide library
         Glide.with(context)
                 .load(album.getImage().get(Constants.IMAGE_LARGE).getText())
-                .apply(new RequestOptions().placeholder(App.getAppContext().getResources()
-                        .getIdentifier("ic_missing_image", "drawable", App.getAppContext()
+                .apply(new RequestOptions().placeholder(context.getApplicationContext().getResources()
+                        .getIdentifier("ic_missing_image", "drawable", context
                                 .getPackageName())))
                 .transition(withCrossFade(1000))
                 .into(holder.getThumbnail());
@@ -93,7 +90,7 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
         });
 
         ((AlbumViewHolder) holder).getThumbnail().setOnClickListener(__->
-                onItemClickedListener.onItemClicked(holder));
+                onItemClickedListener.onItemClicked(album));
 
         this.setIsFavorited(holder, Constants.FAVORITE_ALBUMS_KEY);
     }

@@ -1,7 +1,7 @@
 package com.dihanov.musiq.ui.adapters;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Track;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingContract;
 import com.dihanov.musiq.util.Constants;
 
 import java.text.DateFormat;
@@ -30,16 +29,21 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  */
 
 public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrobbledAdapter.ViewHolder> {
-    private List<Track> scrobbles;
-    private Activity context;
-    private AlertDialog.Builder builder;
-    private NowPlayingContract.Presenter presenter;
+    public interface RecentlyScrobbledItemClickListener {
+        void onTrackLoved(Track track);
+        void onTrackUnloved(Track track);
+    }
 
-    public RecentlyScrobbledAdapter(List<Track> scrobbles, Activity context, NowPlayingContract.Presenter presenter) {
+    private List<Track> scrobbles;
+    private Context context;
+    private AlertDialog.Builder builder;
+    private RecentlyScrobbledItemClickListener recentlyScrobbledItemClickListener;
+
+    public RecentlyScrobbledAdapter(List<Track> scrobbles, Context context, RecentlyScrobbledItemClickListener recentlyScrobbledItemClickListener) {
         this.scrobbles = scrobbles;
         this.context = context;
         this.builder = new AlertDialog.Builder(context);
-        this.presenter = presenter;
+        this.recentlyScrobbledItemClickListener = recentlyScrobbledItemClickListener;
     }
 
     @Override
@@ -93,8 +97,7 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
                                 return;
                             })
                             .setPositiveButton(context.getString(R.string.unlove_track_button), (dialog, which) -> {
-                                presenter.unloveTrack(track.getArtist().getName(),
-                                        track.getName());
+                                recentlyScrobbledItemClickListener.onTrackUnloved(track);
                                 holder.loved.setVisibility(View.INVISIBLE);
                                 track.setLoved("0");
                                 notifyDataSetChanged();
@@ -107,14 +110,14 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
                                 return;
                             })
                             .setPositiveButton(context.getString(R.string.love_track_button), (dialog, which) -> {
-                                presenter.loveTrack(track.getArtist().getName(), track.getName());
+                                recentlyScrobbledItemClickListener.onTrackLoved(track);
                                 holder.loved.setVisibility(View.VISIBLE);
                                 track.setLoved("1");
                                 notifyDataSetChanged();
                             }).create().show();
                 }
 
-                return true;
+                return false;
             }
         });
     }
