@@ -64,7 +64,7 @@ public class TopArtistAdapter extends AbstractAdapter {
                 .apply(new RequestOptions().error(context.getApplicationContext().getResources()
                         .getIdentifier("ic_missing_image", "drawable", context
                                 .getPackageName())))
-                .transition(withCrossFade(2000))
+                .transition(withCrossFade(500))
                 .into(holder.getThumbnail());
         holder.getTitle().setText(artist.getName().toLowerCase());
         ((TagView)holder.getTitle()).setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));

@@ -83,7 +83,7 @@ public class ArtistAdapter extends AbstractAdapter {
                 .load(artist.getImage().get(Constants.IMAGE_LARGE).getText())
                 .apply(new RequestOptions().placeholder(mainActivity.getApplicationContext().getResources()
                         .getIdentifier("ic_missing_image", "drawable", mainActivity
-                                .getPackageName()))).transition(withCrossFade(1000))
+                                .getPackageName()))).transition(withCrossFade(500))
                 .into(holder.getThumbnail());
 
         ((ArtistViewHolder) holder).getOverflow().setOnClickListener(new View.OnClickListener() {

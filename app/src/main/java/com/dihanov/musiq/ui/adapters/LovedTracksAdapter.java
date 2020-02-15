@@ -66,7 +66,7 @@ public class LovedTracksAdapter extends RecyclerView.Adapter<LovedTracksAdapter.
         Glide.with(context).load(track.getImage().get(Constants.IMAGE_LARGE).getText())
                 .apply(RequestOptions.circleCropTransform().placeholder(context.getResources()
                         .getIdentifier("ic_music_note_black_24dp", "drawable", context.getPackageName())))
-                .transition(withCrossFade(2000))
+                .transition(withCrossFade(500))
                 .into(holder.thumbnail);
         holder.loved.setVisibility(View.VISIBLE);
         holder.scrobble.setOnLongClickListener(new View.OnLongClickListener() {

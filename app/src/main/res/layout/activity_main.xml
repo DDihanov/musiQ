@@ -33,13 +33,19 @@
 
             <!--a lot of small tweaks to get this perfect, and a normal solution wouldn't do-->
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/bird"
                 android:layout_marginTop="75dp"
                 android:layout_toStartOf="@+id/bird">
 
-                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                <ProgressBar
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/main_gridview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

@@ -80,7 +80,7 @@ public class RecentlyScrobbledAdapter extends RecyclerView.Adapter<RecentlyScrob
         Glide.with(context).load(track.getArtist().getImage().get(Constants.IMAGE_LARGE).getText())
                 .apply(RequestOptions.circleCropTransform().placeholder(context.getResources()
                         .getIdentifier("ic_music_note_black_24dp", "drawable", context.getPackageName())))
-                .transition(withCrossFade(2000))
+                .transition(withCrossFade(500))
                 .into(holder.thumbnail);
         if (!track.getLoved().equals("0")) {
             holder.loved.setVisibility(View.VISIBLE);

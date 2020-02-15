@@ -82,7 +82,7 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
                 .apply(new RequestOptions().placeholder(context.getApplicationContext().getResources()
                         .getIdentifier("ic_missing_image", "drawable", context
                                 .getPackageName())))
-                .transition(withCrossFade(1000))
+                .transition(withCrossFade(500))
                 .into(holder.getThumbnail());
 
         ((AlbumViewHolder)holder).getOverflow().setOnClickListener(new View.OnClickListener() {

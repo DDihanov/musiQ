@@ -288,7 +288,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     private void initArtistImage() {
         Glide.with(this).load(this.artist.getImage().get(Constants.IMAGE_XLARGE).getText())
                 .apply(new RequestOptions().placeholder(this.getResources()
-                        .getIdentifier("ic_missing_image", "drawable", this.getPackageName()))).transition(withCrossFade(2000)).into(this.artistImage);
+                        .getIdentifier("ic_missing_image", "drawable", this.getPackageName()))).transition(withCrossFade(500)).into(this.artistImage);
     }
 
     @Override
