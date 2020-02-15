@@ -11,7 +11,6 @@ import com.dihanov.musiq.di.app.DaggerAppComponent;
 import com.dihanov.musiq.di.modules.NetworkModule;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.squareup.leakcanary.LeakCanary;
 
 import javax.inject.Inject;
 
@@ -45,10 +44,6 @@ public class App extends Application implements
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
         FlowManager.init(this);
         DaggerAppComponent
                 .builder()
