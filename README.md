@@ -1,7 +1,15 @@
-# Disclaimer: THIS REPO IS NO LONGER ACTIVELY MAINTAINED
-
-<b>The project is in need of some refactoring since I created it when I was new to developing Android apps some 3 or 4 years ago</b>, so there are some inconsistencies: like some static classes that could be turned into normal ones and injected instead, a main repository class and/or UseCases to abstract some logic from the presenters, migrating to AndroidX, replacing AsyncTasks, use of single Activity architecture, some Views that can be simplified, and other minor details. It is mostly okay, but there is room for improvement. I will get around to refactoring this app some day, but in the meantime, if you are cloning this repo or using some parts of the project, be warned. Also something to note:
-not all artist images are shown, since last.fm decided to suddenly drop support for fetching images over their API(they basically did this overnight), and some other devs have found workarounds for this(like downloading the HTML manually and parsing the images), this workaround, while feasible is not exactly 'legal' and your app can still be taken down, since you are just circumventing their original API restriction.
+<b>The project was in need of some refactoring since I created it when I was new to developing Android apps some 3 or 4 years ago</b>, therefore I compiled a list with TODOs and will gradually strike them out when as I complete them:
+- ~~Refactored MVP logic to be more precice with the design pattern~~
+- ~~Refactored app backend to use repositories~~
+- ~~Refactored app backend to use UseCases~~
+- ~~Migrated to AndroidX~~
+- ~~Updated Material design/libraries~~
+- ~~Refacted static classes to be injected instead~~
+- ~~Genral QOL code refactoring~~
+- ~~Fixed last.fm image fetching(since they disabled it) - artist images are now fetched from a different API~~
+- Completeley remove the few static helper methods that are left in the UI
+- Single activity architecture with Android Navigation Component
+- Rewrite in Kotlin
 
 # musiQ
 a musical encyclopedia
