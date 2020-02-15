@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
@@ -80,7 +80,6 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         initViewPager();
     }
 
-    @Override
     public AppBarLayout getAppBarLayout() {
         return this.appBarLayout;
     }
@@ -90,8 +89,7 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    @Override
-    public void initViewPager() {
+    private void initViewPager() {
         ProfileViewPagerAdapter viewPagerAdapter = new ProfileViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -101,8 +99,7 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         HelperMethods.changeTabsFont(this, tabLayout);
     }
 
-    @Override
-    public void setUserImage(String url) {
+    private void setUserImage(String url) {
         Glide.with(this).load(url).apply(RequestOptions.circleCropTransform().placeholder(this.getResources()
                 .getIdentifier("ic_account_circle_black_24dp", "drawable", this.getPackageName()))).transition(withCrossFade(2000)).into(profileImage);
     }

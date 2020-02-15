@@ -1,31 +1,24 @@
 package com.dihanov.musiq.ui.detail.detailfragments;
 
+import com.dihanov.musiq.data.usecase.GetEntireAlbumInfoUseCase;
+import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.AlbumArtistPairModel;
 import com.dihanov.musiq.models.SpecificAlbum;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.util.AppLog;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 10/6/2017.
  */
 
-public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Presenter {
-    private final LastFmApiClient lastFmApiClient;
-
+public class ArtistSpecificsPresenter implements
+        ArtistSpecificsContract.Presenter, UseCase.ResultCallback<SpecificAlbum> {
     private ArtistSpecificsContract.View artistDetailsFragment;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
+    private GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase;
     @Inject
-    public ArtistSpecificsPresenter(LastFmApiClient lastFmApiClient) {
-        this.lastFmApiClient = lastFmApiClient;
+    public ArtistSpecificsPresenter(GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase) {
+        this.getEntireAlbumInfoUseCase = getEntireAlbumInfoUseCase;
     }
 
     @Override
@@ -36,39 +29,28 @@ public class ArtistSpecificsPresenter implements ArtistSpecificsContract.Present
     @Override
     public void leaveView() {
         this.artistDetailsFragment = null;
-        compositeDisposable.clear();
     }
 
 
     @Override
     public void fetchEntireAlbumInfo(String artistName, String albumName) {
-        lastFmApiClient.getLastFmApiService()
-                .searchForSpecificAlbum(artistName, albumName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(specificAlbum -> specificAlbum)
-                .subscribe(new Observer<SpecificAlbum>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        artistDetailsFragment.showProgressBar();
-                        compositeDisposable.add(d);
-                    }
+       getEntireAlbumInfoUseCase.invoke(this, new AlbumArtistPairModel(artistName, albumName));
+    }
 
-                    @Override
-                    public void onNext(SpecificAlbum specificAlbum) {
-                        Album fullAlbum = specificAlbum.getAlbum();
-                        artistDetailsFragment.showAlbumDetails(fullAlbum);
-                    }
+    @Override
+    public void onStart() {
+        artistDetailsFragment.showProgressBar();
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(this.getClass().toString(), e.getMessage());
-                    }
+    @Override
+    public void onSuccess(SpecificAlbum response) {
+        Album fullAlbum = response.getAlbum();
+        artistDetailsFragment.showAlbumDetails(fullAlbum);
+        artistDetailsFragment.hideProgressBar();
+    }
 
-                    @Override
-                    public void onComplete() {
-                        artistDetailsFragment.hideProgressBar();
-                    }
-                });
+    @Override
+    public void onError(Throwable e) {
+        artistDetailsFragment.hideProgressBar();
     }
 }

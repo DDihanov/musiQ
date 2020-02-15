@@ -6,8 +6,6 @@ import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.ui.BasePresenter;
 import com.dihanov.musiq.ui.BaseView;
 
-import io.reactivex.Observable;
-
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
@@ -26,8 +24,6 @@ public interface AlbumResultContract {
     }
 
     interface Presenter extends BasePresenter<AlbumResultContract.View>, SpecificAlbumViewHolderClickable {
-        Observable<GeneralAlbumSearch> searchForAlbum(String albumName);
-
-        void publishResult(Observable<GeneralAlbumSearch> observable);
+        void searchForAlbum(String albumName);
     }
 }

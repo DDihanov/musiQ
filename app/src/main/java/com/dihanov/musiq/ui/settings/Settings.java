@@ -36,8 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.ScrobbleDB;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.db.ScrobbleDB;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;

@@ -1,7 +1,7 @@
 package com.dihanov.musiq;
 
+import com.dihanov.musiq.data.network.LastFmApiService;
 import com.dihanov.musiq.models.SpecificArtist;
-import com.dihanov.musiq.service.LastFmApiService;
 
 import org.junit.Before;
 import org.junit.Test;

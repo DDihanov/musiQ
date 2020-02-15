@@ -1,35 +1,69 @@
 package com.dihanov.musiq.ui.main.mainfragments.album;
 
+import com.dihanov.musiq.data.usecase.GetEntireAlbumInfoUseCase;
+import com.dihanov.musiq.data.usecase.SearchForAlbumUseCase;
+import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.AlbumArtistPairModel;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.models.SpecificAlbum;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.util.AppLog;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
  */
 
-public class AlbumResultPresenter implements AlbumResultContract.Presenter {
-    private static final int limit = 20;
-
-    private final LastFmApiClient lastFmApiClient;
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+public class AlbumResultPresenter implements
+        AlbumResultContract.Presenter {
     private AlbumResultContract.View albumResultFragment;
+    private SearchForAlbumUseCase searchForAlbumUseCase;
+    private GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase;
+
+    private UseCase.ResultCallback<GeneralAlbumSearch> albumSearchCallback = new UseCase.ResultCallback<GeneralAlbumSearch>() {
+        @Override
+        public void onStart() {
+            albumResultFragment.showProgressBar();
+        }
+
+        @Override
+        public void onSuccess(GeneralAlbumSearch response) {
+            albumResultFragment.setSearchResults(response);
+            albumResultFragment.hideKeyboard();
+            albumResultFragment.hideProgressBar();
+            albumResultFragment.hideProgressBar();
+            albumResultFragment.hideProgressBar();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            albumResultFragment.hideProgressBar();
+        }
+    };
+
+    private UseCase.ResultCallback<SpecificAlbum> specificAlbumResultCallback = new UseCase.ResultCallback<SpecificAlbum>() {
+        @Override
+        public void onStart() {
+            albumResultFragment.showProgressBar();
+        }
+
+        @Override
+        public void onSuccess(SpecificAlbum response) {
+            Album fullAlbum = response.getAlbum();
+            albumResultFragment.showAlbumDetails(fullAlbum);
+            albumResultFragment.hideProgressBar();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            albumResultFragment.hideProgressBar();
+        }
+    };
 
     @Inject
-    public AlbumResultPresenter(LastFmApiClient lastFmApiClient) {
-        this.lastFmApiClient = lastFmApiClient;
+    public AlbumResultPresenter(SearchForAlbumUseCase searchForAlbumUseCase, GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase) {
+        this.searchForAlbumUseCase = searchForAlbumUseCase;
+        this.getEntireAlbumInfoUseCase = getEntireAlbumInfoUseCase;
     }
 
     @Override
@@ -39,80 +73,18 @@ public class AlbumResultPresenter implements AlbumResultContract.Presenter {
 
     @Override
     public void leaveView() {
-        if(this.compositeDisposable != null){
-            compositeDisposable.clear();
-        }
         this.albumResultFragment = null;
     }
 
 
     @Override
-    public Observable<GeneralAlbumSearch> searchForAlbum(String albumName) {
-        return lastFmApiClient.getLastFmApiService()
-                .searchForAlbum(albumName, limit);
-    }
-
-    @Override
-    public void publishResult(Observable<GeneralAlbumSearch> observable) {
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<GeneralAlbumSearch>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        albumResultFragment.showProgressBar();
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(GeneralAlbumSearch albumSearchResults) {
-                        albumResultFragment.setSearchResults(albumSearchResults);
-                        albumResultFragment.hideKeyboard();
-                        albumResultFragment.hideProgressBar();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        albumResultFragment.hideProgressBar();
-                        compositeDisposable.clear();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        albumResultFragment.hideProgressBar();
-                        compositeDisposable.clear();
-                    }
-                });
+    public void searchForAlbum(String albumName) {
+        searchForAlbumUseCase.invoke(albumSearchCallback, albumName);
     }
 
     @Override
     public void fetchEntireAlbumInfo(String artistName, String albumName) {
-        lastFmApiClient.getLastFmApiService()
-                .searchForSpecificAlbum(artistName, albumName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(specificAlbum -> specificAlbum)
-                .subscribe(new Observer<SpecificAlbum>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        albumResultFragment.showProgressBar();
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(SpecificAlbum specificAlbum) {
-                        Album fullAlbum = specificAlbum.getAlbum();
-                        albumResultFragment.showAlbumDetails(fullAlbum);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(this.getClass().toString(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        albumResultFragment.hideProgressBar();
-                    }
-                });
+        getEntireAlbumInfoUseCase.invoke(specificAlbumResultCallback, new AlbumArtistPairModel(artistName, albumName));
     }
+
 }

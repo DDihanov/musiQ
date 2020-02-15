@@ -1,4 +1,4 @@
-package com.dihanov.musiq.service;
+package com.dihanov.musiq.data.network;
 
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.Image;

@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
@@ -39,10 +39,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
@@ -65,6 +64,7 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
     @Inject
     FavoritesManager favoritesManager;
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private MainActivity mainActivity;
 
@@ -121,20 +121,18 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
 
 
     private void addOnSearchBarTextChangedListener(MainActivity mainActivity) {
-        Observable<ArtistSearchResults> observable = RxSearchView.queryTextChanges(mainActivity.getSearchBar())
+        Disposable subscribe = RxSearchView.queryTextChanges(mainActivity.getSearchBar())
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                 .filter(s -> s.length() >= 2)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(s -> {
                     HelperMethods.checkConnection(mainActivity);
-                    mainActivity.showProgressBar();
                 })
-                .observeOn(Schedulers.io())
-                .flatMap((Function<CharSequence, Observable<ArtistSearchResults>>) s -> artistResultFragmentPresenter.searchForArtist(s.toString()))
+                .doOnNext(s -> artistResultFragmentPresenter.searchForArtist(s.toString()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry();
+                .subscribe();
 
-        artistResultFragmentPresenter.publishResult(observable);
+        compositeDisposable.add(subscribe);
     }
 
     @Override
@@ -164,6 +162,7 @@ public class ArtistResult extends DaggerFragment implements ArtistResultContract
     @Override
     public void onDestroy() {
         super.onDestroy();
+        compositeDisposable.clear();
         this.artistResultFragmentPresenter.leaveView();
     }
 

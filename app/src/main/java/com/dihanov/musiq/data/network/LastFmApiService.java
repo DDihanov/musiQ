@@ -1,4 +1,4 @@
-package com.dihanov.musiq.service;
+package com.dihanov.musiq.data.network;
 
 
 import com.dihanov.musiq.config.Config;
@@ -6,7 +6,6 @@ import com.dihanov.musiq.models.ArtistSearchResults;
 import com.dihanov.musiq.models.ArtistTopTags;
 import com.dihanov.musiq.models.ArtistTopTracks;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
-import com.dihanov.musiq.models.UserLovedTracks;
 import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.SpecificAlbum;
@@ -17,6 +16,7 @@ import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.models.UserArtistTracks;
 import com.dihanov.musiq.models.UserFriends;
 import com.dihanov.musiq.models.UserInfo;
+import com.dihanov.musiq.models.UserLovedTracks;
 import com.dihanov.musiq.models.UserTopArtists;
 import com.dihanov.musiq.models.UserTopTracks;
 

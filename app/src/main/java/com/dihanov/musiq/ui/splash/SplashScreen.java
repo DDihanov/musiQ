@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;

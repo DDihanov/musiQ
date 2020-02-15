@@ -1,10 +1,10 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.config.Config;
+import com.dihanov.musiq.data.network.ArtistImageDeserializer;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.Track;
-import com.dihanov.musiq.service.ArtistImageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

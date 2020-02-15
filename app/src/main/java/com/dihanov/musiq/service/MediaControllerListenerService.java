@@ -13,7 +13,7 @@ import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.util.NetworkConnectionReceiver;
@@ -48,6 +48,9 @@ public class MediaControllerListenerService extends NotificationListenerService
 
     @Inject
     UserSettingsRepository userSettingsRepository;
+
+    @Inject
+    Notificator notificator;
 
     private Map<String, MediaController.Callback> callbacks = new HashMap<>();
     private List<MediaController> currentControllers = new ArrayList<>();
@@ -159,7 +162,7 @@ public class MediaControllerListenerService extends NotificationListenerService
         }
 
         if (sbn.getPackageName().equals(currentPlayingControllerPackageName)) {
-            Notificator.cancelNotification(this);
+            notificator.cancelNotification(this);
         }
     }
 

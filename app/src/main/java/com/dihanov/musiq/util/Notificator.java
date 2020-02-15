@@ -7,11 +7,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -19,12 +21,18 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * Created by dimitar.dihanov on 2/9/2018.
  */
 
+@Singleton
 public class Notificator {
     private static final int NOTIFICATION_ID = 9237;
     private static final String NOTIFICATION_CHANNEL_ID = "musiq_notif_channel";
     private static final String NOTIFICATION_CHANNEL_NAME = "musiq_notif_channel";
 
-    public static void buildNotification(Context context, String title, String content) {
+
+    @Inject
+    public Notificator() {
+    }
+
+    public void buildNotification(Context context, String title, String content) {
         NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
         //cancel the previous notification
@@ -65,7 +73,7 @@ public class Notificator {
 
     }
 
-    public static void cancelNotification(Context context) {
+    public void cancelNotification(Context context) {
         NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         nm.cancel(NOTIFICATION_ID);
     }

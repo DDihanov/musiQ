@@ -94,12 +94,8 @@ public class HelperMethods {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    public static boolean isTablet(BaseView<?> context){
+    public static boolean isTablet(Activity context){
         return ((Activity)context).getResources().getBoolean(R.bool.isTablet);
-    }
-
-    public static int getOrientation(BaseView<?> context){
-        return ((Activity)context).getResources().getConfiguration().orientation;
     }
 
     public static int getOrientation(Activity context){
@@ -151,7 +147,6 @@ public class HelperMethods {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
                     TextView toEdit = (TextView) tabViewChild;
-//                    toEdit.setTypeface(ResourcesCompat.getFont(context, R.font.cabin));
                     toEdit.setAllCaps(false);
                 }
             }
@@ -210,7 +205,7 @@ public class HelperMethods {
         return byteArray;
     }
 
-    public static int determineArtistLimit(BaseView mainActivity) {
+    public static int determineArtistLimit(Activity mainActivity) {
         if (HelperMethods.isTablet(mainActivity) || HelperMethods.getOrientation(mainActivity) == Configuration.ORIENTATION_LANDSCAPE) {
             return 10;
         }

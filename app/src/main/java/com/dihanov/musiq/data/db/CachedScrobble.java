@@ -1,4 +1,4 @@
-package com.dihanov.musiq.db;
+package com.dihanov.musiq.data.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;

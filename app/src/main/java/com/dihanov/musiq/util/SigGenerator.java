@@ -3,7 +3,7 @@ package com.dihanov.musiq.util;
 import android.util.Log;
 
 import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

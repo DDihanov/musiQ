@@ -1,6 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.db.ScrobbleDB;
+import com.dihanov.musiq.data.db.ScrobbleDB;
 
 import javax.inject.Singleton;
 

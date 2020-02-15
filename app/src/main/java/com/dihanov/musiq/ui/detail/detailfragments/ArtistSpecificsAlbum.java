@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;

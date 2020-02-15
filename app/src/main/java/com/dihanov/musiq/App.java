@@ -6,7 +6,7 @@ import android.app.Service;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.di.app.DaggerAppComponent;
 import com.dihanov.musiq.di.modules.NetworkModule;
 import com.dihanov.musiq.service.scrobble.Scrobbler;

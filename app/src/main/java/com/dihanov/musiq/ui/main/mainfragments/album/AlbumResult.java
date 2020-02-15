@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.GeneralAlbumSearch;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
@@ -35,10 +35,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by dimitar.dihanov on 11/2/2017.
@@ -62,6 +61,8 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
 
     @Inject
     UserSettingsRepository userSettingsRepository;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private MainActivity mainActivity;
 
@@ -112,20 +113,18 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
     }
 
     private void addOnSearchBarTextChangedListener() {
-        Observable<GeneralAlbumSearch> observable = RxSearchView.queryTextChanges(mainActivity.getSearchBar())
+        Disposable subscribe = RxSearchView.queryTextChanges(mainActivity.getSearchBar())
                 .debounce(DELAY_IN_MILLIS, TimeUnit.MILLISECONDS)
                 .filter(s -> s.length() >= 2)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(s -> {
                     HelperMethods.checkConnection(mainActivity);
-                    mainActivity.showProgressBar();
                 })
-                .observeOn(Schedulers.io())
-                .flatMap((Function<CharSequence, Observable<GeneralAlbumSearch>>) s -> albumResultFragmentPresenter.searchForAlbum(s.toString()))
+                .doOnNext(s -> albumResultFragmentPresenter.searchForAlbum(s.toString()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry();
+                .subscribe();
 
-        albumResultFragmentPresenter.publishResult(observable);
+        compositeDisposable.add(subscribe);
     }
 
     private void initRecyclerView() {
@@ -155,6 +154,7 @@ public class AlbumResult extends DaggerFragment implements AlbumResultContract.V
     @Override
     public void onDestroy() {
         super.onDestroy();
+        compositeDisposable.clear();
         this.albumResultFragmentPresenter.leaveView();
     }
 

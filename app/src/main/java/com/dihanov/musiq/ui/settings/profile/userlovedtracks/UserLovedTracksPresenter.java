@@ -1,165 +1,106 @@
 package com.dihanov.musiq.ui.settings.profile.userlovedtracks;
 
-import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.usecase.GetUserLovedTracksUseCase;
+import com.dihanov.musiq.data.usecase.LoveTrackUseCase;
+import com.dihanov.musiq.data.usecase.UnloveTrackUseCase;
+import com.dihanov.musiq.data.usecase.UseCase;
+import com.dihanov.musiq.models.LoveUnloveTrackModel;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.UserLovedTracks;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.util.AppLog;
-import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.SigGenerator;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
 public class UserLovedTracksPresenter implements UserLovedTracksContract.Presenter {
-    private final String TAG = getClass().getSimpleName();
-
-    private LastFmApiClient lastFmApiClient;
     private UserLovedTracksContract.View view;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private UserSettingsRepository userSettingsRepository;
-    private SigGenerator sigGenerator;
+    private GetUserLovedTracksUseCase getUserLovedTracksUseCase;
+    private LoveTrackUseCase loveTrackUseCase;
+    private UnloveTrackUseCase unloveTrackUseCase;
+    private UseCase.ResultCallback<UserLovedTracks> getUserLovedTracksResultCallback = new UseCase.ResultCallback<UserLovedTracks>() {
+        @Override
+        public void onStart() {
+            if (view != null) {
+                view.showProgressBar();
+            }
+        }
+
+        @Override
+        public void onSuccess(UserLovedTracks userLovedTracks) {
+            if (userLovedTracks == null ||
+                    userLovedTracks.getLovedtracks() == null ||
+                    userLovedTracks.getLovedtracks().getTrack() == null
+                    || view == null) {
+                return;
+            }
+            view.loadLovedTracks(userLovedTracks.getLovedtracks().getTrack());
+            if (view != null) {
+                view.hideProgressBar();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            if (view != null) {
+                view.showProgressBar();
+            }
+        }
+    };
+    private UseCase.ResultCallback<Response> loveTrackCallback = new UseCase.ResultCallback<Response>() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            if (response != null) {
+                view.showToastTrackLoved();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+    };
+    private UseCase.ResultCallback<Response> unloveTrackCallback = new UseCase.ResultCallback<Response>() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            if (response != null) {
+                view.showToastTrackUnloved();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+    };
 
     @Inject
-    public UserLovedTracksPresenter(LastFmApiClient lastFmApiClient, UserSettingsRepository userSettingsRepository, SigGenerator sigGenerator) {
-        this.lastFmApiClient = lastFmApiClient;
-        this.sigGenerator = sigGenerator;
-        this.userSettingsRepository = userSettingsRepository;
+    public UserLovedTracksPresenter(GetUserLovedTracksUseCase getUserLovedTracksUseCase, LoveTrackUseCase loveTrackUseCase, UnloveTrackUseCase unloveTrackUseCase) {
+        this.loveTrackUseCase = loveTrackUseCase;
+        this.unloveTrackUseCase = unloveTrackUseCase;
+        this.getUserLovedTracksUseCase = getUserLovedTracksUseCase;
     }
 
     @Override
     public void fetchLovedTracks(int limit) {
-        lastFmApiClient.getLastFmApiService()
-                .getUserLovedTracks(userSettingsRepository.getUsername(), limit)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<UserLovedTracks>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                        if (view != null){
-                            view.showProgressBar();
-                        }
-                    }
-
-                    @Override
-                    public void onNext(UserLovedTracks userLovedTracks) {
-                        if (userLovedTracks == null ||
-                                userLovedTracks.getLovedtracks() == null ||
-                                userLovedTracks.getLovedtracks().getTrack() == null
-                                || view == null) {
-                            return;
-                        }
-                        view.loadLovedTracks(userLovedTracks.getLovedtracks().getTrack());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, e.getMessage());
-                        if (view != null){
-                            view.hideProgressBar();
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                        if (view != null){
-                            view.hideProgressBar();
-                        }
-                    }
-                });
+        getUserLovedTracksUseCase.invoke(getUserLovedTracksResultCallback, limit);
     }
 
     @Override
     public void loveTrack(String artistName, String trackName) {
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                Constants.TRACK, trackName,
-                Constants.METHOD, Constants.LOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .loveTrack(Constants.LOVE_TRACK_METHOD,
-                        artistName,
-                        trackName,
-                        Config.API_KEY,
-                        apiSig,
-                        userSettingsRepository.getUserSessionKey(),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if(response != null){
-                            view.showToastTrackLoved();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+        loveTrackUseCase.invoke(loveTrackCallback, new LoveUnloveTrackModel(artistName, trackName));
     }
 
     @Override
     public void unloveTrack(String artistName, String trackName) {
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                Constants.TRACK, trackName,
-                Constants.METHOD, Constants.UNLOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .unloveTrack(Constants.UNLOVE_TRACK_METHOD,
-                        artistName,
-                        trackName,
-                        Config.API_KEY,
-                        apiSig,
-                        userSettingsRepository.getUserSessionKey(),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if (response != null) {
-                            view.showToastTrackUnloved();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+       unloveTrackUseCase.invoke(unloveTrackCallback, new LoveUnloveTrackModel(artistName, trackName));
     }
 
     @Override
@@ -171,4 +112,6 @@ public class UserLovedTracksPresenter implements UserLovedTracksContract.Present
     public void leaveView() {
         this.view = null;
     }
+
+
 }

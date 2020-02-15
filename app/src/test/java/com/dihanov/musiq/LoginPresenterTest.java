@@ -3,9 +3,9 @@ package com.dihanov.musiq;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import com.dihanov.musiq.data.network.LastFmApiClient;
+import com.dihanov.musiq.data.network.LastFmApiService;
 import com.dihanov.musiq.models.User;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.service.LastFmApiService;
 import com.dihanov.musiq.ui.login.LoginContract;
 import com.dihanov.musiq.ui.login.LoginPresenter;
 import com.dihanov.musiq.util.Connectivity;

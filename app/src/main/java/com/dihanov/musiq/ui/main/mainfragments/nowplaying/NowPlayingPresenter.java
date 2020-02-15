@@ -1,52 +1,132 @@
 package com.dihanov.musiq.ui.main.mainfragments.nowplaying;
 
-import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.usecase.FetchArtistWithSerializedInfoUseCase;
+import com.dihanov.musiq.data.usecase.GetEntireAlbumInfoUseCase;
+import com.dihanov.musiq.data.usecase.GetRecentScrobblesUseCase;
+import com.dihanov.musiq.data.usecase.LoveTrackUseCase;
+import com.dihanov.musiq.data.usecase.UnloveTrackUseCase;
+import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.Album;
+import com.dihanov.musiq.models.AlbumArtistPairModel;
+import com.dihanov.musiq.models.LoveUnloveTrackModel;
 import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.models.SpecificAlbum;
-import com.dihanov.musiq.models.SpecificArtist;
-import com.dihanov.musiq.models.TopArtistAlbums;
-import com.dihanov.musiq.service.LastFmApiClient;
-import com.dihanov.musiq.ui.adapters.ArtistAdapter;
-import com.dihanov.musiq.util.AppLog;
-import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.SigGenerator;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
 public class NowPlayingPresenter implements NowPlayingContract.Presenter {
-    private static final int RECENT_SCROBBLES_LIMIT = 20;
-    private static final String TAG = NowPlayingPresenter.class.getSimpleName();
-
-    private final LastFmApiClient lastFmApiClient;
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private NowPlayingContract.View nowPlayingFragment;
-    private UserSettingsRepository userSettingsRepository;
-    private SigGenerator sigGenerator;
+    private GetRecentScrobblesUseCase getRecentScrobblesUseCase;
+    private LoveTrackUseCase loveTrackUseCase;
+    private UnloveTrackUseCase unloveTrackUseCase;
+    private GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase;
+    private FetchArtistWithSerializedInfoUseCase fetchArtistWithSerializedInfoUseCase;
+
+    private UseCase.ResultCallback<RecentTracksWrapper> recentTracksWrapperResultCallback =
+            new UseCase.ResultCallback<RecentTracksWrapper>() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onSuccess(RecentTracksWrapper response) {
+                    if (nowPlayingFragment != null) {
+                        nowPlayingFragment.setRecentTracks(response);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                }
+            };
+
+    private UseCase.ResultCallback<Response> loveTrackCallback = new UseCase.ResultCallback<Response>() {
+
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            if(response != null){
+                nowPlayingFragment.showToastTrackLoved();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+    };
+
+    private UseCase.ResultCallback<Response> unloveTrackCallback = new UseCase.ResultCallback<Response>() {
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            if (response != null) {
+                nowPlayingFragment.showToastTrackUnloved();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+        }
+    };
+
+    private UseCase.ResultCallback<SpecificAlbum> specificAlbumResultCallback = new UseCase.ResultCallback<SpecificAlbum>() {
+        @Override
+        public void onStart() {
+            nowPlayingFragment.showProgressBar();
+        }
+
+        @Override
+        public void onSuccess(SpecificAlbum specificAlbum) {
+            Album fullAlbum = specificAlbum.getAlbum();
+            nowPlayingFragment.showAlbumDetails(fullAlbum);
+            nowPlayingFragment.hideProgressBar();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            nowPlayingFragment.hideProgressBar();
+        }
+    };
+
+    private UseCase.ResultCallback<HashMap<String, String>> serializedArtistCallback = new UseCase.ResultCallback<HashMap<String, String>>() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(HashMap<String, String> response) {
+            nowPlayingFragment.hideProgressBar();
+            nowPlayingFragment.startActivityWithExtras(response);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+    };
 
     @Inject
-    public NowPlayingPresenter(LastFmApiClient lastFmApiClient, UserSettingsRepository userSettingsRepository, SigGenerator sigGenerator) {
-        this.lastFmApiClient = lastFmApiClient;
-        this.sigGenerator = sigGenerator;
-        this.userSettingsRepository = userSettingsRepository;
+    public NowPlayingPresenter(FetchArtistWithSerializedInfoUseCase fetchArtistWithSerializedInfoUseCase, GetEntireAlbumInfoUseCase getEntireAlbumInfoUseCase, GetRecentScrobblesUseCase getRecentScrobblesUseCase, UnloveTrackUseCase unloveTrackUseCase, LoveTrackUseCase loveTrackUseCase) {
+        this.fetchArtistWithSerializedInfoUseCase = fetchArtistWithSerializedInfoUseCase;
+        this.getEntireAlbumInfoUseCase = getEntireAlbumInfoUseCase;
+        this.unloveTrackUseCase = unloveTrackUseCase;
+        this.loveTrackUseCase = loveTrackUseCase;
+        this.getRecentScrobblesUseCase = getRecentScrobblesUseCase;
     }
 
     @Override
@@ -61,203 +141,27 @@ public class NowPlayingPresenter implements NowPlayingContract.Presenter {
 
     @Override
     public void loadRecentScrobbles() {
-        lastFmApiClient.getLastFmApiService()
-                .getUserRecentTracks(userSettingsRepository.getUsername(), RECENT_SCROBBLES_LIMIT, 1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<RecentTracksWrapper>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(RecentTracksWrapper recentTracksWrapper) {
-                        if (nowPlayingFragment != null) {
-                            nowPlayingFragment.setRecentTracks(recentTracksWrapper);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+         getRecentScrobblesUseCase.invoke(recentTracksWrapperResultCallback, null);
     }
 
     @Override
     public void loveTrack(String artistName, String trackName) {
-
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                Constants.TRACK, trackName,
-                Constants.METHOD, Constants.LOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .loveTrack(Constants.LOVE_TRACK_METHOD,
-                        artistName,
-                        trackName,
-                        Config.API_KEY,
-                        apiSig,
-                        userSettingsRepository.getUserSessionKey(),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if(response != null){
-                            nowPlayingFragment.showToastTrackLoved();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+        loveTrackUseCase.invoke(loveTrackCallback, new LoveUnloveTrackModel(artistName, trackName));
     }
 
     @Override
     public void unloveTrack(String artistName, String trackName) {
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                Constants.TRACK, trackName,
-                Constants.METHOD, Constants.UNLOVE_TRACK_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .unloveTrack(Constants.UNLOVE_TRACK_METHOD,
-                        artistName,
-                        trackName,
-                        Config.API_KEY,
-                        apiSig,
-                        userSettingsRepository.getUserSessionKey(),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if (response != null) {
-                            nowPlayingFragment.showToastTrackUnloved();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        compositeDisposable.clear();
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+        unloveTrackUseCase.invoke(unloveTrackCallback, new LoveUnloveTrackModel(artistName, trackName));
     }
 
     @Override
     public void fetchArtist(String artistName) {
-        HashMap<String, String> bundleExtra = new HashMap<>();
-
-        Observable<SpecificArtist> specificArtistRequest = lastFmApiClient.getLastFmApiService()
-                .getSpecificArtistInfo(artistName)
-                .subscribeOn(Schedulers.io());
-        Observable<TopArtistAlbums> topAlbumRequest = lastFmApiClient.getLastFmApiService()
-                .searchForArtistTopAlbums(artistName, Constants.ALBUM_LIMIT)
-                .subscribeOn(Schedulers.newThread());
-
-        Observable.zip(
-                specificArtistRequest,
-                topAlbumRequest,
-                new BiFunction<SpecificArtist, TopArtistAlbums, HashMap<String, String>>() {
-                    @Override
-                    public HashMap<String, String> apply(SpecificArtist specificArtist, TopArtistAlbums topArtistAlbums) throws Exception {
-                        HashMap<String, String> result = new HashMap<>();
-
-                        result.put(Constants.ARTIST, new Gson().toJson(specificArtist, SpecificArtist.class));
-                        result.put(Constants.ALBUM, new Gson().toJson(topArtistAlbums, TopArtistAlbums.class));
-
-                        return result;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<HashMap<String, String>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(HashMap<String, String> stringStringHashMap) {
-                        bundleExtra.putAll(stringStringHashMap);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(ArtistAdapter.class.toString(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        nowPlayingFragment.hideProgressBar();
-                        nowPlayingFragment.startActivityWithExtras(bundleExtra);
-                        //important we use .clear and not .dispose, since .dispose will not allow any further subscribing
-                        compositeDisposable.clear();
-                    }
-                });
+       fetchArtistWithSerializedInfoUseCase.invoke(serializedArtistCallback, artistName);
     }
 
     @Override
     public void fetchEntireAlbumInfo(String artistName, String albumName) {
-        lastFmApiClient.getLastFmApiService()
-                .searchForSpecificAlbum(artistName, albumName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(specificAlbum -> specificAlbum)
-                .subscribe(new Observer<SpecificAlbum>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        nowPlayingFragment.showProgressBar();
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(SpecificAlbum specificAlbum) {
-                        Album fullAlbum = specificAlbum.getAlbum();
-                        nowPlayingFragment.showAlbumDetails(fullAlbum);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(this.getClass().toString(), e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        nowPlayingFragment.hideProgressBar();
-                    }
-                });
+        getEntireAlbumInfoUseCase.invoke(specificAlbumResultCallback, new AlbumArtistPairModel(artistName, albumName));
     }
 }
 

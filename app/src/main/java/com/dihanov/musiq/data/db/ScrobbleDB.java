@@ -1,19 +1,14 @@
-package com.dihanov.musiq.db;
+package com.dihanov.musiq.data.db;
 
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.Delete;
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.Insert;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import okhttp3.Cache;
 
 /**
  * Created by dimitar.dihanov on 2/8/2018.

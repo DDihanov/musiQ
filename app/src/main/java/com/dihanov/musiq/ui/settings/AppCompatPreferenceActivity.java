@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 
 import javax.inject.Inject;
 
@@ -26,7 +26,6 @@ import dagger.android.AndroidInjection;
  * to be used with AppCompat.
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
-
     private AppCompatDelegate mDelegate;
 
     @Inject

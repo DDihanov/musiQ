@@ -16,9 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.network.LastFmApiClient;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
-import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;

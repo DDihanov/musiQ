@@ -1,6 +1,6 @@
 package com.dihanov.musiq.di.modules;
 
-import com.dihanov.musiq.service.LastFmApiClient;
+import com.dihanov.musiq.data.network.LastFmApiClient;
 
 import javax.inject.Singleton;
 

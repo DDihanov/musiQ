@@ -23,7 +23,7 @@ public interface MainContract {
     interface Presenter extends BasePresenter<View> {
         void getUserInfo();
 
-        void loadUserTopArtists(String timeframe, String username, int limit);
+        void loadUserTopArtists(String timeframe);
 
         void loadChartTopArtists(int limit);
 

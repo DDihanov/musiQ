@@ -8,25 +8,17 @@ import android.media.session.PlaybackState;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.db.ScrobbleDB;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.db.ScrobbleDB;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.usecase.BulkScrobbleUseCase;
+import com.dihanov.musiq.data.usecase.ScrobbleTrackUseCase;
+import com.dihanov.musiq.data.usecase.UpdateNowPlayingUseCase;
+import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.Response;
-import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.AppLog;
-import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.Notificator;
-import com.dihanov.musiq.util.SigGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by dimitar.dihanov on 2/6/2018.
@@ -34,79 +26,75 @@ import io.reactivex.schedulers.Schedulers;
 
 public class Scrobbler {
     private static long lastScrobbleTime = System.currentTimeMillis();
-    private static Object object = new Object();
-
+    private static final Object LOCK = new Object();
+    private static final Object NOW_PLAYING_LOCK = new Object();
     private static final String TAG = Scrobbler.class.getSimpleName();
-    private static State state;
+    private static State STATE;
+
     private ScrobbleDB scrobbleDB;
     private Scrobble nowPlaying;
-    private LastFmApiClient lastFmApiClient;
     private Context context;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private UserSettingsRepository userSettingsRepository;
-    private SigGenerator sigGenerator;
+    private Notificator notificator;
+    private ScrobbleTrackUseCase scrobbleTrackUseCase;
+    private BulkScrobbleUseCase bulkScrobbleUseCase;
+    private UpdateNowPlayingUseCase updateNowPlayingUseCase;
 
-    public Scrobbler(LastFmApiClient lastFmApiClient, Context context, ScrobbleDB scrobbleDB, UserSettingsRepository userSettingsRepository) {
-        this.lastFmApiClient = lastFmApiClient;
+    private UseCase.ResultCallback<Response> bulkScrobbleCallback = new UseCase.ResultCallback<Response>() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            AppLog.log(BulkScrobbleUseCase.class.getSimpleName(), "Scrobbled " +
+                    response.getScrobbles().getScrobble().getArtist().getText() +
+                    " - " +
+                    response.getScrobbles().getScrobble().getTrack().getText());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            scrobbleDB.clearCache();
+        }
+    };
+
+    private UseCase.ResultCallback<Response> updateNowPlayingCallback = new UseCase.ResultCallback<Response>() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            AppLog.log(TAG, String.format("Updated now playing: %s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+    };
+
+    public Scrobbler(UpdateNowPlayingUseCase updateNowPlayingUseCase, BulkScrobbleUseCase bulkScrobbleUseCase, ScrobbleTrackUseCase scrobbleTrackUseCase, Context context, ScrobbleDB scrobbleDB, UserSettingsRepository userSettingsRepository, Notificator notificator) {
+        this.updateNowPlayingUseCase = updateNowPlayingUseCase;
+        this.bulkScrobbleUseCase = bulkScrobbleUseCase;
+        this.scrobbleTrackUseCase = scrobbleTrackUseCase;
         this.context = context;
-        this.state = new State(State.NONE);
+        STATE = new State(State.NONE);
         this.scrobbleDB = scrobbleDB;
+        this.notificator = notificator;
         this.userSettingsRepository = userSettingsRepository;
     }
 
     public void scrobble(Scrobble scrobble) {
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, scrobble.getArtistName(),
-                Constants.TRACK, scrobble.getTrackName(),
-                Constants.TIMESTAMP, String.valueOf(scrobble.getTimestamp()),
-                Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
-
-        lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
-                scrobble.getArtistName(),
-                scrobble.getTrackName(),
-                Config.API_KEY,
-                apiSig,
-                scrobble.getTimestamp(),
-                userSettingsRepository.getUserSessionKey(),
-                Config.FORMAT)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        if(response != null){
-                            if (response.getError() == null) {
-                                AppLog.log(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
-                            } else {
-                                handleErrorResponse(response, scrobble);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        storeInDb(scrobble);
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        resetPenalty();
-                        if(nowPlaying != null){
-                            nowPlaying.setTrackStartTime(System.currentTimeMillis());
-                        }
-                        compositeDisposable.clear();
-                    }
-                });
+        scrobbleTrackUseCase.invoke(new ScrobbleCallback(scrobble), scrobble);
 
     }
 
     private void resetPenalty() {
-        if(state == null){
+        if (STATE == null) {
             return;
         }
         getStatus().setPenalty(0);
@@ -150,63 +138,32 @@ public class Scrobbler {
         }
 
         if (userSettingsRepository.hasNotificationsEnabled() && userSettingsRepository.hasSessionKey()) {
-            Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
+            notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
         }
 
         this.nowPlaying = nowPlaying;
-        String apiSig = sigGenerator.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),
-                Constants.TRACK, nowPlaying.getTrackName(),
-                Constants.METHOD, Constants.UPDATE_NOW_PLAYING_METHOD);
-
-        lastFmApiClient.getLastFmApiService()
-                .updateNowPlaying(Constants.UPDATE_NOW_PLAYING_METHOD,
-                        nowPlaying.getArtistName(),
-                        nowPlaying.getTrackName(),
-                        Config.API_KEY,
-                        apiSig,
-                        userSettingsRepository.getUserSessionKey(),
-                        Config.FORMAT)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Response>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-                        AppLog.log(TAG, String.format("Updated now playing: %s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                    }
-                });
+        synchronized (NOW_PLAYING_LOCK) {
+            updateNowPlayingUseCase.invoke(updateNowPlayingCallback, nowPlaying);
+        }
     }
 
     public void setStatus(PlaybackState playbackState) {
         int state = playbackState.getState();
 
-        synchronized (object) {
+        synchronized (LOCK) {
             manageScrobble(nowPlaying);
         }
 
         if (playbackState.getState() == PlaybackState.STATE_NONE) {
             this.setNowPlaying(null);
         } else {
-            Scrobbler.state.handleStatusChanged(state);
+            Scrobbler.STATE.handleStatusChanged(state);
         }
 
     }
 
     public State getStatus() {
-        return this.state;
+        return this.STATE;
     }
 
     private void storeInDb(Scrobble scrobble) {
@@ -218,69 +175,7 @@ public class Scrobbler {
 
         if (cached.isEmpty() || userSettingsRepository.hasScrobbleReviewEnabled()) return;
 
-        List<Observable<Response>> observables = new ArrayList<>();
-        String apiSig = "";
-
-        for (int i = 0; i < 50 && i < cached.size(); i++) {
-            Scrobble scrobble = cached.get(i);
-            String artistName = scrobble.getArtistName();
-            String trackName = scrobble.getTrackName();
-            String timestamp = String.valueOf(scrobble.getTimestamp());
-            apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                    Constants.TRACK, trackName,
-                    Constants.TIMESTAMP, timestamp,
-                    Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
-
-
-            observables.add(lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
-                    artistName,
-                    trackName,
-                    Config.API_KEY,
-                    apiSig,
-                    timestamp,
-                    userSettingsRepository.getUserSessionKey(),
-                    Config.FORMAT)
-                    .subscribeOn(Schedulers.io()));
-        }
-
-        Observable.zipIterable(observables, objects -> {
-            List<Response> result = new ArrayList<>();
-            for (Object object : objects) {
-                result.add((Response) object);
-            }
-            return result;
-        }, false, 10)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<Response>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(List<Response> responses) {
-                        if (responses != null) {
-                            for (Response respons : responses) {
-                                AppLog.log(TAG, "Scrobbled " +
-                                        respons.getScrobbles().getScrobble().getArtist().getText() +
-                                        " - " +
-                                        respons.getScrobbles().getScrobble().getTrack().getText());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(TAG, e.getMessage());
-                        compositeDisposable.clear();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                        scrobbleDB.clearCache();
-                    }
-                });
+        bulkScrobbleUseCase.invoke(bulkScrobbleCallback, cached);
     }
 
     public void scrobbleFromCacheDirectly() {
@@ -288,74 +183,12 @@ public class Scrobbler {
 
         if (cached.isEmpty()) return;
 
-        List<Observable<Response>> observables = new ArrayList<>();
-        String apiSig = "";
-
-        for (int i = 0; i < 50 && i < cached.size(); i++) {
-            Scrobble scrobble = cached.get(i);
-            String artistName = scrobble.getArtistName();
-            String trackName = scrobble.getTrackName();
-            String timestamp = String.valueOf(scrobble.getTimestamp());
-            apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
-                    Constants.TRACK, trackName,
-                    Constants.TIMESTAMP, timestamp,
-                    Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
-
-
-            observables.add(lastFmApiClient.getLastFmApiService().scrobbleTrack(Constants.TRACK_SCROBBLE_METHOD,
-                    artistName,
-                    trackName,
-                    Config.API_KEY,
-                    apiSig,
-                    timestamp,
-                    userSettingsRepository.getUserSessionKey(),
-                    Config.FORMAT)
-                    .subscribeOn(Schedulers.io()));
-        }
-
-        Observable.zipIterable(observables, objects -> {
-            List<Response> result = new ArrayList<>();
-            for (Object object : objects) {
-                result.add((Response) object);
-            }
-            return result;
-        }, false, 10)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<Response>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(List<Response> responses) {
-                        if (responses != null) {
-                            for (Response respons : responses) {
-                                AppLog.log(TAG, "Scrobbled " +
-                                        respons.getScrobbles().getScrobble().getArtist().getText() +
-                                        " - " +
-                                        respons.getScrobbles().getScrobble().getTrack().getText());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        AppLog.log(TAG, e.getMessage());
-                        compositeDisposable.clear();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        compositeDisposable.clear();
-                        scrobbleDB.clearCache();
-                    }
-                });
+        bulkScrobbleUseCase.invoke(bulkScrobbleCallback, cached);
     }
 
     public void updateTrackInfo(MediaMetadata metadata) {
         if (this.nowPlaying != null) {
-            synchronized (object) {
+            synchronized (LOCK) {
                 manageScrobble(this.nowPlaying);
             }
         }
@@ -403,13 +236,13 @@ public class Scrobbler {
             return;
         }
 
-        long currentTime = System.currentTimeMillis() - state.getPenalty();
+        long currentTime = System.currentTimeMillis() - STATE.getPenalty();
         //multiply by 1000 to time in milliseconds
         long trackBeginTime = scrobble.getTrackStartTime();
         long minimumTrackTime = scrobble.getDuration() / 2;
         long requiredTime = trackBeginTime + minimumTrackTime;
 
-        if (requiredTime <= currentTime ) {
+        if (requiredTime <= currentTime) {
             long start = System.currentTimeMillis();
             if (lastScrobbleTime + 5000 >= start) {
                 return;
@@ -420,6 +253,40 @@ public class Scrobbler {
                 this.scrobble(scrobble);
             }
             lastScrobbleTime = start;
+        }
+    }
+
+    private class ScrobbleCallback implements UseCase.ResultCallback<Response> {
+        private Scrobble scrobble;
+
+        public ScrobbleCallback(Scrobble scrobble) {
+            this.scrobble = scrobble;
+        }
+
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onSuccess(Response response) {
+            if (response != null) {
+                if (response.getError() == null) {
+                    AppLog.log(TAG, String.format("Scrobbled %s - %s", scrobble.getArtistName(), scrobble.getTrackName()));
+                } else {
+                    handleErrorResponse(response, scrobble);
+                }
+            }
+            resetPenalty();
+            if (nowPlaying != null) {
+                nowPlaying.setTrackStartTime(System.currentTimeMillis());
+            }
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            storeInDb(scrobble);
+            AppLog.log(TAG, e.getMessage());
         }
     }
 }

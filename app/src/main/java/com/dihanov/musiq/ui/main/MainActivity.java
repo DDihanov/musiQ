@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.db.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.TopArtistAdapter;
@@ -363,7 +363,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
             mainActivityPresenter.loadChartTopArtists(limit);
         } else {
             String period = determineSelectedTimeframeFromInt();
-            mainActivityPresenter.loadUserTopArtists(period, username, limit);
+            mainActivityPresenter.loadUserTopArtists(period);
         }
     }
 

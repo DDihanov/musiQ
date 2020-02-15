@@ -58,6 +58,7 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:clickable="false"
+                    android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -206,6 +207,7 @@
         tools:layout_editor_absoluteY="0dp">
 
         <TextView
+            android:maxLines="1"
             android:id="@+id/artist_details_name"
             fontPath="fonts/cabin_bold.ttf"
             android:layout_width="match_parent"
