@@ -1,5 +1,7 @@
 package com.dihanov.musiq.ui.main.mainfragments.usertopartists;
 
+import android.util.Pair;
+
 import com.dihanov.musiq.data.usecase.GetUserTopArtistsUseCase;
 import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.UserTopArtists;
@@ -33,7 +35,7 @@ public class UserTopArtistsPresenter implements UserTopArtistsContract.Presenter
 
     @Override
     public void loadTopArtists(String timeframe) {
-        getUserTopArtistsUseCase.invoke(this, timeframe);
+        getUserTopArtistsUseCase.invoke(this, new Pair<>(timeframe, 10));
     }
 
     @Override
@@ -43,8 +45,10 @@ public class UserTopArtistsPresenter implements UserTopArtistsContract.Presenter
 
     @Override
     public void onSuccess(UserTopArtists response) {
-        userTopTracks.configureBarChart(response);
-        userTopTracks.hideProgressBar();
+        if (userTopTracks != null) {
+            userTopTracks.configureBarChart(response);
+            userTopTracks.hideProgressBar();
+        }
     }
 
     @Override

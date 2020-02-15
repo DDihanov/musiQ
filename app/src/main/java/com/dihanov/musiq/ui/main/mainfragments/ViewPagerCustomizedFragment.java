@@ -1,11 +1,12 @@
 package com.dihanov.musiq.ui.main.mainfragments;
 
 import android.content.Context;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.widget.SearchView;
 
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.ui.main.ViewPagerAdapter;

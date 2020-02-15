@@ -1,7 +1,6 @@
 package com.dihanov.musiq.util;
 
 import android.content.Context;
-import android.support.design.widget.NavigationView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
+import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 

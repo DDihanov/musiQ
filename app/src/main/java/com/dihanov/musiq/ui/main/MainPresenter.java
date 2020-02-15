@@ -1,5 +1,7 @@
 package com.dihanov.musiq.ui.main;
 
+import android.util.Pair;
+
 import com.dihanov.musiq.data.usecase.FetchArtistWithSerializedInfoUseCase;
 import com.dihanov.musiq.data.usecase.GetChartTopArtistsUseCase;
 import com.dihanov.musiq.data.usecase.GetUserInfoUseCase;
@@ -137,7 +139,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void loadUserTopArtists(String timeframe) {
-        getUserTopArtistsUseCase.invoke(userTopArtistsResultCallback, timeframe);
+        getUserTopArtistsUseCase.invoke(userTopArtistsResultCallback, new Pair<>(timeframe, 4));
     }
 
     @Override

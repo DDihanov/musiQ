@@ -15,11 +15,15 @@ import com.dihanov.musiq.ui.viewholders.AbstractViewHolder;
 import com.dihanov.musiq.ui.viewholders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.FavoritesManager;
+import com.jakewharton.rxbinding3.view.RxView;
 import com.veinhorn.tagview.TagView;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -69,12 +73,12 @@ public class TopArtistAdapter extends AbstractAdapter {
         holder.getTitle().setText(artist.getName().toLowerCase());
         ((TagView)holder.getTitle()).setTagColor(Color.parseColor(context.getString(R.color.colorAccent)));
         ((TagView)holder.getTitle()).setTagCircleRadius(10f);
-        holder.getThumbnail().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemClickedListener.onItemClicked(artist);
-            }
-        });
+        RxView.clicks(holder.getThumbnail())
+                .debounce(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(click -> {
+                    onItemClickedListener.onItemClicked(artist);
+                });
 
         this.setIsFavorited(holder, Constants.FAVORITE_ARTISTS_KEY);
     }

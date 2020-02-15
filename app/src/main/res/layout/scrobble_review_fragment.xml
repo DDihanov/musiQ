@@ -18,12 +18,13 @@
         android:layout_height="match_parent"
         android:descendantFocusability="afterDescendants"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/scrobble_review_scrobble_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
         android:text="@string/scrobble_all" />
 
 </RelativeLayout>

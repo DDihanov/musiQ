@@ -34,7 +34,6 @@ public class ArtistImageDeserializer implements JsonDeserializer<Artist> {
         Request.Builder requestBuilder;
         requestBuilder = new Request.Builder()
                 .url("https://webservice.fanart.tv/v3/music/" + artist.getMbid() + "&?api_key=" + BuildConfig.API_KEY_FANART + "&format=json");
-        requestBuilder.addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36");
         Request request = requestBuilder.build();
 
         Response response = null;

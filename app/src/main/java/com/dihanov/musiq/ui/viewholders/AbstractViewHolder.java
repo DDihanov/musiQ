@@ -1,8 +1,9 @@
 package com.dihanov.musiq.ui.viewholders;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;
 import com.dihanov.musiq.interfaces.Favoritable;

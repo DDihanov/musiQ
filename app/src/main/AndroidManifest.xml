@@ -17,7 +17,9 @@
         android:roundIcon="@drawable/ic_launcher_icon_large"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.splash.SplashScreen">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.splash.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,8 +27,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.detail.ArtistDetails"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize"/>
         <activity
             android:screenOrientation="portrait"
@@ -44,9 +52,10 @@
         </service>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.settings.Settings"
             android:label="@string/title_activity_settings"
-            android:windowSoftInputMode="adjustPan" ></activity>
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@ import com.dihanov.musiq.ui.viewholders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
-import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.Iterator;
 import java.util.List;

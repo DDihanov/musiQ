@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -68,6 +69,14 @@ public class Album implements Favoritable {
     }
 
     public Object getArtist() {
+        if (artist instanceof LinkedTreeMap) {
+            LinkedTreeMap<String, String> weirdArtist = (LinkedTreeMap<String, String>) artist;
+            Artist artist = new Artist();
+            artist.setName(weirdArtist.get("name"));
+            artist.setMbid(weirdArtist.get("mbid"));
+            artist.setUrl(weirdArtist.get("url"));
+            return artist;
+        }
         return artist;
     }
 

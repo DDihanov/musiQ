@@ -1,8 +1,8 @@
 package com.dihanov.musiq.ui.main;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.dihanov.musiq.ui.main.mainfragments.album.AlbumResult;
 import com.dihanov.musiq.ui.main.mainfragments.artist.ArtistResult;

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 public class SearchForAlbumUseCase extends BaseUseCase<String, GeneralAlbumSearch> {
-    private static final int LIMIT = 20;
+    private static final int LIMIT = 10;
 
     @Inject
     public SearchForAlbumUseCase(LastFmApiClient lastFmApiClient, SigGenerator sigGenerator, UserSettingsRepository userSettingsRepository) {

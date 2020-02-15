@@ -1,12 +1,13 @@
 package com.dihanov.musiq.ui.viewholders;
 
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.PopupMenu;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.Favoritable;

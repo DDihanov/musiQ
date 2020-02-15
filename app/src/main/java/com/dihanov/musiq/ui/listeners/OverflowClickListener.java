@@ -1,7 +1,8 @@
 package com.dihanov.musiq.ui.listeners;
 
-import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
+
+import androidx.appcompat.widget.PopupMenu;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.interfaces.ClickableArtistViewHolder;

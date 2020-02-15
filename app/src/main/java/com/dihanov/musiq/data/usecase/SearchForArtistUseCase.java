@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 public class SearchForArtistUseCase extends BaseUseCase<String, ArtistSearchResults> {
-    private static final int LIMIT = 20;
+    private static final int LIMIT = 10;
 
     @Inject
     public SearchForArtistUseCase(LastFmApiClient lastFmApiClient, SigGenerator sigGenerator, UserSettingsRepository userSettingsRepository) {

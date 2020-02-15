@@ -2,10 +2,11 @@ package com.dihanov.musiq.ui.detail.detailfragments.detailfragmentstoptracks;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;

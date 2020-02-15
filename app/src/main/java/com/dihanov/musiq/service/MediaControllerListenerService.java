@@ -10,8 +10,9 @@ import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.dihanov.musiq.data.repository.UserSettingsRepository;
 import com.dihanov.musiq.service.scrobble.Scrobbler;

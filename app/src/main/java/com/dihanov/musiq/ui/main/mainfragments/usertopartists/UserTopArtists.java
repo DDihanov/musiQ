@@ -2,11 +2,12 @@ package com.dihanov.musiq.ui.main.mainfragments.usertopartists;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.ui.main.MainActivity;

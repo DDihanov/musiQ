@@ -21,19 +21,19 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.db.ScrobbleDB;
@@ -43,6 +43,7 @@ import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter;
 import com.dihanov.musiq.util.Connectivity;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -291,7 +292,7 @@ public class Settings extends AppCompatPreferenceActivity implements HasFragment
         ListView scrobbleListView;
 
         @BindView(R.id.scrobble_review_scrobble_all)
-        Button scrobbleAll;
+        MaterialButton scrobbleAll;
 
         @BindView(R.id.scrobble_review_empty)
         TextView empty;

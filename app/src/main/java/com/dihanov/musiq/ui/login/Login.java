@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.network.LastFmApiClient;
@@ -24,6 +24,7 @@ import com.dihanov.musiq.ui.main.MainActivity;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.HelperMethods;
+import com.google.android.material.button.MaterialButton;
 
 import javax.inject.Inject;
 
@@ -38,7 +39,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class Login extends DaggerAppCompatActivity implements LoginContract.View, MainViewFunctionable {
     @BindView(R.id.sign_in)
-    Button signInButton;
+    MaterialButton signInButton;
 
     @BindView(R.id.username)
     EditText username;
