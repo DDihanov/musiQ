@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.dihanov.musiq"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 41
         versionName "1.910"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -73,7 +73,8 @@ dependencies {
     implementation 'com.github.florent37:viewtooltip:1.0.8'
 
     //Calligraphy
-    implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
 
     //Gson JSON parser
     implementation 'com.google.code.gson:gson:2.8.1'
@@ -132,5 +133,4 @@ dependencies {
     }
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
