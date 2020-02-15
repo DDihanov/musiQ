@@ -2,10 +2,9 @@ package com.dihanov.musiq.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
+import com.dihanov.musiq.ui.viewholders.AbstractViewHolder;
+import com.dihanov.musiq.util.FavoritesManager;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,11 +16,18 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewH
         void onItemClicked(T item);
     }
 
+    private Set<String> favorites;
+    private FavoritesManager favoritesManager;
+
+    public AbstractAdapter(Set<String> favorites, FavoritesManager favoritesManager) {
+        this.favorites = favorites;
+        this.favoritesManager = favoritesManager;
+    }
+
     protected void setIsFavorited(AbstractViewHolder holder, String key){
         boolean isFavorited = false;
         //this automatically makes it so the button displays the correct setting
-        Set<String> stringSet = App.getSharedPreferences().getStringSet(key, new HashSet<>());
-        for (String s : stringSet) {
+        for (String s : favorites) {
             if(s.toLowerCase().equals(holder.getTitle().getText().toString())){
                 isFavorited = true;
                 break;
@@ -36,4 +42,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter<AbstractViewH
     }
 
     public abstract void remove(String key);
+
+    public FavoritesManager getFavoritesManager() {
+        return favoritesManager;
+    }
 }

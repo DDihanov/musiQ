@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.TopArtistAdapter;
@@ -39,8 +39,10 @@ import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.util.ActivityStarterWithIntentExtras;
 import com.dihanov.musiq.util.Connectivity;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.KeyboardHelper;
+import com.dihanov.musiq.util.Period;
 import com.dihanov.musiq.util.SettingsManager;
 import com.dihanov.musiq.util.TopArtistSource;
 import com.dihanov.musiq.util.UserInfoSetter;
@@ -80,6 +82,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     @Inject
     SettingsManager settingsManager;
 
+    @Inject
+    FavoritesManager favoritesManager;
+
     @BindView(R.id.dummy_button)
     Button dummyButton;
 
@@ -112,6 +117,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
+
+    @Inject
+    UserSettingsRepository userSettingsRepository;
 
     private SearchView searchBar;
     private String lastSearch;
@@ -171,7 +179,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         appBarLayout.setExpanded(true);
         mainActivityPresenter.takeView(this);
 
-        if (App.getSharedPreferences().getBoolean(Constants.FIRST_TIME, true)) {
+        if (userSettingsRepository.isFirstLaunch()) {
             int orientation = this.getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -207,7 +215,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
             public boolean onTouch(View v, MotionEvent event) {
                 mTourGuideHandler.cleanUp();
                 dummyButton.setVisibility(View.INVISIBLE);
-                App.getSharedPreferences().edit().putBoolean(Constants.FIRST_TIME, false).apply();
+                userSettingsRepository.setIsFirstLaunch(false);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
                 return true;
             }
@@ -225,7 +233,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
             settingsManager.manageSettings(item);
             return true;
         });
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         if (!username.isEmpty() && username != "") {
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
@@ -260,11 +268,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     }
 
     private void initViewPager() {
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         boolean isLoggedIn = !username.isEmpty() || !username.equals("");
 
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), username);
 
         if (!isLoggedIn) {
             viewPagerAdapter.setTabCount(viewPagerAdapter.getLoggedOutTabCount());
@@ -342,9 +350,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     private void loadBackdrop(MainActivity mainActivity) {
         int limit = HelperMethods.determineArtistLimit(mainActivity);
 
-        int which = App.getSharedPreferences().getInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.LAST_FM_CHARTS);
+        int which = userSettingsRepository.getSelectedChartToShow();
 
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
 
         if (username.isEmpty() || username.equals("")) {
             mainActivityPresenter.loadChartTopArtists(limit);
@@ -354,8 +362,25 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         if (which == TopArtistSource.LAST_FM_CHARTS) {
             mainActivityPresenter.loadChartTopArtists(limit);
         } else {
-            String period = HelperMethods.determineSelectedTimeframeFromInt();
+            String period = determineSelectedTimeframeFromInt();
             mainActivityPresenter.loadUserTopArtists(period, username, limit);
+        }
+    }
+
+    private String determineSelectedTimeframeFromInt() {
+        switch (userSettingsRepository.getChartTimeFrame()) {
+            case 0:
+                return Period.OVERALL;
+            case 1:
+                return Period.SEVEN_DAY;
+            case 2:
+                return Period.ONE_MONTH;
+            case 3:
+                return Period.THREE_MONTH;
+            case 4:
+                return Period.TWELVE_MONTH;
+            default:
+                return Period.OVERALL;
         }
     }
 
@@ -416,7 +441,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         TopArtistAdapter topArtistAdapter = new TopArtistAdapter(this,
                 artists,
                 true,
-                this);
+                this,
+                userSettingsRepository.getFavoriteArtists(), favoritesManager);
         recyclerView.setAdapter(topArtistAdapter);
         recyclerView.postDelayed(() -> recyclerView.smoothScrollToPosition(artists.size() - 1), 1000);
     }

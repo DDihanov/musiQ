@@ -10,13 +10,13 @@ import android.widget.Toast;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.db.ScrobbleDB;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.models.Response;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.HelperMethods;
 import com.dihanov.musiq.util.Notificator;
+import com.dihanov.musiq.util.SigGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +43,19 @@ public class Scrobbler {
     private LastFmApiClient lastFmApiClient;
     private Context context;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private UserSettingsRepository userSettingsRepository;
+    private SigGenerator sigGenerator;
 
-    public Scrobbler(LastFmApiClient lastFmApiClient, Context context, ScrobbleDB scrobbleDB) {
+    public Scrobbler(LastFmApiClient lastFmApiClient, Context context, ScrobbleDB scrobbleDB, UserSettingsRepository userSettingsRepository) {
         this.lastFmApiClient = lastFmApiClient;
         this.context = context;
         this.state = new State(State.NONE);
         this.scrobbleDB = scrobbleDB;
+        this.userSettingsRepository = userSettingsRepository;
     }
 
     public void scrobble(Scrobble scrobble) {
-        String apiSig = HelperMethods.generateSig(Constants.ARTIST, scrobble.getArtistName(),
+        String apiSig = sigGenerator.generateSig(Constants.ARTIST, scrobble.getArtistName(),
                 Constants.TRACK, scrobble.getTrackName(),
                 Constants.TIMESTAMP, String.valueOf(scrobble.getTimestamp()),
                 Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
@@ -63,7 +66,7 @@ public class Scrobbler {
                 Config.API_KEY,
                 apiSig,
                 scrobble.getTimestamp(),
-                App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                userSettingsRepository.getUserSessionKey(),
                 Config.FORMAT)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -139,19 +142,19 @@ public class Scrobbler {
 
     private void setNowPlaying(Scrobble nowPlaying) {
         //check to see if user is logged in before continuing
-        if (!App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) return;
+        if (!userSettingsRepository.hasSessionKey()) return;
 
         if (nowPlaying == null) {
             this.nowPlaying = null;
             return;
         }
 
-        if (App.getSharedPreferences().getBoolean("scrobble_notifications", true) && App.getSharedPreferences().contains(Constants.USER_SESSION_KEY)) {
+        if (userSettingsRepository.hasNotificationsEnabled() && userSettingsRepository.hasSessionKey()) {
             Notificator.buildNotification(context, context.getString(R.string.now_scrobbling), String.format("%s - %s", nowPlaying.getArtistName(), nowPlaying.getTrackName()));
         }
 
         this.nowPlaying = nowPlaying;
-        String apiSig = HelperMethods.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),
+        String apiSig = sigGenerator.generateSig(Constants.ARTIST, nowPlaying.getArtistName(),
                 Constants.TRACK, nowPlaying.getTrackName(),
                 Constants.METHOD, Constants.UPDATE_NOW_PLAYING_METHOD);
 
@@ -161,7 +164,7 @@ public class Scrobbler {
                         nowPlaying.getTrackName(),
                         Config.API_KEY,
                         apiSig,
-                        App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                        userSettingsRepository.getUserSessionKey(),
                         Config.FORMAT)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Response>() {
@@ -213,7 +216,7 @@ public class Scrobbler {
     public void scrobbleFromCache() {
         List<Scrobble> cached = scrobbleDB.getCachedScrobbles();
 
-        if (cached.isEmpty() || App.getSharedPreferences().getBoolean("scrobble_review", false)) return;
+        if (cached.isEmpty() || userSettingsRepository.hasScrobbleReviewEnabled()) return;
 
         List<Observable<Response>> observables = new ArrayList<>();
         String apiSig = "";
@@ -223,7 +226,7 @@ public class Scrobbler {
             String artistName = scrobble.getArtistName();
             String trackName = scrobble.getTrackName();
             String timestamp = String.valueOf(scrobble.getTimestamp());
-            apiSig = HelperMethods.generateSig(Constants.ARTIST, artistName,
+            apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
                     Constants.TRACK, trackName,
                     Constants.TIMESTAMP, timestamp,
                     Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
@@ -235,7 +238,7 @@ public class Scrobbler {
                     Config.API_KEY,
                     apiSig,
                     timestamp,
-                    App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                    userSettingsRepository.getUserSessionKey(),
                     Config.FORMAT)
                     .subscribeOn(Schedulers.io()));
         }
@@ -293,7 +296,7 @@ public class Scrobbler {
             String artistName = scrobble.getArtistName();
             String trackName = scrobble.getTrackName();
             String timestamp = String.valueOf(scrobble.getTimestamp());
-            apiSig = HelperMethods.generateSig(Constants.ARTIST, artistName,
+            apiSig = sigGenerator.generateSig(Constants.ARTIST, artistName,
                     Constants.TRACK, trackName,
                     Constants.TIMESTAMP, timestamp,
                     Constants.METHOD, Constants.TRACK_SCROBBLE_METHOD);
@@ -305,7 +308,7 @@ public class Scrobbler {
                     Config.API_KEY,
                     apiSig,
                     timestamp,
-                    App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""),
+                    userSettingsRepository.getUserSessionKey(),
                     Config.FORMAT)
                     .subscribeOn(Schedulers.io()));
         }
@@ -411,7 +414,7 @@ public class Scrobbler {
             if (lastScrobbleTime + 5000 >= start) {
                 return;
             }
-            if (App.getSharedPreferences().getBoolean("scrobble_review", false)) {
+            if (userSettingsRepository.hasScrobbleReviewEnabled()) {
                 storeInDb(scrobble);
             } else {
                 this.scrobble(scrobble);

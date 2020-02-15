@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.main;
 
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
 import com.dihanov.musiq.models.TopArtistAlbums;
@@ -36,9 +36,11 @@ public class MainPresenter implements MainContract.Presenter {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final LastFmApiClient lastFmApiClient;
+    private UserSettingsRepository userSettingsRepository;
 
     @Inject
-    public MainPresenter(LastFmApiClient lastFmApiClient) {
+    public MainPresenter(LastFmApiClient lastFmApiClient, UserSettingsRepository userSettingsRepository) {
+        this.userSettingsRepository = userSettingsRepository;
         this.lastFmApiClient = lastFmApiClient;
     }
 
@@ -56,7 +58,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getUserInfo() {
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         lastFmApiClient.getLastFmApiService()
                 .getUserInfo(username)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,7 +100,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void setUserInfo(String profilePicUrl, String playcount, String username) {
-        App.getSharedPreferences().edit().putString(Constants.PROFILE_PIC, profilePicUrl).apply();
+        userSettingsRepository.persistProfilePictureUrl(profilePicUrl);
 
         mainActivityView.setUserInfo(profilePicUrl, playcount, username);
     }

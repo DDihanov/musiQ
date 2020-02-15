@@ -9,14 +9,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
-import com.dihanov.musiq.ui.view_holders.ArtistViewHolder;
+import com.dihanov.musiq.ui.viewholders.AbstractViewHolder;
+import com.dihanov.musiq.ui.viewholders.ArtistViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,13 +36,15 @@ public class ArtistAdapter extends AbstractAdapter {
     private List<Artist> artistList;
     private OnItemClickedListener<Artist> onItemClickedListener;
 
-    public ArtistAdapter(Context context, List<Artist> albumList, OnItemClickedListener<Artist> onItemClickedListener) {
+    public ArtistAdapter(Context context, List<Artist> albumList, OnItemClickedListener<Artist> onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.mainActivity =context;
         this.artistList = albumList;
         this.onItemClickedListener = onItemClickedListener;
     }
 
-    public ArtistAdapter(Context context, List<Artist> albumList, boolean isFavoriteType, OnItemClickedListener<Artist>  onItemClickedListener) {
+    public ArtistAdapter(Context context, List<Artist> albumList, boolean isFavoriteType, OnItemClickedListener<Artist>  onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.mainActivity = context;
         this.artistList = albumList;
         this.onItemClickedListener = onItemClickedListener;

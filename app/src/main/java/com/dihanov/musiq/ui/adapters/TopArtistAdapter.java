@@ -11,13 +11,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Artist;
-import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
-import com.dihanov.musiq.ui.view_holders.TopArtistsViewHolder;
+import com.dihanov.musiq.ui.viewholders.AbstractViewHolder;
+import com.dihanov.musiq.ui.viewholders.TopArtistsViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.FavoritesManager;
 import com.veinhorn.tagview.TagView;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -31,14 +33,16 @@ public class TopArtistAdapter extends AbstractAdapter {
     private List<Artist> topArtist;
     private OnItemClickedListener<Artist> onItemClickedListener;
 
-    public TopArtistAdapter(Context context, List<Artist> topArtist, OnItemClickedListener<Artist> onItemClickedListener) {
+    public TopArtistAdapter(Context context, List<Artist> topArtist, OnItemClickedListener<Artist> onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.context = context;
         this.topArtist = topArtist;
         this.onItemClickedListener = onItemClickedListener;
     }
 
 
-    public TopArtistAdapter(Context context, List<Artist> topArtist, boolean isFavoriteType, OnItemClickedListener<Artist> onItemClickedListener) {
+    public TopArtistAdapter(Context context, List<Artist> topArtist, boolean isFavoriteType, OnItemClickedListener<Artist> onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.context = context;
         this.topArtist = topArtist;
         this.isFavoriteType = isFavoriteType;

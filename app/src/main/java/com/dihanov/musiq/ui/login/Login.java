@@ -3,7 +3,6 @@ package com.dihanov.musiq.ui.login;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.service.MediaControllerListenerService;
@@ -71,6 +70,9 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     @Inject
     LastFmApiClient lastFmApiClient;
 
+    @Inject
+    UserSettingsRepository userSettingsRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +81,7 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
 
 
         register.setMovementMethod(LinkMovementMethod.getInstance());
-        rememberMeCheckBox.setChecked(App.getSharedPreferences().getBoolean(Constants.REMEMBER_ME, false));
+        rememberMeCheckBox.setChecked(userSettingsRepository.hasRememberMeEnabled());
         loginActivityPresenter.takeView(Login.this);
     }
 
@@ -110,10 +112,9 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
     }
 
     private void checkIntent(Intent intent) {
-        SharedPreferences sharedPreferences = App.getSharedPreferences();
         if(intent.hasExtra(Constants.REMEMBER_ME)){
-            String username = sharedPreferences.getString(Constants.USERNAME, "");
-            String password = sharedPreferences.getString(Constants.PASSWORD, "");
+            String username = userSettingsRepository.getUsername();
+            String password = userSettingsRepository.getPassword();
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.login_layout);
             HelperMethods.setLayoutChildrenEnabled(false, layout);
             this.username.setText(username);
@@ -134,7 +135,7 @@ public class Login extends DaggerAppCompatActivity implements LoginContract.View
                 .setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        App.getSharedPreferences().edit().remove(Constants.USERNAME).remove(Constants.PASSWORD).commit();
+                        userSettingsRepository.clearLoginData();
                         Intent intent = new Intent(Login.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);

@@ -9,13 +9,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.models.Album;
-import com.dihanov.musiq.ui.view_holders.AbstractViewHolder;
-import com.dihanov.musiq.ui.view_holders.AlbumViewHolder;
+import com.dihanov.musiq.ui.viewholders.AbstractViewHolder;
+import com.dihanov.musiq.ui.viewholders.AlbumViewHolder;
 import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.util.FavoritesManager;
 import com.dihanov.musiq.util.HelperMethods;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -30,13 +32,15 @@ public class AlbumDetailsAdapter extends AbstractAdapter {
 
     private OnItemClickedListener<Album> onItemClickedListener;
 
-    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, OnItemClickedListener onItemClickedListener) {
+    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, OnItemClickedListener onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.context = context;
         this.artistAlbumsList = artistAlbumsList;
         this.onItemClickedListener = onItemClickedListener;
     }
 
-    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, boolean isFavoriteType, OnItemClickedListener onItemClickedListener) {
+    public AlbumDetailsAdapter(Context context, List<Album> artistAlbumsList, boolean isFavoriteType, OnItemClickedListener onItemClickedListener, Set<String> favorites, FavoritesManager favoritesManager) {
+        super(favorites, favoritesManager);
         this.context = context;
         this.artistAlbumsList = artistAlbumsList;
         this.onItemClickedListener = onItemClickedListener;

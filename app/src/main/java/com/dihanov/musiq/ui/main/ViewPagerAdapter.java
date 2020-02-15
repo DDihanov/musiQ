@@ -4,15 +4,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.ui.main.main_fragments.album.AlbumResult;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
-import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
-import com.dihanov.musiq.ui.main.main_fragments.user_top_tracks.UserTopTracks;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.ui.main.mainfragments.album.AlbumResult;
+import com.dihanov.musiq.ui.main.mainfragments.artist.ArtistResult;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.album.FavoriteAlbums;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.artist.FavoriteArtist;
+import com.dihanov.musiq.ui.main.mainfragments.nowplaying.NowPlaying;
+import com.dihanov.musiq.ui.main.mainfragments.usertopartists.UserTopArtists;
+import com.dihanov.musiq.ui.main.mainfragments.usertoptracks.UserTopTracks;
 
 /**
  * Created by Dimitar Dihanov on 20.9.2017 г..
@@ -34,9 +32,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private static int tabCount = loggedOutTabCount + loggedInTabCount;
 
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm, String username) {
         super(fm);
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
         boolean isLoggedIn = !username.isEmpty() || !username.equals("");
         artistResultCase = isLoggedIn ? 3 : 3 - loggedInTabCount;
         albumResultCase = isLoggedIn ? 4 : 4 - loggedInTabCount;

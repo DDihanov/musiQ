@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.util.Constants;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.util.HelperMethods;
 
 import javax.inject.Inject;
@@ -32,6 +31,9 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class Profile extends DaggerAppCompatActivity implements ProfileContract.View {
     @Inject
     ProfileContract.Presenter profilePresenter;
+
+    @Inject
+    UserSettingsRepository userSettingsRepository;
 
     @BindView(R.id.profile_collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -70,7 +72,7 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
         initCollapsingToolbar();
         setSupportActionBar(toolbar);
         this.profilePresenter.takeView(this);
-        String profilePicUrl = App.getSharedPreferences().getString(Constants.PROFILE_PIC, "");
+        String profilePicUrl = userSettingsRepository.getProfilePicUrl();
         if (!profilePicUrl.isEmpty() && profilePicUrl != "") {
             setUserImage(profilePicUrl);
         }
@@ -106,7 +108,7 @@ public class Profile extends DaggerAppCompatActivity implements ProfileContract.
     }
 
     private void initCollapsingToolbar() {
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         collapsingToolbar.setTitle(username);
         HelperMethods.setToolbarFont(collapsingToolbar, this);
         appBarLayout.setExpanded(true);

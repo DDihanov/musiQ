@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsAlbum;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsBiography;
-import com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks.ArtistSpecificsTopTracks;
+import com.dihanov.musiq.ui.detail.detailfragments.ArtistSpecificsAlbum;
+import com.dihanov.musiq.ui.detail.detailfragments.ArtistSpecificsBiography;
+import com.dihanov.musiq.ui.detail.detailfragments.detailfragmentstoptracks.ArtistSpecificsTopTracks;
 
 /**
  * Created by dimitar.dihanov on 9/29/2017.

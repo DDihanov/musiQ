@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.models.SpecificArtist;
@@ -80,6 +80,12 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
 
     @Inject
     SettingsManager settingsManager;
+
+    @Inject
+    UserSettingsRepository userSettingsRepository;
+
+    @Inject
+    FavoritesManager favoritesManager;
 
     @BindView(R.id.navigation)
     NavigationView navigationView;
@@ -183,7 +189,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
     }
 
     private void configureIcon() {
-        if (!FavoritesManager.isFavorited(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase())) {
+        if (!favoritesManager.isFavorited(Constants.FAVORITE_ARTISTS_KEY, this.artist.getName().toLowerCase())) {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
             this.favoriteArtistStar.setTag(false);
         } else {
@@ -204,7 +210,7 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
             return true;
         });
 
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         if (!username.isEmpty() && username != "") {
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
@@ -314,13 +320,13 @@ public class ArtistDetails extends DaggerAppCompatActivity implements ArtistDeta
         if (((boolean) favoriteArtistStar.getTag()) == false) {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_on);
             this.favoriteArtistStar.setTag(true);
-            FavoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY,
+            favoritesManager.addToFavorites(Constants.FAVORITE_ARTISTS_KEY,
                     this.artist.getName().toLowerCase(), new Gson().toJson(this.artist, Artist.class));
             Toast.makeText(this, "Artist added to favorites", Toast.LENGTH_SHORT).show();
         } else {
             this.favoriteArtistStar.setImageResource(android.R.drawable.btn_star_big_off);
             this.favoriteArtistStar.setTag(false);
-            FavoritesManager.removeFromFavorites(Constants.FAVORITE_ARTISTS_KEY,
+            favoritesManager.removeFromFavorites(Constants.FAVORITE_ARTISTS_KEY,
                     this.artist.getName().toLowerCase(), new Gson().toJson(this.artist, Artist.class));
             Toast.makeText(this, "Artist removed from favorites", Toast.LENGTH_SHORT).show();
         }

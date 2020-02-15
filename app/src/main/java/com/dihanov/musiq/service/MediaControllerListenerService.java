@@ -13,7 +13,7 @@ import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.util.NetworkConnectionReceiver;
@@ -46,6 +46,9 @@ public class MediaControllerListenerService extends NotificationListenerService
     @Inject
     Scrobbler scrobbler;
 
+    @Inject
+    UserSettingsRepository userSettingsRepository;
+
     private Map<String, MediaController.Callback> callbacks = new HashMap<>();
     private List<MediaController> currentControllers = new ArrayList<>();
 
@@ -66,7 +69,7 @@ public class MediaControllerListenerService extends NotificationListenerService
         onActiveSessionsChanged(initialSessions);
         this.networkConnectionReceiver = new NetworkConnectionReceiver(scrobbler);
         this.registerReceiver(networkConnectionReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        App.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        userSettingsRepository.registerOnSharedPrefChangedListener(this);
     }
 
     @Override
@@ -79,7 +82,7 @@ public class MediaControllerListenerService extends NotificationListenerService
 
     @Override
     public void onActiveSessionsChanged(@Nullable List<MediaController> controllers) {
-        boolean enableAutoDetect = App.getSharedPreferences().getBoolean("enable_auto_detect", true);
+        boolean enableAutoDetect = userSettingsRepository.isAutoDetectEnabled();
 
         MediaController.Callback callback = new MediaController.Callback() {
             @Override
@@ -109,17 +112,14 @@ public class MediaControllerListenerService extends NotificationListenerService
 
             if (!contains) {
                 if (!enableAutoDetect) {
-                    if (!App.getSharedPreferences().getBoolean(Settings.PLAYER_PREFIX + element.getPackageName(), true)) {
+                    if (!userSettingsRepository.getRegisteredPlayer(Settings.PLAYER_PREFIX + element.getPackageName())) {
                         continue;
                     }
                 }
                 element.registerCallback(callback);
                 currControllerIterator.add(element);
                 callbacks.put(element.getPackageName(), callback);
-                App.getSharedPreferences()
-                        .edit()
-                        .putString(CONTROLLER_PREFIX + element.getPackageName(), CONTROLLER_PREFIX + element.getPackageName())
-                        .apply();
+                userSettingsRepository.putMediaController(CONTROLLER_PREFIX + element.getPackageName());
             }
         }
 

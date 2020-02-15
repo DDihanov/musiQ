@@ -1,6 +1,7 @@
 package com.dihanov.musiq.ui.settings;
 
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -31,23 +31,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.db.ScrobbleDB;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.service.scrobble.Scrobbler;
-import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter;
 import com.dihanov.musiq.util.Connectivity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasFragmentInjector;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -70,8 +68,16 @@ import dagger.android.support.AndroidSupportInjection;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class Settings extends AppCompatPreferenceActivity {
+public class Settings extends AppCompatPreferenceActivity implements HasFragmentInjector {
     public static final String PLAYER_PREFIX = "player_prefix.";
+
+    @Override
+    public AndroidInjector<Fragment> fragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
+    }
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -206,13 +212,17 @@ public class Settings extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class PlayerPreferenceFragment extends PreferenceFragment {
+        @Inject
+        UserSettingsRepository userSettingsRepository;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
+            AndroidInjection.inject(this);
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            Map<String, ?> all = App.getSharedPreferences().getAll();
+            Map<String, ?> all = userSettingsRepository.getAll();
 
             PreferenceScreen root = getPreferenceScreen();
             PackageManager packageManager = root.getContext().getApplicationContext().getPackageManager();

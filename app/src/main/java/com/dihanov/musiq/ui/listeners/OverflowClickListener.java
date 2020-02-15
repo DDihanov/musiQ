@@ -19,6 +19,7 @@ public class OverflowClickListener implements PopupMenu.OnMenuItemClickListener 
     private String key;
     private String name;
     private AbstractAdapter adapterToRefresh;
+    private FavoritesManager favoritesManager;
 
     //the key will be used to either add favorites to the artists or the albums category
     public OverflowClickListener(String name, String value, ClickableArtistViewHolder viewHolder, String key, AbstractAdapter adapter) {
@@ -27,17 +28,18 @@ public class OverflowClickListener implements PopupMenu.OnMenuItemClickListener 
         this.viewHolder = viewHolder;
         this.key = key;
         this.adapterToRefresh = adapter;
+        this.favoritesManager = adapter.getFavoritesManager();
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.action_add_favourite):
-                FavoritesManager.addToFavorites(key, name,serializedValue);
+                favoritesManager.addToFavorites(key, name,serializedValue);
                 viewHolder.setIsFavorited(true);
                 return true;
             case (R.id.action_remove_favorite):
-                FavoritesManager.removeFromFavorites(key, name, serializedValue);
+                favoritesManager.removeFromFavorites(key, name, serializedValue);
                 viewHolder.setIsFavorited(false);
                 adapterToRefresh.remove(name);
                 return true;

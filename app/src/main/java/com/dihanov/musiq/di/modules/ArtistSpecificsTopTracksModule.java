@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks.ArtistSpecificsTopTracks;
-import com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks.ArtistSpecificsTopTracksContract;
-import com.dihanov.musiq.ui.detail.detail_fragments.detail_fragments_top_tracks.ArtistSpecificsTopTracksPresenter;
+import com.dihanov.musiq.ui.detail.detailfragments.detailfragmentstoptracks.ArtistSpecificsTopTracks;
+import com.dihanov.musiq.ui.detail.detailfragments.detailfragmentstoptracks.ArtistSpecificsTopTracksContract;
+import com.dihanov.musiq.ui.detail.detailfragments.detailfragmentstoptracks.ArtistSpecificsTopTracksPresenter;
 
 import dagger.Binds;
 import dagger.Module;

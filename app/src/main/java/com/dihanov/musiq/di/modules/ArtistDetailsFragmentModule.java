@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecifics;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsContract;
-import com.dihanov.musiq.ui.detail.detail_fragments.ArtistSpecificsPresenter;
+import com.dihanov.musiq.ui.detail.detailfragments.ArtistSpecifics;
+import com.dihanov.musiq.ui.detail.detailfragments.ArtistSpecificsContract;
+import com.dihanov.musiq.ui.detail.detailfragments.ArtistSpecificsPresenter;
 
 import dagger.Binds;
 import dagger.Module;

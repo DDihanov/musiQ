@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
-import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.TopArtistSource;
+import com.dihanov.musiq.db.UserSettingsRepository;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
@@ -27,8 +29,12 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
+    @Inject
+    UserSettingsRepository userSettingsRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -129,7 +135,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     }
 
     private boolean isNotLoggedIn() {
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
         boolean result = username.isEmpty() || username.equals("");
         if (result) {
             AlertDialog.Builder b = new AlertDialog.Builder(AppCompatPreferenceActivity.this);
@@ -146,19 +152,19 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     private void createListPreferenceDialog() {
         Dialog dialog = null;
         final String[] str = getResources().getStringArray(R.array.top_artist_source);
-        int selectedItem = App.getSharedPreferences().getInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.LAST_FM_CHARTS);
+        int selectedItem = userSettingsRepository.getSelectedChartToShow();
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(this.getString(R.string.top_artist_chart_source));
         b.setSingleChoiceItems(str, selectedItem, (dialog1, which) -> {
             if (which == 0) {
-                App.getSharedPreferences().edit().putInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.LAST_FM_CHARTS).apply();
+                userSettingsRepository.setChartToLastFmChart();
             }
             if (which == 1) {
-                App.getSharedPreferences().edit().putInt(Constants.TOP_ARTIST_SOURCE, TopArtistSource.USER_TOP_ARTISTS_CHART).apply();
-                int selectedTimeframe = App.getSharedPreferences().getInt(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, 0);
+                userSettingsRepository.setChartToUserTopArtists();
+                int selectedTimeframe = userSettingsRepository.getChartTimeFrame();
                 b.setTitle(getString(R.string.select_timeframe));
                 b.setSingleChoiceItems(R.array.timeframe_options, selectedTimeframe, (dialog2, which1) -> {
-                    App.getSharedPreferences().edit().putInt(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, which1).apply();
+                    userSettingsRepository.persistSelectedChartTimeframe(selectedItem);
                     dialog1.dismiss();
                     dialog2.dismiss();
                 });

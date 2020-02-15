@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlaying;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingContract;
-import com.dihanov.musiq.ui.main.main_fragments.now_playing.NowPlayingPresenter;
+import com.dihanov.musiq.ui.main.mainfragments.nowplaying.NowPlaying;
+import com.dihanov.musiq.ui.main.mainfragments.nowplaying.NowPlayingContract;
+import com.dihanov.musiq.ui.main.mainfragments.nowplaying.NowPlayingPresenter;
 
 import dagger.Binds;
 import dagger.Module;

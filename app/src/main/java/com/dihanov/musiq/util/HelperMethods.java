@@ -18,22 +18,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.di.app.App;
 import com.dihanov.musiq.ui.BaseView;
 import com.dihanov.musiq.ui.main.MainActivity;
 import com.github.florent37.viewtooltip.ViewTooltip;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by dimitar.dihanov on 2/9/2018.
@@ -54,39 +47,6 @@ public class HelperMethods {
         return Typeface.createFromAsset(context.getAssets(), font);
     }
 
-    public static int determineSelectedTimeframeFromString() {
-        switch (App.getSharedPreferences().getString(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, Period.OVERALL)) {
-            case Period.OVERALL:
-                return 0;
-            case Period.SEVEN_DAY:
-                return  1;
-            case Period.ONE_MONTH:
-                return 2;
-            case Period.THREE_MONTH:
-                return 3;
-            case Period.TWELVE_MONTH:
-                return 4;
-            default:
-                return 0;
-        }
-    }
-
-    public static String determineSelectedTimeframeFromInt() {
-        switch (App.getSharedPreferences().getInt(Constants.USER_TOP_ARTIST_CHART_TIMEFRAME, 0)) {
-            case 0:
-                return Period.OVERALL;
-            case 1:
-                return  Period.SEVEN_DAY;
-            case 2:
-                return Period.ONE_MONTH;
-            case 3:
-                return Period.THREE_MONTH;
-            case 4:
-                return Period.TWELVE_MONTH;
-            default:
-                return Period.OVERALL;
-        }
-    }
 
     public static float getScreenWidth(Activity activity){
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -227,58 +187,6 @@ public class HelperMethods {
 
     public static void showNetworkErrorTooltip(BaseView<?> activity, View view) {
         showTooltip((Activity)activity, view, Constants.NO_NETWORK_CONN_FOUND, 15f);
-    }
-
-    public static String generateAuthSig(String username, String password){
-        String toCypher = "api_key" + Config.API_KEY + "methodauth.getMobileSessionpassword" + password + "username" + username + Config.API_SECRET;
-        String md5 = "";
-        try {
-             byte[] arr = MessageDigest.getInstance("MD5").digest(toCypher.getBytes("UTF-8"));
-             md5 = byteArrayToHex(arr);
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(Constants.class.getSimpleName(), e.getMessage());
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            Log.e(Constants.class.getSimpleName(), e.getMessage());
-            e.printStackTrace();
-        }
-
-        return md5;
-    }
-
-    public static String generateSig(String... params){
-        TreeMap<String, String> sorted = new TreeMap<>();
-        String toCypher = "";
-        String md5 = "";
-        sorted.put("api_key", Config.API_KEY);
-        sorted.put("sk", App.getSharedPreferences().getString(Constants.USER_SESSION_KEY, ""));
-        for (int i = 0; i < params.length - 1; i+=2) {
-            sorted.put(params[i], params[i+1]);
-        }
-
-        for (Map.Entry<String, String> stringStringEntry : sorted.entrySet()) {
-            toCypher += stringStringEntry.getKey() + stringStringEntry.getValue();
-        }
-        toCypher += Config.API_SECRET;
-        try {
-            byte[] arr = MessageDigest.getInstance("MD5").digest(toCypher.getBytes("UTF-8"));
-            md5 = byteArrayToHex(arr);
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(Constants.class.getSimpleName(), e.getMessage());
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            Log.e(Constants.class.getSimpleName(), e.getMessage());
-            e.printStackTrace();
-        }
-
-        return md5;
-    }
-
-    public static String byteArrayToHex(byte[] a) {
-        StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b: a)
-            sb.append(String.format("%02x", b));
-        return sb.toString();
     }
 
     public static void setLayoutChildrenEnabled(boolean status, ViewGroup viewGroup){

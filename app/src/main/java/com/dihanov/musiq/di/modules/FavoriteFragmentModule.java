@@ -2,12 +2,12 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbums;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsContract;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.album.FavoriteAlbumsPresenter;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtist;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistsContract;
-import com.dihanov.musiq.ui.main.main_fragments.favorites.artist.FavoriteArtistsPresenter;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.album.FavoriteAlbums;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.album.FavoriteAlbumsContract;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.album.FavoriteAlbumsPresenter;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.artist.FavoriteArtist;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.artist.FavoriteArtistsContract;
+import com.dihanov.musiq.ui.main.mainfragments.favorites.artist.FavoriteArtistsPresenter;
 
 import dagger.Binds;
 import dagger.Module;

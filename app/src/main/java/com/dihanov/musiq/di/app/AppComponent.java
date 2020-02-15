@@ -2,10 +2,9 @@ package com.dihanov.musiq.di.app;
 
 import android.app.Application;
 
-import com.dihanov.musiq.di.builders.ActivityBindingModule;
+import com.dihanov.musiq.App;
+import com.dihanov.musiq.di.builders.BindingModule;
 import com.dihanov.musiq.di.modules.NetworkModule;
-import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter$ScrobbleReviewViewHolder_ViewBinding;
-import com.dihanov.musiq.ui.settings.Settings;
 
 import javax.inject.Singleton;
 
@@ -21,7 +20,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         AndroidSupportInjectionModule.class,
         AppModule.class,
-        ActivityBindingModule.class})
+        BindingModule.class})
 public interface AppComponent {
     @Component.Builder
     interface Builder{

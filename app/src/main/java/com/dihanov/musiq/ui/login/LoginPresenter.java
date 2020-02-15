@@ -1,12 +1,12 @@
 package com.dihanov.musiq.ui.login;
 
 import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.models.User;
 import com.dihanov.musiq.service.LastFmApiClient;
 import com.dihanov.musiq.util.AppLog;
 import com.dihanov.musiq.util.Constants;
-import com.dihanov.musiq.util.HelperMethods;
+import com.dihanov.musiq.util.SigGenerator;
 
 import javax.inject.Inject;
 
@@ -25,10 +25,14 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private LoginContract.View login;
+    private UserSettingsRepository userSettingsRepository;
+    private SigGenerator sigGenerator;
 
     @Inject
-    public LoginPresenter(LastFmApiClient lastFmApiClient){
+    public LoginPresenter(LastFmApiClient lastFmApiClient, UserSettingsRepository userSettingsRepository, SigGenerator sigGenerator){
         this.lastFmApiClient = lastFmApiClient;
+        this.userSettingsRepository = userSettingsRepository;
+        this.sigGenerator = sigGenerator;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void authenticateUser(String username, String password, boolean rememberMe) {
         lastFmApiClient.getLastFmApiService()
-                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, HelperMethods.generateAuthSig(username, password), Config.FORMAT)
+                .getMobileSessionToken(Constants.AUTH_MOBILE_SESSION_METHOD, username, password, Config.API_KEY, sigGenerator.generateAuthSig(username, password), Config.FORMAT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
@@ -58,7 +62,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onNext(User user) {
-                        App.getSharedPreferences().edit().putString(Constants.USER_SESSION_KEY, user.getSession().getKey()).apply();
+                        userSettingsRepository.persistSessionKey(user.getSession().getKey());
                     }
 
                     @Override
@@ -81,10 +85,9 @@ public class LoginPresenter implements LoginContract.Presenter {
 
 
     private void persistUserInfo(String username, String password, boolean rememberMe) {
-        App.getSharedPreferences().edit().putString(Constants.USERNAME, username)
-                .putString(Constants.PASSWORD, password)
-                .putBoolean(Constants.REMEMBER_ME, rememberMe)
-                .apply();
+        userSettingsRepository.persistUsername(username);
+        userSettingsRepository.persistPassword(password);
+        userSettingsRepository.setRememberMe(rememberMe);
     }
 
     public void setLastFmApiClient(LastFmApiClient lastFmApiClient) {

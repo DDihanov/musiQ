@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtists;
-import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtistsContract;
-import com.dihanov.musiq.ui.main.main_fragments.user_top_artists.UserTopArtistsPresenter;
+import com.dihanov.musiq.ui.main.mainfragments.usertopartists.UserTopArtists;
+import com.dihanov.musiq.ui.main.mainfragments.usertopartists.UserTopArtistsContract;
+import com.dihanov.musiq.ui.main.mainfragments.usertopartists.UserTopArtistsPresenter;
 
 import dagger.Binds;
 import dagger.Module;

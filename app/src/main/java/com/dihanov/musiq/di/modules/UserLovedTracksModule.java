@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksContract;
-import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksPresenter;
-import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksView;
+import com.dihanov.musiq.ui.settings.profile.userlovedtracks.UserLovedTracksContract;
+import com.dihanov.musiq.ui.settings.profile.userlovedtracks.UserLovedTracksPresenter;
+import com.dihanov.musiq.ui.settings.profile.userlovedtracks.UserLovedTracksView;
 
 import dagger.Binds;
 import dagger.Module;

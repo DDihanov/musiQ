@@ -1,9 +1,9 @@
 package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
-import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsContract;
-import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsInfo;
-import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsPresenter;
+import com.dihanov.musiq.ui.settings.profile.userfriendsinfo.ProfileUserFriendsContract;
+import com.dihanov.musiq.ui.settings.profile.userfriendsinfo.ProfileUserFriendsInfo;
+import com.dihanov.musiq.ui.settings.profile.userfriendsinfo.ProfileUserFriendsPresenter;
 
 import dagger.Binds;
 import dagger.Module;

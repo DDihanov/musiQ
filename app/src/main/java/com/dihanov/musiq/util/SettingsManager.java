@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.di.app.App;
+import com.dihanov.musiq.db.UserSettingsRepository;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.settings.Settings;
@@ -27,9 +27,11 @@ import javax.inject.Singleton;
 @Singleton
 public class SettingsManager {
     private Activity activity;
+    private UserSettingsRepository userSettingsRepository;
 
     @Inject
-    public SettingsManager() {
+    public SettingsManager(UserSettingsRepository userSettingsRepository) {
+        this.userSettingsRepository = userSettingsRepository;
     }
 
     public void setActivity(Activity activity) {
@@ -63,11 +65,7 @@ public class SettingsManager {
     }
 
     private void logOut() {
-        App.getSharedPreferences().edit().remove(Constants.USERNAME)
-                .remove(Constants.PASSWORD)
-                .remove(Constants.USER_SESSION_KEY)
-                .remove(Constants.REMEMBER_ME)
-                .apply();
+        userSettingsRepository.clearLoginData();
         Intent intent = new Intent(activity, Login.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.stopService(new Intent(activity, MediaControllerListenerService.class));
@@ -98,7 +96,7 @@ public class SettingsManager {
     private void openProfile() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
 
-        String username = App.getSharedPreferences().getString(Constants.USERNAME, "");
+        String username = userSettingsRepository.getUsername();
 
         if (username.isEmpty() || username == "" && !activity.isFinishing()) {
             alertDialogBuilder.setCancelable(true);

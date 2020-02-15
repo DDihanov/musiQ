@@ -2,9 +2,9 @@ package com.dihanov.musiq.di.modules;
 
 import com.dihanov.musiq.di.annotations.PerActivity;
 import com.dihanov.musiq.di.annotations.PerFragment;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResult;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultContract;
-import com.dihanov.musiq.ui.main.main_fragments.artist.ArtistResultPresenter;
+import com.dihanov.musiq.ui.main.mainfragments.artist.ArtistResult;
+import com.dihanov.musiq.ui.main.mainfragments.artist.ArtistResultContract;
+import com.dihanov.musiq.ui.main.mainfragments.artist.ArtistResultPresenter;
 
 import dagger.Binds;
 import dagger.Module;

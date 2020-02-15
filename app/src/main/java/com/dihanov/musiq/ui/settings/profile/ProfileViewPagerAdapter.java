@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dihanov.musiq.ui.settings.profile.user_bio.ProfileUserInfo;
-import com.dihanov.musiq.ui.settings.profile.user_friends_info.ProfileUserFriendsInfo;
-import com.dihanov.musiq.ui.settings.profile.user_loved_tracks.UserLovedTracksView;
+import com.dihanov.musiq.ui.settings.profile.userbio.ProfileUserInfo;
+import com.dihanov.musiq.ui.settings.profile.userfriendsinfo.ProfileUserFriendsInfo;
+import com.dihanov.musiq.ui.settings.profile.userlovedtracks.UserLovedTracksView;
 
 public class ProfileViewPagerAdapter extends FragmentStatePagerAdapter {
     private static int TAB_COUNT = 3;

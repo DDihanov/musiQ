@@ -10,7 +10,7 @@
 
     <!-- permissions -->
     <application
-        android:name=".di.app.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_icon_large"
         android:label="@string/app_name"
