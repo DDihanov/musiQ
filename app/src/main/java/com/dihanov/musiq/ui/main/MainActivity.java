@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.Artist;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;
 import com.dihanov.musiq.ui.adapters.TopArtistAdapter;

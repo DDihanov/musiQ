@@ -37,10 +37,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.db.ScrobbleDB;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.service.MediaControllerListenerService;
-import com.dihanov.musiq.service.scrobble.Scrobble;
-import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.adapters.ScrobbleReviewAdapter;
 import com.dihanov.musiq.util.Connectivity;
 import com.google.android.material.button.MaterialButton;
@@ -301,7 +301,7 @@ public class Settings extends AppCompatPreferenceActivity implements HasFragment
         ScrobbleDB scrobbleDB;
 
         @Inject
-        Scrobbler scrobbler;
+        ScrobbleRepository scrobbleRepository;
 
         private List<Scrobble> cachedScrobbles;
 
@@ -332,7 +332,7 @@ public class Settings extends AppCompatPreferenceActivity implements HasFragment
                 empty.setVisibility(View.INVISIBLE);
             }
 
-            scrobbleListView.setAdapter(new ScrobbleReviewAdapter(getActivity(), R.layout.scrobble_review_layout, this.cachedScrobbles, scrobbler, scrobbleDB));
+            scrobbleListView.setAdapter(new ScrobbleReviewAdapter(getActivity(), R.layout.scrobble_review_layout, this.cachedScrobbles, scrobbleRepository, scrobbleDB));
 
             scrobbleAll.setOnClickListener(v -> {
                 if (!Connectivity.isConnected(getActivity())) {
@@ -352,7 +352,7 @@ public class Settings extends AppCompatPreferenceActivity implements HasFragment
                     b.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            scrobbler.scrobbleFromCacheDirectly();
+                            scrobbleRepository.scrobbleFromCacheDirectly();
                             ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).clear();
                             ((ArrayAdapter<Scrobble>) scrobbleListView.getAdapter()).notifyDataSetChanged();
                         }

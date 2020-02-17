@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.RecentTracksWrapper;
 import com.dihanov.musiq.models.Track;
-import com.dihanov.musiq.service.scrobble.Scrobble;
-import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.dihanov.musiq.ui.adapters.RecentlyScrobbledAdapter;
 import com.dihanov.musiq.ui.detail.ArtistDetails;
 import com.dihanov.musiq.ui.main.AlbumDetailsPopupWindowManager;
@@ -77,7 +77,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
     RecyclerView recentTracks;
 
     @Inject
-    Scrobbler scrobbler;
+    ScrobbleRepository scrobbleRepository;
 
     @Inject
     NowPlayingContract.Presenter nowPlayingFragmentPresenter;
@@ -119,7 +119,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
 
         nowPlayingFragmentPresenter.takeView(this);
 
-        Scrobble nowPlaying = scrobbler.getNowPlaying();
+        Scrobble nowPlaying = scrobbleRepository.getNowPlaying();
         if (nowPlaying == null) {
             nowPlayingArtistImage.setVisibility(View.GONE);
             nowPlayingArtist.setVisibility(View.GONE);
@@ -166,7 +166,7 @@ public class NowPlaying extends ViewPagerCustomizedFragment implements NowPlayin
 
     @OnClick(R.id.love_track_full)
     void loveTrack(View view) {
-        Scrobble nowPlaying = scrobbler.getNowPlaying();
+        Scrobble nowPlaying = scrobbleRepository.getNowPlaying();
         if (nowPlaying == null || nowPlaying.getArtistName() == null || nowPlaying.getTrackName() == null) {
             return;
         }

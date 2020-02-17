@@ -1,4 +1,4 @@
-package com.dihanov.musiq.service.scrobble;
+package com.dihanov.musiq.data.repository.scrobble;
 
 /**
  * Created by dimitar.dihanov on 2/7/2018.

@@ -1,6 +1,6 @@
 package com.dihanov.musiq.models;
 
-import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
 
 public class ScrobbleResponseModel {
     private Scrobble scrobble;

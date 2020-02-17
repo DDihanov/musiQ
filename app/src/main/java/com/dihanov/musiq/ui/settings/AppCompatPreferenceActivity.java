@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 
 import javax.inject.Inject;
 

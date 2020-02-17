@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.login;
 
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.data.usecase.AuthenticateUserUseCase;
 import com.dihanov.musiq.data.usecase.BaseUseCase;
 import com.dihanov.musiq.models.AuthenticateUserModel;

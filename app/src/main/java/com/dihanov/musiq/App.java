@@ -6,10 +6,10 @@ import android.app.Service;
 
 import com.bumptech.glide.Glide;
 import com.dihanov.musiq.config.Config;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.di.app.DaggerAppComponent;
 import com.dihanov.musiq.di.modules.NetworkModule;
-import com.dihanov.musiq.service.scrobble.Scrobbler;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class App extends Application implements
         HasActivityInjector,
         HasServiceInjector{
     @Inject
-    Scrobbler scrobbler;
+    ScrobbleRepository scrobbleRepository;
 
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
@@ -67,7 +67,7 @@ public class App extends Application implements
             userSettingsRepository.initFavoriteAlbums();
         }
 
-        scrobbler.scrobbleFromCache();
+        scrobbleRepository.scrobbleFromCache();
     }
 
     @Override

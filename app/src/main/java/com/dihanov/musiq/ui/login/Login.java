@@ -17,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.network.LastFmApiClient;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.interfaces.MainViewFunctionable;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.main.MainActivity;

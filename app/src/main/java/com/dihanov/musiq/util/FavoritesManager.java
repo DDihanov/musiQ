@@ -1,6 +1,6 @@
 package com.dihanov.musiq.util;
 
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 
 import java.util.HashSet;
 import java.util.Iterator;

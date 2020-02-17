@@ -2,9 +2,9 @@ package com.dihanov.musiq.data.usecase;
 
 import com.dihanov.musiq.config.Config;
 import com.dihanov.musiq.data.network.LastFmApiClient;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.Response;
-import com.dihanov.musiq.service.scrobble.Scrobble;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.SigGenerator;
 

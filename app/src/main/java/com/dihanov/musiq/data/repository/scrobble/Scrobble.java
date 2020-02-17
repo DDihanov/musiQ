@@ -1,4 +1,4 @@
-package com.dihanov.musiq.service.scrobble;
+package com.dihanov.musiq.data.repository.scrobble;
 
 import android.graphics.Bitmap;
 

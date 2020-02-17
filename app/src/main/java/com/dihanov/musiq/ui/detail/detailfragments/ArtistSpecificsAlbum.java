@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.Album;
 import com.dihanov.musiq.models.TopArtistAlbums;
 import com.dihanov.musiq.ui.adapters.AbstractAdapter;

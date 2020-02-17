@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.dihanov.musiq.R;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.service.MediaControllerListenerService;
 import com.dihanov.musiq.ui.login.Login;
 import com.dihanov.musiq.ui.settings.Settings;

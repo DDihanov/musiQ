@@ -1,6 +1,6 @@
 package com.dihanov.musiq.data.db;
 
-import com.dihanov.musiq.service.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;

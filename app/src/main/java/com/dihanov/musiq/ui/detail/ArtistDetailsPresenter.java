@@ -1,6 +1,6 @@
 package com.dihanov.musiq.ui.detail;
 
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.data.usecase.GetUserInfoUseCase;
 import com.dihanov.musiq.data.usecase.UseCase;
 import com.dihanov.musiq.models.UserInfo;

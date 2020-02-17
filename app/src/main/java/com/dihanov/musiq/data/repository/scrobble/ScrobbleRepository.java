@@ -1,4 +1,4 @@
-package com.dihanov.musiq.service.scrobble;
+package com.dihanov.musiq.data.repository.scrobble;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.db.ScrobbleDB;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.data.usecase.BulkScrobbleUseCase;
 import com.dihanov.musiq.data.usecase.ScrobbleTrackUseCase;
 import com.dihanov.musiq.data.usecase.UpdateNowPlayingUseCase;
@@ -24,11 +24,11 @@ import java.util.List;
  * Created by dimitar.dihanov on 2/6/2018.
  */
 
-public class Scrobbler {
+public class ScrobbleRepository {
     private static long lastScrobbleTime = System.currentTimeMillis();
     private static final Object LOCK = new Object();
     private static final Object NOW_PLAYING_LOCK = new Object();
-    private static final String TAG = Scrobbler.class.getSimpleName();
+    private static final String TAG = ScrobbleRepository.class.getSimpleName();
     private static State STATE;
 
     private ScrobbleDB scrobbleDB;
@@ -77,7 +77,7 @@ public class Scrobbler {
         }
     };
 
-    public Scrobbler(UpdateNowPlayingUseCase updateNowPlayingUseCase, BulkScrobbleUseCase bulkScrobbleUseCase, ScrobbleTrackUseCase scrobbleTrackUseCase, Context context, ScrobbleDB scrobbleDB, UserSettingsRepository userSettingsRepository, Notificator notificator) {
+    public ScrobbleRepository(UpdateNowPlayingUseCase updateNowPlayingUseCase, BulkScrobbleUseCase bulkScrobbleUseCase, ScrobbleTrackUseCase scrobbleTrackUseCase, Context context, ScrobbleDB scrobbleDB, UserSettingsRepository userSettingsRepository, Notificator notificator) {
         this.updateNowPlayingUseCase = updateNowPlayingUseCase;
         this.bulkScrobbleUseCase = bulkScrobbleUseCase;
         this.scrobbleTrackUseCase = scrobbleTrackUseCase;
@@ -157,7 +157,7 @@ public class Scrobbler {
         if (playbackState.getState() == PlaybackState.STATE_NONE) {
             this.setNowPlaying(null);
         } else {
-            Scrobbler.STATE.handleStatusChanged(state);
+            ScrobbleRepository.STATE.handleStatusChanged(state);
         }
 
     }

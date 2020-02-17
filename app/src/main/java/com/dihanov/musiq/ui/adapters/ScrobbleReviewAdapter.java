@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 
 import com.dihanov.musiq.R;
 import com.dihanov.musiq.data.db.ScrobbleDB;
-import com.dihanov.musiq.service.scrobble.Scrobble;
-import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.data.repository.scrobble.Scrobble;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
 import com.dihanov.musiq.util.Connectivity;
 
 import java.text.DateFormat;
@@ -33,13 +33,13 @@ import butterknife.ButterKnife;
 public class ScrobbleReviewAdapter extends ArrayAdapter<Scrobble> {
     private List<Scrobble> tracks;
     private Context context;
-    private Scrobbler scrobbler;
+    private ScrobbleRepository scrobbleRepository;
     private ScrobbleDB scrobbleDB;
 
-    public ScrobbleReviewAdapter(@NonNull Context context, int resource, @NonNull List<Scrobble> objects, Scrobbler scrobbler, ScrobbleDB scrobbleDB) {
+    public ScrobbleReviewAdapter(@NonNull Context context, int resource, @NonNull List<Scrobble> objects, ScrobbleRepository scrobbleRepository, ScrobbleDB scrobbleDB) {
         super(context, resource, objects);
         this.scrobbleDB = scrobbleDB;
-        this.scrobbler = scrobbler;
+        this.scrobbleRepository = scrobbleRepository;
         this.tracks = objects;
         this.context = context;
     }
@@ -73,7 +73,7 @@ public class ScrobbleReviewAdapter extends ArrayAdapter<Scrobble> {
                 scrobble.setTrackName(viewHolder.track.getText().toString());
 
                 remove(scrobble);
-                scrobbler.scrobble(scrobble);
+                scrobbleRepository.scrobble(scrobble);
                 scrobbleDB.removeScrobble(scrobble);
                 Toast.makeText(context, context.getString(R.string.track_scrobbled), Toast.LENGTH_SHORT).show();
             }

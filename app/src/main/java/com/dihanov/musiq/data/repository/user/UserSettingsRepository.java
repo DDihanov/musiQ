@@ -1,4 +1,4 @@
-package com.dihanov.musiq.data.repository;
+package com.dihanov.musiq.data.repository.user;
 
 import android.content.SharedPreferences;
 

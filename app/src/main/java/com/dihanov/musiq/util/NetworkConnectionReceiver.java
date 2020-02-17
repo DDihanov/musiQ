@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-
-import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
 
 /**
  * Created by dimitar.dihanov on 2/9/2018.
@@ -15,10 +14,10 @@ import com.dihanov.musiq.service.scrobble.Scrobbler;
 
 public class NetworkConnectionReceiver extends BroadcastReceiver {
     private static final String TAG = NetworkConnectionReceiver.class.getSimpleName();
-    private Scrobbler scrobbler;
+    private ScrobbleRepository scrobbleRepository;
 
-    public NetworkConnectionReceiver(Scrobbler scrobbler) {
-        this.scrobbler = scrobbler;
+    public NetworkConnectionReceiver(ScrobbleRepository scrobbleRepository) {
+        this.scrobbleRepository = scrobbleRepository;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class NetworkConnectionReceiver extends BroadcastReceiver {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
             if (activeNetwork != null && activeNetwork.getState() == NetworkInfo.State.CONNECTED) {
-                scrobbler.scrobbleFromCache();
+                scrobbleRepository.scrobbleFromCache();
                 AppLog.log(TAG, "Scrobbling cached tracks.");
             }
         }

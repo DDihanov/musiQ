@@ -3,7 +3,7 @@ package com.dihanov.musiq.data.usecase;
 import android.util.Pair;
 
 import com.dihanov.musiq.data.network.LastFmApiClient;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.UserTopArtists;
 import com.dihanov.musiq.util.SigGenerator;
 

@@ -14,8 +14,8 @@ import android.service.notification.StatusBarNotification;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
-import com.dihanov.musiq.service.scrobble.Scrobbler;
+import com.dihanov.musiq.data.repository.scrobble.ScrobbleRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.ui.settings.Settings;
 import com.dihanov.musiq.util.NetworkConnectionReceiver;
 import com.dihanov.musiq.util.Notificator;
@@ -45,7 +45,7 @@ public class MediaControllerListenerService extends NotificationListenerService
     private NetworkConnectionReceiver networkConnectionReceiver;
 
     @Inject
-    Scrobbler scrobbler;
+    ScrobbleRepository scrobbleRepository;
 
     @Inject
     UserSettingsRepository userSettingsRepository;
@@ -71,7 +71,7 @@ public class MediaControllerListenerService extends NotificationListenerService
         //controller will be found only after the user interacts with the media player, thus, skipping a track
         List<MediaController> initialSessions = mediaSessionManager.getActiveSessions(componentName);
         onActiveSessionsChanged(initialSessions);
-        this.networkConnectionReceiver = new NetworkConnectionReceiver(scrobbler);
+        this.networkConnectionReceiver = new NetworkConnectionReceiver(scrobbleRepository);
         this.registerReceiver(networkConnectionReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         userSettingsRepository.registerOnSharedPrefChangedListener(this);
     }
@@ -91,12 +91,12 @@ public class MediaControllerListenerService extends NotificationListenerService
         MediaController.Callback callback = new MediaController.Callback() {
             @Override
             public void onPlaybackStateChanged(@NonNull PlaybackState state) {
-                scrobbler.setStatus(state);
+                scrobbleRepository.setStatus(state);
             }
 
             @Override
             public void onMetadataChanged(@Nullable MediaMetadata metadata) {
-                scrobbler.updateTrackInfo(metadata);
+                scrobbleRepository.updateTrackInfo(metadata);
             }
         };
 

@@ -1,7 +1,7 @@
 package com.dihanov.musiq.data.usecase;
 
 import com.dihanov.musiq.data.network.LastFmApiClient;
-import com.dihanov.musiq.data.repository.UserSettingsRepository;
+import com.dihanov.musiq.data.repository.user.UserSettingsRepository;
 import com.dihanov.musiq.models.UserInfo;
 import com.dihanov.musiq.util.Constants;
 import com.dihanov.musiq.util.SigGenerator;
