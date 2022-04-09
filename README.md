@@ -1,4 +1,9 @@
-<b>The project was in need of some refactoring since I created it when I was new to developing Android apps some 3 or 4 years ago</b>, therefore I compiled a list with TODOs and will gradually strike them out when as I complete them:
+# DEPRECATED
+I don't consider to update this any time soon, so it's just one for the history books.
+
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+<b>The project was in need of some refactoring since I created it when I was new to developing Android apps years ago</b>, therefore I compiled a list with TODOs and will gradually strike them out when as I complete them:
 - ~~Refactored MVP logic to be more precice with the design pattern~~
 - ~~Refactored app backend to use repositories~~
 - ~~Refactored app backend to use UseCases~~
@@ -21,7 +26,7 @@ a musical encyclopedia
 This application is designed using the MVP pattern.
 The application features a beautiful material design, and makes use of cutting-edge libraries to function, e.g.:
 <ul>
-	<li>RxJava2</li>
+    <li>RxJava2</li>
     <li>Dagger2</li>
     <li>Retrofit2</li>
     <li>RxBinding</li>
